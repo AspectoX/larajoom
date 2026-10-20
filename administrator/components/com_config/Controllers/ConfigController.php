@@ -3,6 +3,7 @@
 namespace Aspectox\LaraJoom\Admin\Components\com_config\Controllers;
 
 use Aspectox\LaraJoom\Core\Access;
+use Aspectox\LaraJoom\Core\Settings\Settings;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -105,7 +106,7 @@ class ConfigController extends Controller
      */
     public function save(Request $request)
     {
-        $saved = 0;
+        $values = [];
 
         foreach (self::FIELDS as $group => $fields) {
             foreach ($fields as $field) {
@@ -113,21 +114,12 @@ class ConfigController extends Controller
                     continue;
                 }
 
-                $value = $request->input($field);
-
-                DB::table('larajoom_configuration')->updateOrInsert(
-                    ['name' => $field],
-                    [
-                        'value'      => $this->encodeValue($field, $value),
-                        'group'      => $group,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                );
-
-                $saved++;
+                // El tipo y el ámbito salen del registro (Settings\Registry)
+                $values[$field] = $request->input($field);
             }
         }
+
+        $saved = Settings::save($values);
 
         $this->savePermissions($request->input('permissions', []));
 
@@ -187,23 +179,6 @@ class ConfigController extends Controller
                 ->where('id', $asset->id)
                 ->update(['rules' => json_encode($rules), 'updated_at' => now()]);
         }
-    }
-
-    /**
-     * Codifica el valor a guardar: los text filters son una estructura
-     * (por grupo) y se guardan en JSON, como en Joomla.
-     */
-    protected function encodeValue(string $field, $value): string
-    {
-        if (!is_array($value)) {
-            return (string) $value;
-        }
-
-        if ($field === 'filters') {
-            return json_encode($value);
-        }
-
-        return implode(',', $value);
     }
 
     /**
@@ -343,13 +318,8 @@ class ConfigController extends Controller
             'value' => 'nullable|string',
         ]);
 
-        DB::table('larajoom_configuration')
-            ->where('name', $name)
-            ->where('group', $group)
-            ->update([
-                'value' => $data['value'],
-                'updated_at' => now(),
-            ]);
+        // El tipo sale del registro (Settings\Registry)
+        Settings::set($name, $data['value']);
 
         return redirect()->route('larajoom.admin.config.index')->with('success', 'Actualizado');
     }

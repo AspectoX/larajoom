@@ -68,7 +68,7 @@ class FrameworkConfig
      */
     public static function normalizeSessionDriver(?string $value = null): string
     {
-        $value = $value ?? (string) config('larajoom.session_handler', self::SESSION_DRIVER_FALLBACK);
+        $value = $value ?? Settings::string('session_handler', self::SESSION_DRIVER_FALLBACK);
 
         $value = match ($value) {
             'filesystem' => 'file',
@@ -83,9 +83,7 @@ class FrameworkConfig
      */
     public static function mailer(?string $value = null): string
     {
-        $value = self::normalizeMailer($value);
-
-        return $value;
+        return self::normalizeMailer($value);
     }
 
     /**
@@ -94,7 +92,7 @@ class FrameworkConfig
      */
     public static function normalizeMailer(?string $value = null): string
     {
-        $value = $value ?? (string) config('larajoom.mailer', self::MAILER_FALLBACK);
+        $value = $value ?? Settings::string('mailer', self::MAILER_FALLBACK);
 
         $value = match ($value) {
             'mail'  => 'smtp',
@@ -123,7 +121,7 @@ class FrameworkConfig
      */
     public static function normalizeCacheStore(?string $value = null): string
     {
-        $value = $value ?? (string) config('larajoom.cache_handler', self::CACHE_STORE_FALLBACK);
+        $value = $value ?? Settings::string('cache_handler', self::CACHE_STORE_FALLBACK);
 
         $value = match ($value) {
             'filesystem' => 'file',
@@ -138,7 +136,7 @@ class FrameworkConfig
      */
     public static function timezone(?string $value = null): string
     {
-        $value = $value ?? (string) config('larajoom.offset', self::TIMEZONE_FALLBACK);
+        $value = $value ?? Settings::string('offset', self::TIMEZONE_FALLBACK);
 
         return in_array($value, timezone_identifiers_list(), true) ? $value : self::TIMEZONE_FALLBACK;
     }
@@ -149,7 +147,7 @@ class FrameworkConfig
 
     protected static function applyDebug(): void
     {
-        config(['app.debug' => (bool) config('larajoom.debug', false)]);
+        config(['app.debug' => Settings::bool('debug')]);
     }
 
     protected static function applyTimezone(): void
@@ -169,7 +167,7 @@ class FrameworkConfig
             'maximum' => E_ALL,
         ];
 
-        $level = (string) config('larajoom.error_reporting', 'default');
+        $level = Settings::string('error_reporting', 'default');
 
         if (isset($levels[$level])) {
             error_reporting($levels[$level]);
@@ -180,17 +178,17 @@ class FrameworkConfig
     {
         config(['session.driver' => self::sessionDriver()]);
 
-        $lifetime = (int) config('larajoom.lifetime', 15);
+        $lifetime = Settings::int('lifetime');
         if ($lifetime > 0) {
             config(['session.lifetime' => $lifetime]);
         }
 
-        $domain = (string) config('larajoom.cookie_domain', '');
+        $domain = Settings::string('cookie_domain');
         if ($domain !== '') {
             config(['session.domain' => $domain]);
         }
 
-        $path = (string) config('larajoom.cookie_path', '');
+        $path = Settings::string('cookie_path');
         if ($path !== '') {
             config(['session.path' => $path]);
         }
@@ -202,7 +200,7 @@ class FrameworkConfig
 
         config(['cache.default' => $store]);
 
-        $ttl = (int) config('larajoom.cachetime', 15);
+        $ttl = Settings::int('cachetime');
         if ($ttl > 0 && config('cache.stores.' . $store) !== null) {
             // Joomla guarda el tiempo de cache en minutos, Laravel en segundos
             config(['cache.stores.' . $store . '.ttl' => $ttl * 60]);
@@ -221,23 +219,23 @@ class FrameworkConfig
         ];
 
         foreach ($map as $key => $configKey) {
-            $value = (string) config('larajoom.' . $key, '');
+            $value = Settings::string($key);
             if ($value !== '') {
                 config([$configKey => $value]);
             }
         }
 
-        $host = (string) config('larajoom.smtphost', '');
+        $host = Settings::string('smtphost');
         if ($host !== '') {
             config(['mail.mailers.smtp.host' => $host]);
         }
 
-        $port = (int) config('larajoom.smtpport', 25);
+        $port = Settings::int('smtpport');
         if ($port > 0) {
             config(['mail.mailers.smtp.port' => $port]);
         }
 
-        $secure = (string) config('larajoom.smtpsecure', 'none');
+        $secure = Settings::string('smtpsecure', 'none');
         if ($secure !== '') {
             config([
                 'mail.mailers.smtp.scheme' => $secure === 'none' ? null : $secure,
@@ -245,9 +243,9 @@ class FrameworkConfig
             ]);
         }
 
-        if (config('larajoom.smtpauth')) {
-            $user = (string) config('larajoom.smtpuser', '');
-            $pass = (string) config('larajoom.smtppass', '');
+        if (Settings::bool('smtpauth')) {
+            $user = Settings::string('smtpuser');
+            $pass = Settings::string('smtppass');
 
             if ($user !== '') {
                 config(['mail.mailers.smtp.username' => $user]);
