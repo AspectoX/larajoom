@@ -1,0 +1,15 @@
+{
+  "template": "atum",
+  "positions": [
+    {"name":"top","label":"Top","description":"Posicion superior"},
+    {"name":"right","label":"Right","description":"Columna derecha"},
+    {"name":"footer","label":"Footer","description":"Pie de pagina"},
+    {"name":"title","label":"Title","description":"Titulo del panel"},
+    {"name":"toolbar","label":"Toolbar","description":"Barra de herramientas"},
+    {"name":"menu","label":"Menu","description":"Menu lateral"},
+    {"name":"debug","label":"Debug","description":"Modulos debug"},
+    {"name":"customtop","label":"Custom Top","description":"Personalizado arriba"},
+    {"name":"bottom","label":"Bottom","description":"Inferior"},
+    {"name":"status","label":"Status","description":"Estado en header"}
+  ]
+}

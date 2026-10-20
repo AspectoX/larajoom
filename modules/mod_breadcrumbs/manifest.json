@@ -1,0 +1,6 @@
+{
+    "type":  "module",
+    "name":  "mod_breadcrumbs",
+    "view_namespace":  "modules.mod_breadcrumbs",
+    "lang_namespace":  "mod_breadcrumbs"
+}

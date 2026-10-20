@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'lj_warn_javascript'    => 'JavaScript is required.',
+    'lj_error_occurred'     => 'An error has occurred.',
+    'lj_default_error'      => 'An unexpected error occurred.',
+    'lj_toolbar'            => 'Toolbar',
+    'lj_back_to_cp'         => 'Back to Control Panel',
+    'lj_sidebar_heading'    => 'Sidebar',
+    'lj_toggle_sidebar'     => 'Toggle menu',
+    'lj_view_website'       => 'View Website',
+    'lj_backend_login'      => 'Backend Login',
+    'lj_cpanel_link'        => 'Go to Control Panel',
+    'lj_edit_module'        => 'Edit module: :title',
+    'lj_action_edit'        => 'Edit',
+    'lj_action_unpublish'   => 'Unpublish',
+    'lj_more_elements'      => 'More elements',
+    'lj_login_logo'         => 'Login logo',
+    'lj_profile'            => 'Profile',
+    'lj_logout'             => 'Log out',
+    'ax_pagination_previous' => 'Previous',
+    'ax_pagination_next'     => 'Next',
+    'ax_pagination_showing'  => 'Showing',
+    'ax_pagination_to'       => 'to',
+    'ax_pagination_of'       => 'of',
+    'ax_pagination_results'  => 'results',
+];

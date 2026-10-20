@@ -1,0 +1,6 @@
+{
+    "type":  "module",
+    "name":  "mod_login",
+    "view_namespace":  "admin.modules.mod_login",
+    "lang_namespace":  "mod_login"
+}

@@ -1,0 +1,7 @@
+{
+    "type":  "plugin",
+    "group":  "authentication",
+    "name":  "joomla",
+    "view_namespace":  "plugins.authentication.joomla",
+    "lang_namespace":  "plg_authentication_joomla"
+}

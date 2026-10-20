@@ -1,0 +1,7 @@
+{
+    "type": "plugin",
+    "group": "user",
+    "name": "profile",
+    "view_namespace": "plugins.user.profile",
+    "lang_namespace": "plg_user_profile"
+}

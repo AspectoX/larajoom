@@ -1,0 +1,6 @@
+{
+    "type": "template",
+    "name": "system",
+    "view_path": "administrator/templates/system",
+    "lang_path": "administrator/templates/system/language"
+}

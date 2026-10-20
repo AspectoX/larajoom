@@ -1,0 +1,19 @@
+<?php
+
+return [
+    'lj_warn_javascript'    => 'Se requiere JavaScript.',
+    'lj_error_occurred'     => 'Ha ocurrido un error.',
+    'lj_default_error'      => 'Ha ocurrido un error inesperado.',
+    'lj_toolbar'            => 'Barra de herramientas',
+    'lj_back_to_cp'         => 'Volver al Panel de Control',
+    'lj_sidebar_heading'    => 'Barra lateral',
+    'lj_toggle_sidebar'     => 'Toggle menu',
+    'lj_view_website'       => 'Ver sitio web',
+    'lj_backend_login'      => 'Inicio de sesión del backend',
+    'lj_cpanel_link'        => 'Ir al Panel de Control',
+    'lj_edit_module'        => 'Editar módulo: :title',
+    'lj_action_edit'        => 'Editar',
+    'lj_action_unpublish'   => 'Despublicar',
+    'lj_more_elements'      => 'Más elementos',
+    'lj_login_logo'         => 'Logo de login',
+];

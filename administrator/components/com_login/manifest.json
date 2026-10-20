@@ -1,0 +1,7 @@
+{
+    "name": "com_login",
+    "type": "component",
+    "view_namespace": "com_login",
+    "lang_namespace": "com_login",
+    "view_path": "administrator/components/com_login/resources/views"
+}

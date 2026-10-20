@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_content",
+    "view_namespace":  "admin.components.com_content",
+    "lang_namespace":  "com_content"
+}

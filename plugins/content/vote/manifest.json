@@ -1,0 +1,7 @@
+{
+    "type": "plugin",
+    "group": "content",
+    "name": "vote",
+    "view_namespace": "plugins.content.vote",
+    "lang_namespace": "plg_content_vote"
+}

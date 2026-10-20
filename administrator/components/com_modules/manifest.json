@@ -1,0 +1,6 @@
+{
+    "type": "component",
+    "name": "com_modules",
+    "view_namespace": "admin.components.com_modules",
+    "lang_namespace": "com_modules"
+}

@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_users",
+    "view_namespace":  "admin.components.com_users",
+    "lang_namespace":  "com_users"
+}

@@ -1,0 +1,7 @@
+{
+    "type":"component",
+    "name":"com_cpanel",
+    "title":"LaraJoom",
+    "view_namespace":"admin.components.com_cpanel",
+    "lang_namespace":"com_cpanel"
+}

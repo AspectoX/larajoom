@@ -1,0 +1,6 @@
+{
+    "type":  "module",
+    "name":  "mod_menu",
+    "view_namespace":  "modules.mod_menu",
+    "lang_namespace":  "mod_menu"
+}

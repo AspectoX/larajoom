@@ -1,0 +1,6 @@
+{
+    "type":  "template",
+    "name":  "atum",
+    "view_path":  "administrator/templates/atum",
+    "lang_path":  "administrator/templates/atum/language"
+}

@@ -1,0 +1,180 @@
+:root {
+    color-scheme: light dark;
+
+    --body-bg: light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 15%));
+    --body-ff: Helvetica Neue Light, Helvetica, Arial, sans-serif;
+    --body-fz: clamp(0.8rem, 2vw, 1rem);
+
+    --clr-txt: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+    --clr-white: light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 85%));
+    --clr-black: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 15%));
+    --clr-txto-gray: light-dark(hsl(210, 6%, 70%), hsl(210, 6%, 70%));
+
+    /* Colores de alertas y botones */
+
+    --clr-bg-primary: hsl(211, 100%, 50%);
+    --clr-txt-primary: hsl(214, 63%, 32%);
+    --clr-hover-primary: hsl(214, 63%, 70%);
+    --clr-active-primary: hsl(213, 63%, 40%);
+    --clr-br-primary: hsl(214, 63%, 30%);
+    --pick-bg-primary: hsl(211, 100%, 98%);
+    --pick-br-primary: hsl(211, 100%, 50%);
+    --opt-clr-primary: hsl(211, 100%, 32%);
+    --opt-bg-hover-primary: hsl(211, 100%, 92%);
+    --chck-clr-primary: hsl(211, 100%, 62%);
+
+    --clr-bg-gray: hsl(210, 15%, 30%);
+    --clr-txt-gray: hsl(210, 15%, 12%);
+    --clr-hover-gray: hsl(210, 15%, 20%);
+    --clr-active-gray: hsl(210, 15%, 30%);
+    --clr-br-gray: hsl(210, 15%, 30%);
+    --pick-bg-gray: hsl(210, 15%, 98%);
+    --pick-br-gray: hsl(210, 15%, 50%);
+    --opt-clr-gray: hsl(210, 15%, 32%);
+    --opt-bg-hover-gray: hsl(210, 15%, 92%);
+    --chck-clr-gray: hsl(210, 15%, 62%);
+
+    --clr-bg-acent: hsl(334, 44%, 50%);
+    --clr-txt-acent: hsl(334, 44%, 32%);
+    --clr-hover-acent: hsl(334, 44%, 70%);
+    --clr-active-acent: hsl(334, 44%, 40%);
+    --clr-br-acent: hsl(334, 44%, 30%);
+    --pick-bg-acent: hsl(334, 44%, 98%);
+    --pick-br-acent: hsl(334, 44%, 50%);
+    --opt-clr-acent: hsl(334, 44%, 32%);
+    --opt-bg-hover-acent: hsl(334, 44%, 92%);
+    --chck-clr-acent: hsl(334, 44%, 62%);
+
+    --clr-bg-success: hsl(134, 61%, 50%);
+    --clr-txt-success: hsl(137, 61%, 32%);
+    --clr-hover-success: hsl(137, 61%, 70%);
+    --clr-active-success: hsl(136, 61%, 40%);
+    --clr-br-success: hsl(134, 61%, 30%);
+    --pick-bg-success: hsl(134, 61%, 98%);
+    --pick-br-success: hsl(134, 61%, 50%);
+    --opt-clr-success: hsl(134, 61%, 32%);
+    --opt-bg-hover-success: hsl(134, 61%, 92%);
+    --chck-clr-success: hsl(134, 61%, 62%);
+
+    --clr-bg-info: hsl(188, 78%, 50%);
+    --clr-txt-info: hsl(188, 78%, 32%);
+    --clr-hover-info: hsl(188, 78%, 70%);
+    --clr-active-info: hsl(188, 78%, 40%);
+    --clr-br-info: hsl(188, 78%, 30%);
+    --pick-bg-info: hsl(188, 78%, 98%);
+    --pick-br-info: hsl(188, 78%, 50%);
+    --opt-clr-info: hsl(188, 78%, 32%);
+    --opt-bg-hover-info: hsl(188, 78%, 92%);
+    --chck-clr-info: hsl(188, 78%, 62%);
+
+    --clr-bg-warning: hsl(45, 100%, 50%);
+    --clr-txt-warning: hsl(45, 100%, 32%);
+    --clr-hover-warning: hsl(45, 100%, 70%);
+    --clr-active-warning: hsl(45, 100%, 40%);
+    --clr-br-warning: hsl(45, 100%, 30%);
+    --pick-bg-warning: hsl(45, 100%, 98%);
+    --pick-br-warning: hsl(45, 100%, 50%);
+    --opt-clr-warning: hsl(45, 100%, 32%);
+    --opt-bg-hover-warning: hsl(45, 100%, 92%);
+    --chck-clr-warning: hsl(45, 100%, 62%);
+
+    --clr-bg-danger: hsl(354, 70%, 50%);
+    --clr-txt-danger: hsl(354, 70%, 32%);
+    --clr-hover-danger: hsl(354, 70%, 70%);
+    --clr-active-danger: hsl(354, 70%, 40%);
+    --clr-br-danger: hsl(354, 70%, 30%);
+    --pick-bg-danger: hsl(354, 70%, 98%);
+    --pick-br-danger: hsl(354, 70%, 50%);
+    --opt-clr-danger: hsl(354, 70%, 32%);
+    --opt-bg-hover-danger: hsl(354, 70%, 92%);
+    --chck-clr-danger: hsl(354, 70%, 62%);
+
+    --error: hsl(1, 66%, 40%);
+
+    --bg-input: light-dark(hsl(0, 0%, 97%), hsl(0, 0%, 97%));
+    --bor-input: 1px solid light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 85%));
+
+    /* Variables de fuentes */
+    --family-primary: Helvetica, Arial, sans-serif;
+    --family-secondary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --family-tertiary: 'Work Sans', sans-serif;
+    --family-special: "Fira Sans", sans-serif;
+    --font-size: 1rem;
+
+    --h1: clamp(2rem, 5vw, 4rem);
+    --h2: clamp(1.75rem, 4vw, 3rem);
+    --h3: clamp(1.5rem, 3vw, 2.5rem);
+    --h4: clamp(1.25rem, 2.5vw, 2rem);
+    --h5: clamp(1.1rem, 2vw, 1.75rem);
+    --h6: clamp(1rem, 1.5vw, 1.5rem);
+    --p: clamp(1rem, 1vw + 0.5rem, 1.125rem);
+
+    --fw-100: 100;
+    /* Thin */
+    --fw-200: 200;
+    /* ExtraLight */
+    --fw-300: 300;
+    /* Light */
+    --fw-400: 400;
+    /* Regular */
+    --fw-500: 500;
+    /* Medium */
+    --fw-600: 600;
+    /* SemiBold */
+    --fw-700: 700;
+    /* Bold */
+    --fw-800: 800;
+    /* ExtraBold */
+    --fw-900: 900;
+    /* Black */
+
+    --fs-i: italic;
+    /* Font italic*/
+    --fs-n: normal;
+    /* Font normal*/
+
+
+    /* Sizes */
+    --sz-0: 0;
+    --sz-1: 0.0625rem;
+    --sz-2: 0.125rem;
+    --sz-3: 0.188rem;
+    --sz-4: 0.25rem;
+    --sz-5: 0.313rem;
+    --sz-6: 0.375rem;
+    --sz-7: 0.4375rem;
+    --sz-8: 0.5rem;
+    --sz-9: 0.5625rem;
+    --sz-10: 0.625rem;
+    --sz-12: 0.75rem;
+    --sz-14: 0.875rem;
+    --sz-16: 1rem;
+    --sz-18: 1.125rem;
+    --sz-20: 1.25rem;
+    --sz-22: 1.375rem;
+    --sz-24: 1.5rem;
+    --sz-26: 1.625rem;
+    --sz-28: 1.75rem;
+    --sz-30: 1.875rem;
+    --sz-32: 2rem;
+    --sz-full: 100%;
+    --sz-auto: auto;
+
+    /* Border */
+    --bor: 1px solid light-dark(hsl(0, 0%, 22%), hsl(0, 0%, 82%));
+
+    --brr-full: 50%;
+    --brr-8: 0.5rem;
+    --brr-10: 0.625rem;
+    --brr-btn: 1.5rem;
+
+    /* Shadows */
+    --sdw-s: 0 0.125rem 0.25rem hsl(0 0% 0% / .075);
+    --sdw-m: 0 0.25rem 0.5rem hsl(0 0% 0% / .075);
+    --sdw-l: 0 0.5rem 0.75rem hsl(0 0% 0% / .075);
+
+    /* TABS */
+    --bg-details: light-dark(hsl(0, 0%, 70%), hsl(0, 0%, 15%));
+    --bg-details__body: light-dark(hsl(0, 0%, 85%),hsl(0, 0%, 45%));
+
+}

@@ -1,0 +1,152 @@
+<?php
+
+use aspectox\AxAdminLara\Services\SettingsService;
+
+if (! function_exists('setting')) {
+    /**
+     * Lee un valor de configuracion centralizada.
+     * Uso: setting('site.site_name'), setting('mail.mail_enabled', true)
+     */
+    function setting(string $key, mixed $default = null): mixed
+    {
+        return app(SettingsService::class)->get($key, $default);
+    }
+}
+
+if (! function_exists('seoTitle')) {
+    /**
+     * Renderiza el titulo SEO con sufijo y posicion configurados.
+     * Funcion global usable en Blade sin necesidad de directiva.
+     */
+    function seoTitle(): string
+    {
+        return e(app(\aspectox\AxAdminLara\Backend\Modules\ModSeo\Services\SeoService::class)->getTitle());
+    }
+}
+
+if (! function_exists('adminTitle')) {
+    /**
+     * Renderiza el titulo del panel de administracion.
+     * Formato: "Pagina - NombreAdmin" usando config('ax-admin-lara.name').
+     * Independiente del sistema SEO del frontend.
+     */
+    function adminTitle(): string
+    {
+        $name = request()->route()?->getName() ?? '';
+        $segments = explode('.', $name);
+        $page = match (count($segments)) {
+            1 => ucfirst($segments[0]),
+            default => ucfirst(end($segments)) === 'Index'
+                ? ucfirst($segments[count($segments) - 2])
+                : ucfirst($segments[count($segments) - 2]).' '.ucfirst(end($segments)),
+        };
+
+        return e($page.' - LaraJoom');
+    }
+}
+
+if (! function_exists('seoMeta')) {
+    /**
+     * Renderiza todos los tags meta SEO (description, OG, Twitter, canonical, etc).
+     * Funcion global usable en Blade sin necesidad de directiva.
+     */
+    function seoMeta(): string
+    {
+        return app(\aspectox\AxAdminLara\Backend\Modules\ModSeo\Services\SeoService::class)->renderMeta();
+    }
+}
+
+if (! function_exists('activeThemeLayout')) {
+    /**
+     * Devuelve la ruta del layout del tema activo para el scope dado.
+     * Uso en rutas del host: view(activeThemeLayout()) o view(activeThemeLayout('admin'))
+     */
+    function activeThemeLayout(string $scope = 'frontend'): string
+    {
+        $theme = app(\aspectox\AxAdminLara\Services\Contracts\ThemeServiceContract::class)
+            ->getActiveTheme($scope);
+
+        if (! $theme) {
+            abort(500, __('ax-admin-lara::admin.no_active_theme', ['scope' => $scope]));
+        }
+
+        return str_replace('/', '.', $theme->path).'.layouts.app';
+    }
+}
+
+if (! function_exists('slugHelper')) {
+    /**
+     * Genera el script que auto-completa el campo slug al perder el foco el campo fuente.
+     * El campo slug queda readonly automaticamente.
+     * Usado internamente por la directiva Blade @slug('source', 'target').
+     */
+    function slugHelper(string $source, string $target): string
+    {
+        return <<<HTML
+<script>
+(function () {
+    function toSlug(str) {
+        return str
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/[\s]+/g, '-')
+            .replace(/-+/g, '-');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var source = document.querySelector('[name="{$source}"]');
+        var target = document.querySelector('[name="{$target}"]');
+
+        if (!source || !target) return;
+
+        target.setAttribute('readonly', 'readonly');
+
+        source.addEventListener('blur', function () {
+            if (source.value.trim() !== '') {
+                target.value = toSlug(source.value);
+            }
+        });
+    });
+})();
+</script>
+HTML;
+    }
+}
+
+if (! function_exists('breadcrumbs')) {
+    /**
+     * Genera migas de pan automaticas en base a la URL actual.
+     * Devuelve HTML listo para imprimir.
+     */
+    function breadcrumbs(?string $separator = ' / '): string
+    {
+        $request = request();
+        $segments = $request->segments();
+        $trail = [];
+        $url = '';
+
+        $trail[] = [
+            'label' => __('mod-breadcrumbs::breadcrumbs.home'),
+            'url'   => url('/'),
+            'last'  => empty($segments),
+        ];
+
+        foreach ($segments as $i => $segment) {
+            $url .= '/'.$segment;
+
+            $trail[] = [
+                'label' => ucwords(str_replace('-', ' ', $segment)),
+                'url'   => $url,
+                'last'  => $i === array_key_last($segments),
+            ];
+        }
+
+        return view('mod-breadcrumbs::default', [
+            'trail'     => $trail,
+            'separator' => $separator,
+        ])->render();
+    }
+}

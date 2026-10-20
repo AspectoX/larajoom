@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_installer",
+    "view_namespace":  "admin.components.com_installer",
+    "lang_namespace":  "com_installer"
+}

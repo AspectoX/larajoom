@@ -1,0 +1,37 @@
+{
+    "name": "aspectox/larajoom",
+    "description": "LaraJoom - Porting Joomla 6 modular architecture to Laravel 13",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aspectox",
+            "email": "info@aspectox.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/view": "^11.0|^12.0|^13.0",
+        "illuminate/routing": "^11.0|^12.0|^13.0",
+        "illuminate/database": "^11.0|^12.0|^13.0",
+        "illuminate/events": "^11.0|^12.0|^13.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aspectox\\LaraJoom\\": "src/",
+            "Aspectox\\LaraJoom\\Site\\Components\\": "components/",
+            "Aspectox\\LaraJoom\\Site\\Modules\\": "modules/",
+            "Aspectox\\LaraJoom\\Plugins\\": "plugins/",
+            "Aspectox\\LaraJoom\\Admin\\Components\\": "administrator/components/",
+            "Aspectox\\LaraJoom\\Admin\\Modules\\": "administrator/modules/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aspectox\\LaraJoom\\LaraJoomServiceProvider"
+            ]
+        }
+    }
+}

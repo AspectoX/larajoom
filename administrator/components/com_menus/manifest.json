@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_menus",
+    "view_namespace":  "admin.components.com_menus",
+    "lang_namespace":  "com_menus"
+}
