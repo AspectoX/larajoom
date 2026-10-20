@@ -10,6 +10,7 @@
     {"name":"debug","label":"Debug","description":"Modulos debug"},
     {"name":"customtop","label":"Custom Top","description":"Personalizado arriba"},
     {"name":"bottom","label":"Bottom","description":"Inferior"},
-    {"name":"status","label":"Status","description":"Estado en header"}
+    {"name":"status","label":"Status","description":"Estado en header"},
+    {"name":"cpanel","label":"Panel de control","description":"Modulos del dashboard"}
   ]
 }

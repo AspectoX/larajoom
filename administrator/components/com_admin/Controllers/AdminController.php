@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Aspectox\LaraJoom\Core\ConfigLoader;
+use Aspectox\LaraJoom\Admin\Components\com_cpanel\Controllers\CpanelController;
 
 class AdminController extends Controller
 {
@@ -17,10 +18,10 @@ class AdminController extends Controller
             ->get();
         $usersCount = DB::table('larajoom_users')->count();
 
-        return view('admin.components.com_admin::index', [
-            'sitename' => $config['sitename'] ?? config('larajoom.sitename', 'LaraJoom'),
-            'extensions' => $extensions,
-            'usersCount' => $usersCount,
-        ]);
+        return view('admin.components.com_admin::index', array_merge(CpanelController::panelData(), [
+            'sitename'    => $config['sitename'] ?? config('larajoom.sitename', 'LaraJoom'),
+            'extensions'  => $extensions,
+            'usersCount'  => $usersCount,
+        ]));
     }
 }

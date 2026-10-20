@@ -56,7 +56,7 @@
             <x-larajoom::select name="position" :label="__('com_modules::com_modules.position')" required>
                 <option value="">{{ __('com_modules::com_modules.select_position') }}</option>
                 @foreach ($positions as $pos)
-                    <option value="{{ $pos }}" @selected(old('position') === $pos)>{{ $pos }}</option>
+                    <option value="{{ $pos }}" @selected(old('position', request('position')) === $pos)>{{ $pos }}</option>
                 @endforeach
             </x-larajoom::select>
 

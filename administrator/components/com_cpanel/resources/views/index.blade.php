@@ -1,16 +1,10 @@
 @extends('admin_tpl::index')
 
+@section('title', __('com_cpanel::com_cpanel.dashboard'))
+@section('icon', 'dashboard')
+
 @section('content')
     <section id="content" class="content">
-        <jdoc:include type="message" />
-        @position('customtop')
-        <div class="row">
-            <div class="col-md-12">
-                <main>
-                    <h1>{{ __('lj_dashboard') }}</h1>
-                    <p>{{ __('lj_welcome') }}</p>
-                </main>
-            </div>
-        </div>
+        @include('admin.components.com_cpanel::dashboard')
     </section>
 @endsection
