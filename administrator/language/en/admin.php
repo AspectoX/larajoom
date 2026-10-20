@@ -29,6 +29,8 @@ return [
     'search'             => 'Search...',
     'no_records'         => 'No records found.',
     'confirm_delete'     => 'Are you sure you want to delete this item?',
+    'show_password'      => 'Show Password',
+    'hide_password'      => 'Hide Password',
 
     // Framework keys (Joomla style)
     'JALL'               => 'All',

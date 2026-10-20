@@ -9,6 +9,7 @@ return [
     'language_en_gb' => 'Inglés (Reino Unido)',
     'language_es_es' => 'Español (España)',
     'show_password' => 'Mostrar contraseña',
+    'hide_password' => 'Ocultar contraseña',
     'login_button' => 'Iniciar sesión',
     'login_form' => 'Inicio de sesión de administrador de LaraJoom',
     'javascript_required' => 'Advertencia! Se debe habilitar JavaScript para el funcionamiento correcto del administrador.',
