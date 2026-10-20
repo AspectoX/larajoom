@@ -92,6 +92,22 @@ class UserAdminController extends Controller
     }
 
     /**
+     * Formatea una fecha de la base (string o Carbon) para mostrarla.
+     */
+    protected function formatDate($value, string $format = 'Y-m-d H:i:s'): string
+    {
+        if (empty($value)) {
+            return '';
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse($value)->format($format);
+        } catch (\Throwable $e) {
+            return (string) $value;
+        }
+    }
+
+    /**
      * Definición de las pestañas del perfil.
      *
      * Cada fieldset define sus campos y el componente con el que se renderiza,
@@ -157,27 +173,22 @@ class UserAdminController extends Controller
                         'name'     => 'registerDate',
                         'type'     => 'text',
                         'label'    => __('com_users::com_users.registration_date'),
-                        'value'    => $profile->registerDate
-                            ? \Illuminate\Support\Carbon::parse($profile->registerDate)->format('Y-m-d H:i:s')
-                            : ($user->created_at?->format('Y-m-d H:i:s') ?? ''),
+                        'value'    => $this->formatDate($profile->registerDate ?? null)
+                            ?: ($user->created_at?->format('Y-m-d H:i:s') ?? ''),
                         'readonly' => true,
                     ],
                     [
                         'name'     => 'lastvisitDate',
                         'type'     => 'text',
                         'label'    => __('com_users::com_users.last_visit_date'),
-                        'value'    => $profile->lastvisitDate
-                            ? \Illuminate\Support\Carbon::parse($profile->lastvisitDate)->format('Y-m-d H:i:s')
-                            : '',
+                        'value'    => $this->formatDate($profile->lastvisitDate ?? null),
                         'readonly' => true,
                     ],
                     [
                         'name'     => 'lastResetTime',
                         'type'     => 'text',
                         'label'    => __('com_users::com_users.last_reset_date'),
-                        'value'    => $profile->lastResetTime
-                            ? \Illuminate\Support\Carbon::parse($profile->lastResetTime)->format('Y-m-d H:i:s')
-                            : '',
+                        'value'    => $this->formatDate($profile->lastResetTime ?? null),
                         'readonly' => true,
                     ],
                     [
@@ -299,9 +310,9 @@ class UserAdminController extends Controller
                 'activated'     => 1,
                 'sendEmail'     => (int) $profile->sendEmail,
                 'params'        => $profile->params ?? null,
-                'registerDate'  => $profile->registerDate,
-                'lastvisitDate' => $profile->lastvisitDate,
-                'lastResetTime' => $profile->lastResetTime,
+                'registerDate'  => $profile->registerDate ?? now(),
+                'lastvisitDate' => $profile->lastvisitDate ?? null,
+                'lastResetTime' => $profile->lastResetTime ?? null,
                 'resetCount'    => (int) ($profile->resetCount ?? 0),
                 'avatar'        => $profile->avatar ?? null,
                 'created_at'    => $profile->created_at ?? now(),
