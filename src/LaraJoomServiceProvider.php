@@ -179,6 +179,11 @@ class LaraJoomServiceProvider extends ServiceProvider
             config()->set('larajoom', $dbConfig);
         }
 
+        // Aplica al config de la app los overrides que son ajustes del framework
+        // (sesión, cache, mail, debug, zona horaria, error_reporting).
+        // Cada ajuste se valida y se aplica de forma independiente: nunca rompen la app.
+        \Aspectox\LaraJoom\Core\Settings\FrameworkConfig::apply();
+
         // Auto-discover package seeders (site + admin + root)
         $seederDirs = [
             $baseDir . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'seeders',

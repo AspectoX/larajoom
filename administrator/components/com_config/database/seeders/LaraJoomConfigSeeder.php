@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class LaraJoomConfigSeeder extends Seeder
 {
@@ -84,7 +85,7 @@ class LaraJoomConfigSeeder extends Seeder
             ['name' => 'fromname', 'value' => '', 'group' => 'mail'],
             ['name' => 'replyto', 'value' => '', 'group' => 'mail'],
             ['name' => 'replytoname', 'value' => '', 'group' => 'mail'],
-            ['name' => 'mailer', 'value' => 'mail', 'group' => 'mail'],
+            ['name' => 'mailer', 'value' => 'smtp', 'group' => 'mail'],
             ['name' => 'sendmail', 'value' => '/usr/sbin/sendmail', 'group' => 'mail'],
             ['name' => 'smtphost', 'value' => 'localhost', 'group' => 'mail'],
             ['name' => 'smtpport', 'value' => '25', 'group' => 'mail'],
@@ -100,7 +101,7 @@ class LaraJoomConfigSeeder extends Seeder
             ['name' => 'force_ssl', 'value' => '-1', 'group' => 'server'],
 
             // -------------------------------------------------- Session
-            ['name' => 'session_handler', 'value' => 'filesystem', 'group' => 'session'],
+            ['name' => 'session_handler', 'value' => 'file', 'group' => 'session'],
             ['name' => 'session_filesystem_path', 'value' => '', 'group' => 'session'],
             ['name' => 'session_memcached_server_host', 'value' => 'localhost', 'group' => 'session'],
             ['name' => 'session_memcached_server_port', 'value' => '11211', 'group' => 'session'],
@@ -143,5 +144,33 @@ class LaraJoomConfigSeeder extends Seeder
                 ]
             );
         }
+
+        $this->normalizeLaravelValues();
+    }
+
+    /**
+     * Normaliza los valores que usaban nomenclatura de Joomla a los de Laravel.
+     *
+     * - session_handler: 'filesystem' → 'file'
+     * - mailer:         'mail'        → 'smtp'
+     *
+     * Sin esto, al aplicar esos ajustes al config() de Laravel la app lanza
+     * InvalidArgumentException (driver/mailer inexistente) en cada request.
+     */
+    protected function normalizeLaravelValues(): void
+    {
+        if (!Schema::hasTable('larajoom_configuration')) {
+            return;
+        }
+
+        DB::table('larajoom_configuration')
+            ->where('name', 'session_handler')
+            ->where('value', 'filesystem')
+            ->update(['value' => 'file', 'updated_at' => now()]);
+
+        DB::table('larajoom_configuration')
+            ->where('name', 'mailer')
+            ->where('value', 'mail')
+            ->update(['value' => 'smtp', 'updated_at' => now()]);
     }
 }

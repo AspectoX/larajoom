@@ -23,11 +23,17 @@
 <fieldset class="options-form">
     <legend>{{ __('com_config::com_config.session_settings') }}</legend>
 
+    @php
+        $sessionDriver = \Aspectox\LaraJoom\Core\Settings\FrameworkConfig::normalizeSessionDriver();
+    @endphp
+
     <x-larajoom::select name="session_handler" :label="__('com_config::com_config.session_handler')">
-        <option value="filesystem" @selected(config('larajoom.session_handler', 'filesystem') == 'filesystem')>{{ __('com_config::com_config.session_handler_file') }}</option>
-        <option value="database" @selected(config('larajoom.session_handler', 'filesystem') == 'database')>{{ __('com_config::com_config.session_handler_database') }}</option>
-        <option value="redis" @selected(config('larajoom.session_handler', 'filesystem') == 'redis')>{{ __('com_config::com_config.session_handler_redis') }}</option>
-        <option value="memcached" @selected(config('larajoom.session_handler', 'filesystem') == 'memcached')>{{ __('com_config::com_config.session_handler_memcached') }}</option>
+        <option value="file" @selected($sessionDriver === 'file')>{{ __('com_config::com_config.session_handler_file') }}</option>
+        <option value="database" @selected($sessionDriver === 'database')>{{ __('com_config::com_config.session_handler_database') }}</option>
+        <option value="redis" @selected($sessionDriver === 'redis')>{{ __('com_config::com_config.session_handler_redis') }}</option>
+        <option value="memcached" @selected($sessionDriver === 'memcached')>{{ __('com_config::com_config.session_handler_memcached') }}</option>
+        <option value="cookie" @selected($sessionDriver === 'cookie')>{{ __('com_config::com_config.session_handler_cookie') }}</option>
+        <option value="array" @selected($sessionDriver === 'array')>{{ __('com_config::com_config.session_handler_array') }}</option>
     </x-larajoom::select>
 
     <x-larajoom::input name="session_filesystem_path" :label="__('com_config::com_config.session_filesystem_path')" :value="config('larajoom.session_filesystem_path', '')" size="60" />

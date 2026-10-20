@@ -1,7 +1,7 @@
 <fieldset class="options-form">
     <legend>{{ __('com_config::com_config.logging_settings') }}</legend>
 
-    <x-larajoom::input name="log_path" :label="__('com_config::com_config.log_path')" :value="config('larajoom.log_path', '')" size="60" required />
+    <x-larajoom::input name="log_path" :label="__('com_config::com_config.log_path')" :value="config('larajoom.log_path', '')" size="60" />
 
     <x-larajoom::toggle name="log_everything" :label="__('com_config::com_config.log_everything')" :checked="(int) config('larajoom.log_everything', 0) === 1" />
 

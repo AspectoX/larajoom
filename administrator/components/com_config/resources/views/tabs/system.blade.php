@@ -70,7 +70,11 @@
 <fieldset class="options-form">
     <legend>{{ __('com_config::com_config.locale_settings') }}</legend>
 
-    <x-larajoom::input name="offset" :label="__('com_config::com_config.offset')" :value="config('larajoom.offset', 'UTC')" size="60" />
+    <x-larajoom::select name="offset" :label="__('com_config::com_config.offset')">
+        @foreach (timezone_identifiers_list() as $timezone)
+            <option value="{{ $timezone }}" @selected(config('larajoom.offset', 'UTC') === $timezone)>{{ $timezone }}</option>
+        @endforeach
+    </x-larajoom::select>
 </fieldset>
 
 <fieldset class="options-form">
@@ -85,10 +89,16 @@
     <x-larajoom::input name="replyto" type="email" :label="__('com_config::com_config.replyto')" :value="config('larajoom.replyto', '')" size="60" />
     <x-larajoom::input name="replytoname" :label="__('com_config::com_config.replytoname')" :value="config('larajoom.replytoname', '')" size="60" />
 
+    @php
+        $mailer = \Aspectox\LaraJoom\Core\Settings\FrameworkConfig::normalizeMailer();
+    @endphp
+
     <x-larajoom::select name="mailer" :label="__('com_config::com_config.mailer')">
-        <option value="mail" @selected(config('larajoom.mailer', 'mail') == 'mail')>{{ __('com_config::com_config.mailer_php') }}</option>
-        <option value="sendmail" @selected(config('larajoom.mailer', 'mail') == 'sendmail')>{{ __('com_config::com_config.mailer_sendmail') }}</option>
-        <option value="smtp" @selected(config('larajoom.mailer', 'mail') == 'smtp')>{{ __('com_config::com_config.mailer_smtp') }}</option>
+        <option value="smtp" @selected($mailer === 'smtp')>{{ __('com_config::com_config.mailer_smtp') }}</option>
+        <option value="sendmail" @selected($mailer === 'sendmail')>{{ __('com_config::com_config.mailer_sendmail') }}</option>
+        <option value="log" @selected($mailer === 'log')>{{ __('com_config::com_config.mailer_log') }}</option>
+        <option value="array" @selected($mailer === 'array')>{{ __('com_config::com_config.mailer_array') }}</option>
+        <option value="failover" @selected($mailer === 'failover')>{{ __('com_config::com_config.mailer_failover') }}</option>
     </x-larajoom::select>
 
     <x-larajoom::input name="sendmail" :label="__('com_config::com_config.sendmail')" :value="config('larajoom.sendmail', '/usr/sbin/sendmail')" size="60" />
