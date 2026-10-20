@@ -62,28 +62,13 @@ class CpanelController extends Controller
     }
 
     /**
-     * Tipos de módulo instalados (carpetas mod_*).
+     * Tipos de módulo instalados.
+     *
+     * Se descubren en todas las carpetas "modules" del paquete (raíz, administrador,
+     * componentes y plugins) a través de ModuleTypes.
      */
     protected static function moduleTypes(): array
     {
-        $base = dirname(__DIR__, 4);
-
-        $types = [];
-
-        foreach (['administrator' . DIRECTORY_SEPARATOR . 'modules', 'modules'] as $folder) {
-            $dir = $base . DIRECTORY_SEPARATOR . $folder;
-
-            if (!is_dir($dir)) {
-                continue;
-            }
-
-            foreach (scandir($dir) ?: [] as $item) {
-                if (str_starts_with($item, 'mod_') && is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-                    $types[$item] = $item;
-                }
-            }
-        }
-
-        return $types;
+        return \Aspectox\LaraJoom\Core\Modules\ModuleTypes::types();
     }
 }
