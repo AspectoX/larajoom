@@ -15,7 +15,7 @@ class AdminController extends Controller
         $extensions = DB::table('larajoom_extensions')
             ->select('name', 'type', 'enabled')
             ->get();
-        $usersCount = DB::table('users')->count();
+        $usersCount = DB::table('larajoom_users')->count();
 
         return view('admin.components.com_admin::index', [
             'sitename' => $config['sitename'] ?? config('larajoom.sitename', 'LaraJoom'),
