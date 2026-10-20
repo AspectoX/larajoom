@@ -1,48 +1,61 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Administración - Usuarios</title>
-</head>
-<body>
-    <header>
-        <h1>Panel de Administración: Usuarios</h1>
-        <nav>
-            <a href="{{ route('larajoom.admin.groups.index') }}">[ Grupos de Usuarios ]</a>
-            <a href="{{ route('larajoom.admin.levels.index') }}">[ Niveles de Acceso ]</a>
-            <a href="/administrator">[ Volver al Panel ]</a>
-        </nav>
-    </header>
+@extends('admin_tpl::index')
 
-    <main>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Registrado</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($users as $user)
-                    <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->created_at->format('Y-m-d') }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4">No hay usuarios registrados.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+@section('title', __('com_users::com_users.users'))
+@section('icon', 'users')
 
-        <nav>
-            {{ $users->links() }}
-        </nav>
-    </main>
-</body>
-</html>
+@section('toolbar')
+    <x-larajoom::toolbar :buttons="[
+        [
+            'label' => __('com_users::com_users.usergroups'),
+            'icon'  => 'roles',
+            'url'   => route('larajoom.admin.groups.index'),
+        ],
+        [
+            'label' => __('com_users::com_users.access_levels'),
+            'icon'  => 'permissions',
+            'url'   => route('larajoom.admin.levels.index'),
+        ],
+    ]" />
+@endsection
+
+@section('content')
+    @php
+        $rows = [];
+        $actions = [];
+
+        foreach ($users as $i => $user) {
+            $groupNames = collect($userGroups[$user->id] ?? [])
+                ->map(fn ($map) => $groups[$map->group_id]->title ?? null)
+                ->filter()
+                ->implode(', ');
+
+            $rows[] = [
+                $user->id,
+                $user->name,
+                $user->email,
+                $groupNames !== '' ? $groupNames : __('com_users::com_users.no_user_group'),
+                $user->created_at?->format('Y-m-d'),
+            ];
+
+            $actions[$i] = [
+                'edit'   => route('larajoom.admin.users.edit', $user->id),
+                'delete' => route('larajoom.admin.users.destroy', $user->id),
+            ];
+        }
+    @endphp
+
+    <x-larajoom::table
+        :headers="[
+            'ID',
+            __('com_users::com_users.user_name'),
+            __('com_users::com_users.email'),
+            __('com_users::com_users.usergroups'),
+            __('com_users::com_users.registered'),
+        ]"
+        :rows="$rows"
+        :actions="$actions"
+        :draggable="false"
+    />
+
+    <x-larajoom::ax-pagination :paginator="$users" />
+@endsection

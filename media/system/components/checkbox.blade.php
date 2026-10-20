@@ -7,12 +7,17 @@
     'disabled' => false,
 ])
 
+@php
+    $current = old($name, $checked);
+    $isChecked = is_array($current) ? in_array($value, $current) : (bool) $current;
+@endphp
+
 <input type="checkbox"
     class="form-check"
     id="{{ $id ?? $name }}"
     name="{{ $name }}"
     value="{{ $value }}"
-    @checked(old($name, $checked))
+    @checked($isChecked)
     @disabled($disabled)>
 @if ($label)
     <label for="{{ $id ?? $name }}">{{ $label }}</label>

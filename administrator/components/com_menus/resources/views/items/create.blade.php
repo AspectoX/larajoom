@@ -136,6 +136,8 @@
             </script>
             @endonce
 
+            <x-larajoom::iconselect name="icon" :label="__('com_menus::com_menus.icon')" :value="old('icon')" />
+
             <x-larajoom::select name="parent_id" :label="__('com_menus::com_menus.parent')">
                 <option value="0">{{ __('com_menus::com_menus.no_parent') }}</option>
                 @foreach ($parents as $parent)
