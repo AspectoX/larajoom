@@ -29,4 +29,7 @@ return [
     'group_deleted'      => 'Grupo eliminado.',
     'level_saved'        => 'Nivel de acceso guardado.',
     'level_deleted'      => 'Nivel de acceso eliminado.',
+    'my_profile'      => 'Mi perfil',
+    'password_confirm' => 'Confirmar contraseña',
+    'profile_saved'   => 'Perfil actualizado.',
 ];

@@ -80,7 +80,7 @@ if (Schema::hasTable('larajoom_modules')) {
                 </span>
             </button>
             <div class="dropdown-menu dropdown-menu-end" id="header-profile-menu" aria-labelledby="header-profile-toggle">
-                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="{{ route('larajoom.admin.profile') }}">Profile</a>
                 <form id="logout-form" action="/administrator/logout" method="POST">
                     @csrf
                     <button type="submit" class="dropdown-item">{{ __('tmp::atum.lj_logout') }}</button>

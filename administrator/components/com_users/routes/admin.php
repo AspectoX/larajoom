@@ -6,6 +6,11 @@ use Aspectox\LaraJoom\Admin\Components\com_users\Controllers\UserAdminController
 Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(function () {
     // Usuarios
     Route::get('/', [UserAdminController::class, 'index'])->name('larajoom.admin.users.index');
+
+    // Perfil del usuario conectado
+    Route::get('/profile', [UserAdminController::class, 'profile'])->name('larajoom.admin.profile');
+    Route::put('/profile', [UserAdminController::class, 'updateProfile'])->name('larajoom.admin.profile.update');
+
     Route::get('/{id}/edit', [UserAdminController::class, 'edit'])->name('larajoom.admin.users.edit');
     Route::put('/{id}', [UserAdminController::class, 'update'])->name('larajoom.admin.users.update');
     Route::delete('/{id}', [UserAdminController::class, 'destroy'])->name('larajoom.admin.users.destroy');

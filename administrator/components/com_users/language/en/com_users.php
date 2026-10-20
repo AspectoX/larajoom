@@ -29,4 +29,7 @@ return [
     'group_deleted'      => 'Group deleted.',
     'level_saved'        => 'Access level saved.',
     'level_deleted'      => 'Access level deleted.',
+    'my_profile'      => 'My profile',
+    'password_confirm' => 'Confirm password',
+    'profile_saved'   => 'Profile updated.',
 ];

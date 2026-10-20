@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class UserAdminController extends Controller
@@ -64,6 +65,35 @@ class UserAdminController extends Controller
         return redirect()
             ->route('larajoom.admin.users.index')
             ->with('success', __('com_users::com_users.user_saved'));
+    }
+
+    public function profile()
+    {
+        $user = Auth::guard('ax-larajoom')->user();
+
+        return view('admin.components.com_users::users.profile', ['user' => $user]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::guard('ax-larajoom')->user();
+
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:users,email,' . $user->getKey(),
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user->name  = $data['name'];
+        $user->email = $data['email'];
+
+        if (!empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('larajoom.admin.profile')->with('success', __('com_users::com_users.profile_saved'));
     }
 
     public function destroy(int $id)
