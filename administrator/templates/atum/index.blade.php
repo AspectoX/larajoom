@@ -61,9 +61,15 @@
     @stack('styles')
     @stack('scripts')
 
-    {{-- Alpine.js: interactividad del panel (ej. mostrar/ocultar contraseña) --}}
+    {{-- Alpine.js: interactividad del panel (ej. mostrar/ocultar contraseña).
+         Se carga sin bloquear el renderizado de la página. --}}
     <script>
-        window.Alpine || document.write('<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"><\/script>');
+        if (!window.Alpine) {
+            var alpine = document.createElement('script');
+            alpine.src = 'https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js';
+            alpine.defer = true;
+            document.head.appendChild(alpine);
+        }
     </script>
 </head>
 

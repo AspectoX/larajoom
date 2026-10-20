@@ -224,7 +224,9 @@ return [
     'cache_handler_database'  => 'Database',
     'cache_handler_redis'     => 'Redis',
     'cache_handler_memcached' => 'Memcached',
+    'use_application_default' => 'Application default',
     'session_handler_file'    => 'Filesystem',
+
     'session_handler_database' => 'Database',
     'session_handler_redis'   => 'Redis',
     'session_handler_memcached' => 'Memcached',

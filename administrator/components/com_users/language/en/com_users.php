@@ -45,4 +45,5 @@ return [
     'user_status' => 'User Status',
     'user_status_hint' => 'Blocked: the user cannot log in.',
     'avatar' => 'Avatar',
+    'profile_table_missing' => 'The profile table is missing: run php artisan migrate.',
 ];

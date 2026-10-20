@@ -283,6 +283,11 @@ class UserAdminController extends Controller
             $user->password = $profile->password;
         }
 
+        if (!Schema::hasTable('larajoom_user_profile')) {
+            return redirect()->route('larajoom.admin.profile')
+                ->withErrors(['profile' => __('com_users::com_users.profile_table_missing')]);
+        }
+
         DB::table('larajoom_user_profile')->updateOrInsert(
             ['user_id' => $user->getKey()],
             [

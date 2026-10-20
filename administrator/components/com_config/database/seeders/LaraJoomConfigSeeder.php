@@ -42,7 +42,7 @@ class LaraJoomConfigSeeder extends Seeder
 
             // -------------------------------------------------- Cache
             ['name' => 'caching', 'value' => '2', 'group' => 'cache'],
-            ['name' => 'cache_handler', 'value' => 'file', 'group' => 'cache'],
+            ['name' => 'cache_handler', 'value' => '', 'group' => 'cache'],
             ['name' => 'cache_platformprefix', 'value' => '0', 'group' => 'cache'],
             ['name' => 'cachetime', 'value' => '15', 'group' => 'cache'],
             ['name' => 'cache_path', 'value' => 'cache', 'group' => 'cache'],
@@ -85,7 +85,7 @@ class LaraJoomConfigSeeder extends Seeder
             ['name' => 'fromname', 'value' => '', 'group' => 'mail'],
             ['name' => 'replyto', 'value' => '', 'group' => 'mail'],
             ['name' => 'replytoname', 'value' => '', 'group' => 'mail'],
-            ['name' => 'mailer', 'value' => 'smtp', 'group' => 'mail'],
+            ['name' => 'mailer', 'value' => '', 'group' => 'mail'],
             ['name' => 'sendmail', 'value' => '/usr/sbin/sendmail', 'group' => 'mail'],
             ['name' => 'smtphost', 'value' => 'localhost', 'group' => 'mail'],
             ['name' => 'smtpport', 'value' => '25', 'group' => 'mail'],
@@ -101,7 +101,7 @@ class LaraJoomConfigSeeder extends Seeder
             ['name' => 'force_ssl', 'value' => '-1', 'group' => 'server'],
 
             // -------------------------------------------------- Session
-            ['name' => 'session_handler', 'value' => 'file', 'group' => 'session'],
+            ['name' => 'session_handler', 'value' => '', 'group' => 'session'],
             ['name' => 'session_filesystem_path', 'value' => '', 'group' => 'session'],
             ['name' => 'session_memcached_server_host', 'value' => 'localhost', 'group' => 'session'],
             ['name' => 'session_memcached_server_port', 'value' => '11211', 'group' => 'session'],

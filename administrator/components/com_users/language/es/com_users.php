@@ -45,4 +45,5 @@ return [
     'user_status' => 'Estado del usuario',
     'user_status_hint' => 'Bloqueado: el usuario no puede iniciar sesión.',
     'avatar' => 'Avatar',
+    'profile_table_missing' => 'Falta la tabla del perfil: ejecutá php artisan migrate.',
 ];

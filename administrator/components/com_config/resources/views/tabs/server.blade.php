@@ -24,16 +24,17 @@
     <legend>{{ __('com_config::com_config.session_settings') }}</legend>
 
     @php
-        $sessionDriver = \Aspectox\LaraJoom\Core\Settings\FrameworkConfig::normalizeSessionDriver();
+        $sessionHandler = (string) config('larajoom.session_handler', '');
     @endphp
 
     <x-larajoom::select name="session_handler" :label="__('com_config::com_config.session_handler')">
-        <option value="file" @selected($sessionDriver === 'file')>{{ __('com_config::com_config.session_handler_file') }}</option>
-        <option value="database" @selected($sessionDriver === 'database')>{{ __('com_config::com_config.session_handler_database') }}</option>
-        <option value="redis" @selected($sessionDriver === 'redis')>{{ __('com_config::com_config.session_handler_redis') }}</option>
-        <option value="memcached" @selected($sessionDriver === 'memcached')>{{ __('com_config::com_config.session_handler_memcached') }}</option>
-        <option value="cookie" @selected($sessionDriver === 'cookie')>{{ __('com_config::com_config.session_handler_cookie') }}</option>
-        <option value="array" @selected($sessionDriver === 'array')>{{ __('com_config::com_config.session_handler_array') }}</option>
+        <option value="" @selected($sessionHandler === '')>{{ __('com_config::com_config.use_application_default') }}</option>
+        <option value="file" @selected($sessionHandler === 'file')>{{ __('com_config::com_config.session_handler_file') }}</option>
+        <option value="database" @selected($sessionHandler === 'database')>{{ __('com_config::com_config.session_handler_database') }}</option>
+        <option value="redis" @selected($sessionHandler === 'redis')>{{ __('com_config::com_config.session_handler_redis') }}</option>
+        <option value="memcached" @selected($sessionHandler === 'memcached')>{{ __('com_config::com_config.session_handler_memcached') }}</option>
+        <option value="cookie" @selected($sessionHandler === 'cookie')>{{ __('com_config::com_config.session_handler_cookie') }}</option>
+        <option value="array" @selected($sessionHandler === 'array')>{{ __('com_config::com_config.session_handler_array') }}</option>
     </x-larajoom::select>
 
     <x-larajoom::input name="session_filesystem_path" :label="__('com_config::com_config.session_filesystem_path')" :value="config('larajoom.session_filesystem_path', '')" size="60" />

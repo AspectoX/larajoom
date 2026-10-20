@@ -7,11 +7,16 @@
         <option value="2" @selected(config('larajoom.caching', '2') == '2')>{{ __('com_config::com_config.caching_progressive') }}</option>
     </x-larajoom::select>
 
+    @php
+        $cacheHandler = (string) config('larajoom.cache_handler', '');
+    @endphp
+
     <x-larajoom::select name="cache_handler" :label="__('com_config::com_config.cache_handler')">
-        <option value="file" @selected(config('larajoom.cache_handler', 'file') == 'file')>{{ __('com_config::com_config.cache_handler_file') }}</option>
-        <option value="database" @selected(config('larajoom.cache_handler', 'file') == 'database')>{{ __('com_config::com_config.cache_handler_database') }}</option>
-        <option value="redis" @selected(config('larajoom.cache_handler', 'file') == 'redis')>{{ __('com_config::com_config.cache_handler_redis') }}</option>
-        <option value="memcached" @selected(config('larajoom.cache_handler', 'file') == 'memcached')>{{ __('com_config::com_config.cache_handler_memcached') }}</option>
+        <option value="" @selected($cacheHandler === '')>{{ __('com_config::com_config.use_application_default') }}</option>
+        <option value="file" @selected($cacheHandler === 'file')>{{ __('com_config::com_config.cache_handler_file') }}</option>
+        <option value="database" @selected($cacheHandler === 'database')>{{ __('com_config::com_config.cache_handler_database') }}</option>
+        <option value="redis" @selected($cacheHandler === 'redis')>{{ __('com_config::com_config.cache_handler_redis') }}</option>
+        <option value="memcached" @selected($cacheHandler === 'memcached')>{{ __('com_config::com_config.cache_handler_memcached') }}</option>
     </x-larajoom::select>
 
     <x-larajoom::toggle name="cache_platformprefix" :label="__('com_config::com_config.cache_platformprefix')" :checked="(int) config('larajoom.cache_platformprefix', 0) === 1" />
@@ -90,15 +95,16 @@
     <x-larajoom::input name="replytoname" :label="__('com_config::com_config.replytoname')" :value="config('larajoom.replytoname', '')" size="60" />
 
     @php
-        $mailer = \Aspectox\LaraJoom\Core\Settings\FrameworkConfig::normalizeMailer();
+        $mailerValue = (string) config('larajoom.mailer', '');
     @endphp
 
     <x-larajoom::select name="mailer" :label="__('com_config::com_config.mailer')">
-        <option value="smtp" @selected($mailer === 'smtp')>{{ __('com_config::com_config.mailer_smtp') }}</option>
-        <option value="sendmail" @selected($mailer === 'sendmail')>{{ __('com_config::com_config.mailer_sendmail') }}</option>
-        <option value="log" @selected($mailer === 'log')>{{ __('com_config::com_config.mailer_log') }}</option>
-        <option value="array" @selected($mailer === 'array')>{{ __('com_config::com_config.mailer_array') }}</option>
-        <option value="failover" @selected($mailer === 'failover')>{{ __('com_config::com_config.mailer_failover') }}</option>
+        <option value="" @selected($mailerValue === '')>{{ __('com_config::com_config.use_application_default') }}</option>
+        <option value="smtp" @selected($mailerValue === 'smtp')>{{ __('com_config::com_config.mailer_smtp') }}</option>
+        <option value="sendmail" @selected($mailerValue === 'sendmail')>{{ __('com_config::com_config.mailer_sendmail') }}</option>
+        <option value="log" @selected($mailerValue === 'log')>{{ __('com_config::com_config.mailer_log') }}</option>
+        <option value="array" @selected($mailerValue === 'array')>{{ __('com_config::com_config.mailer_array') }}</option>
+        <option value="failover" @selected($mailerValue === 'failover')>{{ __('com_config::com_config.mailer_failover') }}</option>
     </x-larajoom::select>
 
     <x-larajoom::input name="sendmail" :label="__('com_config::com_config.sendmail')" :value="config('larajoom.sendmail', '/usr/sbin/sendmail')" size="60" />

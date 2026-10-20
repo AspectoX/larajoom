@@ -63,7 +63,7 @@ class Registry
 
         // ------------------------------------------------ Cache (framework)
         'caching' => [self::SCOPE_BOTH, 'int', 2, 'cache', 'caching', 'Modo de cache (0=off, 1=conservador, 2=progresivo)', self::TARGET_FRAMEWORK],
-        'cache_handler' => [self::SCOPE_BOTH, 'string', 'file', 'cache', 'cache_handler', 'Store de cache (file, database, redis, memcached…)', self::TARGET_FRAMEWORK],
+        'cache_handler' => [self::SCOPE_BOTH, 'string', '', 'cache', 'cache_handler', 'Store de cache (vacío = el de la aplicación)', self::TARGET_FRAMEWORK],
         'cache_platformprefix' => [self::SCOPE_BOTH, 'bool', 0, 'cache', 'cache_platformprefix', 'Prefijo de la cache por plataforma', self::TARGET_FRAMEWORK],
         'cachetime' => [self::SCOPE_BOTH, 'int', 15, 'cache', 'cachetime', 'Tiempo de cache en minutos', self::TARGET_FRAMEWORK],
         'cache_path' => [self::SCOPE_BOTH, 'string', 'cache', 'cache', 'cache_path', 'Ruta del almacenamiento de la cache', self::TARGET_FRAMEWORK],
@@ -106,7 +106,7 @@ class Registry
         'fromname' => [self::SCOPE_BOTH, 'string', '', 'mail', 'fromname', 'Nombre de origen del correo', self::TARGET_FRAMEWORK],
         'replyto' => [self::SCOPE_BOTH, 'string', '', 'mail', 'replyto', 'Dirección de respuesta', self::TARGET_FRAMEWORK],
         'replytoname' => [self::SCOPE_BOTH, 'string', '', 'mail', 'replytoname', 'Nombre de respuesta', self::TARGET_FRAMEWORK],
-        'mailer' => [self::SCOPE_BOTH, 'string', 'smtp', 'mail', 'mailer', 'Método de envío (smtp, sendmail, log…)', self::TARGET_FRAMEWORK],
+        'mailer' => [self::SCOPE_BOTH, 'string', '', 'mail', 'mailer', 'Método de envío (vacío = el de la aplicación)', self::TARGET_FRAMEWORK],
         'sendmail' => [self::SCOPE_BOTH, 'string', '/usr/sbin/sendmail', 'mail', 'sendmail', 'Ruta del binario sendmail', self::TARGET_FRAMEWORK],
         'smtphost' => [self::SCOPE_BOTH, 'string', 'localhost', 'mail', 'smtphost', 'Host del servidor SMTP', self::TARGET_FRAMEWORK],
         'smtpport' => [self::SCOPE_BOTH, 'int', 25, 'mail', 'smtpport', 'Puerto del servidor SMTP', self::TARGET_FRAMEWORK],
@@ -122,7 +122,7 @@ class Registry
         'force_ssl' => [self::SCOPE_BOTH, 'int', -1, 'server', 'force_ssl', 'Fuerza HTTPS (-1=no, 0=admin, 1=site, 2=todo)', self::TARGET_FRAMEWORK],
 
         // ------------------------------------------------ Session (framework)
-        'session_handler' => [self::SCOPE_BOTH, 'string', 'file', 'session', 'session_handler', 'Driver de sesión (file, database, redis…)', self::TARGET_FRAMEWORK],
+        'session_handler' => [self::SCOPE_BOTH, 'string', '', 'session', 'session_handler', 'Driver de sesión (vacío = el de la aplicación)', self::TARGET_FRAMEWORK],
         'session_filesystem_path' => [self::SCOPE_BOTH, 'string', '', 'session', 'session_filesystem_path', 'Ruta de las sesiones en disco', self::TARGET_FRAMEWORK],
         'session_memcached_server_host' => [self::SCOPE_BOTH, 'string', 'localhost', 'session', 'session_memcached_server_host', 'Host de memcached para sesiones', self::TARGET_FRAMEWORK],
         'session_memcached_server_port' => [self::SCOPE_BOTH, 'int', 11211, 'session', 'session_memcached_server_port', 'Puerto de memcached para sesiones', self::TARGET_FRAMEWORK],

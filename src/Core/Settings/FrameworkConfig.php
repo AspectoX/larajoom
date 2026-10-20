@@ -65,10 +65,16 @@ class FrameworkConfig
     /**
      * Normaliza el nombre del driver de sesión (sin comprobar disponibilidad).
      * Traduce los valores históricos de Joomla a los de Laravel.
+     *
+     * Si está vacío (no configurado en el panel) se conserva el de la aplicación.
      */
     public static function normalizeSessionDriver(?string $value = null): string
     {
-        $value = $value ?? Settings::string('session_handler', self::SESSION_DRIVER_FALLBACK);
+        $value = $value ?? Settings::string('session_handler', '');
+
+        if ($value === '') {
+            return (string) config('session.driver', self::SESSION_DRIVER_FALLBACK);
+        }
 
         $value = match ($value) {
             'filesystem' => 'file',
@@ -89,10 +95,16 @@ class FrameworkConfig
     /**
      * Normaliza el nombre del mailer (sin comprobar disponibilidad).
      * Traduce los valores históricos de Joomla a los de Laravel.
+     *
+     * Si está vacío (no configurado en el panel) se conserva el de la aplicación.
      */
     public static function normalizeMailer(?string $value = null): string
     {
-        $value = $value ?? Settings::string('mailer', self::MAILER_FALLBACK);
+        $value = $value ?? Settings::string('mailer', '');
+
+        if ($value === '') {
+            return (string) config('mail.default', self::MAILER_FALLBACK);
+        }
 
         $value = match ($value) {
             'mail'  => 'smtp',
@@ -118,10 +130,16 @@ class FrameworkConfig
 
     /**
      * Normaliza el nombre del store de cache (sin comprobar disponibilidad).
+     *
+     * Si está vacío (no configurado en el panel) se conserva el de la aplicación.
      */
     public static function normalizeCacheStore(?string $value = null): string
     {
-        $value = $value ?? Settings::string('cache_handler', self::CACHE_STORE_FALLBACK);
+        $value = $value ?? Settings::string('cache_handler', '');
+
+        if ($value === '') {
+            return (string) config('cache.default', self::CACHE_STORE_FALLBACK);
+        }
 
         $value = match ($value) {
             'filesystem' => 'file',
@@ -176,7 +194,11 @@ class FrameworkConfig
 
     protected static function applySession(): void
     {
-        config(['session.driver' => self::sessionDriver()]);
+        // Solo se aplica si el administrador lo configuró en el panel;
+        // si no, se respeta el driver de sesión de la aplicación
+        if (Settings::string('session_handler') !== '') {
+            config(['session.driver' => self::sessionDriver()]);
+        }
 
         $lifetime = Settings::int('lifetime');
         if ($lifetime > 0) {
@@ -196,11 +218,13 @@ class FrameworkConfig
 
     protected static function applyCache(): void
     {
+        if (Settings::string('cache_handler') !== '') {
+            config(['cache.default' => self::cacheStore()]);
+        }
+
         $store = self::cacheStore();
+        $ttl   = Settings::int('cachetime');
 
-        config(['cache.default' => $store]);
-
-        $ttl = Settings::int('cachetime');
         if ($ttl > 0 && config('cache.stores.' . $store) !== null) {
             // Joomla guarda el tiempo de cache en minutos, Laravel en segundos
             config(['cache.stores.' . $store . '.ttl' => $ttl * 60]);
@@ -209,7 +233,9 @@ class FrameworkConfig
 
     protected static function applyMail(): void
     {
-        config(['mail.default' => self::mailer()]);
+        if (Settings::string('mailer') !== '') {
+            config(['mail.default' => self::mailer()]);
+        }
 
         $map = [
             'mailfrom'    => 'mail.from.address',
