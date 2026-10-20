@@ -1,6 +1,6 @@
 @extends('admin_tpl::index')
 
-@section('title', __('com_cpanel::com_cpanel.dashboard'))
+@section('title', __('larajoom_admin::admin.dashboard'))
 @section('icon', 'dashboard')
 
 @section('content')
