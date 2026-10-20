@@ -3,6 +3,8 @@
 namespace Aspectox\LaraJoom\Core\Modules;
 
 use FilesystemIterator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -103,11 +105,79 @@ class ModuleTypes
     }
 
     /**
-     * Tipos de módulo instalados (carpetas mod_* con manifest.json).
+     * Tabla del registro de extensiones (como en Joomla: #__extensions).
+     */
+    protected const EXTENSIONS_TABLE = 'larajoom_extensions';
+
+    /**
+     * Tipos de módulo disponibles.
+     *
+     * La fuente principal es el REGISTRO de extensiones (larajoom_extensions),
+     * igual que en Joomla: el instalador sincroniza el disco contra esa tabla.
+     * El disco se usa solo como respaldo, para que un módulo recién agregado
+     * no desaparezca hasta la próxima sincronización.
      *
      * @return array<string,string> array clave => valor (nombre del tipo => nombre del tipo).
      */
     public static function types(): array
+    {
+        $types = self::registered();
+
+        // Respaldo en disco: tipos mod_* con manifest.json que aún no están registrados.
+        foreach (self::diskTypes() as $type) {
+            if (!isset($types[$type])) {
+                $types[$type] = $type;
+            }
+        }
+
+        ksort($types);
+
+        return $types;
+    }
+
+    /**
+     * Tipos de módulo registrados en la base de datos (larajoom_extensions).
+     *
+     * @return array<string,string> array clave => valor (nombre del tipo => nombre del tipo).
+     */
+    public static function registered(): array
+    {
+        try {
+            if (!Schema::hasTable(self::EXTENSIONS_TABLE)) {
+                return [];
+            }
+
+            $rows = DB::table(self::EXTENSIONS_TABLE)
+                ->where('type', 'module')
+                ->where('enabled', 1)
+                ->orderBy('element')
+                ->get(['element']);
+
+            $types = [];
+
+            foreach ($rows as $row) {
+                $element = (string) $row->element;
+
+                if ($element !== '') {
+                    $types[$element] = $element;
+                }
+            }
+
+            ksort($types);
+
+            return $types;
+        } catch (\Throwable $e) {
+            // Sin base de datos disponible: se sigue con el escaneo en disco.
+            return [];
+        }
+    }
+
+    /**
+     * Tipos de módulo encontrados en disco (carpetas mod_* con manifest.json).
+     *
+     * @return array<string,string> array clave => valor (nombre del tipo => nombre del tipo).
+     */
+    protected static function diskTypes(): array
     {
         $types = [];
 
@@ -126,8 +196,6 @@ class ModuleTypes
                 $types[$item] = $item;
             }
         }
-
-        ksort($types);
 
         return $types;
     }
