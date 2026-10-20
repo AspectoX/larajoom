@@ -16,11 +16,17 @@
 
             <x-larajoom::input name="username" id="mod-login-username" type="text" :label="__('com_login::com_login.username')" :value="old('username')"
                 required autofocus autocomplete="username" />
-            <x-larajoom::password name="passwd" id="mod-login-password" :label="__('com_login::com_login.password')" required
-                autocomplete="current-password" />
+            <div class="input-button">
+                <x-larajoom::input name="passwd" id="mod-login-password" type="password" :label="__('com_login::com_login.password')" required
+                    autocomplete="current-password" />
+                <button type="button" class="btn color-primary input-password-toggle">
+                    <span class="icon" aria-hidden="true">
+                        @icon('view')
+                    </span>
+                </button>
+            </div>
 
             <x-larajoom::select id="lang" name="lang" class="form-select" :label="__('com_login::com_login.language')">
-
                 <option value="" selected="selected">{{ __('com_login::com_login.language_default') }}</option>
                 <option value="en-GB">{{ __('com_login::com_login.language_en_gb') }}</option>
                 <option value="es-ES">{{ __('com_login::com_login.language_es_es') }}</option>

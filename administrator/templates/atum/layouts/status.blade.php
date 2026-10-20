@@ -10,18 +10,8 @@ $currentUser = auth('ax-larajoom')->user();
 $userName = trim((string) ($currentUser->name ?? '')) ?: 'Invitado';
 $userInitial = mb_strtoupper(mb_substr($userName, 0, 1));
 
-// El avatar vive en el perfil del usuario
-$avatarValue = '';
-
-if ($currentUser && Schema::hasTable('larajoom_user_profile')) {
-    $profile = DB::table('larajoom_user_profile')
-        ->where('user_id', $currentUser->getKey())
-        ->first();
-
-    $avatarValue = trim((string) ($profile->avatar ?? ''));
-}
-
 $avatarUrl = null;
+$avatarValue = trim((string) ($currentUser->avatar ?? ''));
 
 if ($avatarValue !== '') {
     if (preg_match('#^(https?:)?//#i', $avatarValue) || str_starts_with($avatarValue, '/')) {
