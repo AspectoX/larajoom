@@ -1,0 +1,6 @@
+{
+    "type":  "module",
+    "name":  "mod_latestactions",
+    "view_namespace":  "admin.modules.mod_latestactions",
+    "lang_namespace":  "mod_latestactions"
+}

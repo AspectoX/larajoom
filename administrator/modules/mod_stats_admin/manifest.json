@@ -1,0 +1,6 @@
+{
+    "type":  "module",
+    "name":  "mod_stats_admin",
+    "view_namespace":  "admin.modules.mod_stats_admin",
+    "lang_namespace":  "mod_stats_admin"
+}
