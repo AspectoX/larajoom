@@ -156,8 +156,10 @@ class LaraJoomServiceProvider extends ServiceProvider
         }
 
         // Register admin auth guard
+        // El panel usa la misma tabla de usuarios que el sitio (users), para que
+        // el mapa de roles (larajoom_user_usergroup_map) tenga un único origen de ids.
         config()->set('auth.guards.ax-larajoom', ['driver' => 'session', 'provider' => 'ax-larajoom-users']);
-        config()->set('auth.providers.ax-larajoom-users', ['driver' => 'eloquent', 'model' => 'Aspectox\LaraJoom\Admin\Components\com_users\Models\User']);
+        config()->set('auth.providers.ax-larajoom-users', ['driver' => 'eloquent', 'model' => 'App\Models\User']);
 
         // Blade directives (like AxAdminLara)
         Blade::directive('icon', function ($expression) {

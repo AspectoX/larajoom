@@ -129,9 +129,13 @@ SafeRunner::execute('mod_custom', fn () => $html, $fallbackHtml);
 ```
 
 ### ACL y seguridad
-- Guard de administración propio: `ax-larajoom`.
-- Middleware `larajoom.auth` y `larajoom.acl` para proteger las rutas del panel.
-- Matriz de permisos por acción y grupo (tabla `larajoom_assets`), igual que Joomla.
+- Guard de administración propio: `ax-larajoom` (misma tabla `users` que el sitio, para que el mapa de roles tenga un único origen de ids).
+- Niveles de permiso por componente y grupo: **sin acceso / leer / leer y escribir / leer, escribir y borrar**.
+- Middleware `larajoom.auth` y `larajoom.acl` para proteger las rutas del panel: el ACL valida el componente y la acción de cada ruta (`core.manage`, `core.create`, `core.edit`, `core.delete`).
+- Al panel solo entran los roles con perfil administrativo: Author, Editor, Publisher, Manager, Administrator y SuperAdmin. Public, Guest y Registered quedan afuera.
+- El menú lateral oculta los ítems sin nivel de acceso o sin permiso de lectura; los botones editar/borrar se muestran según el nivel.
+- Matriz de permisos por componente y grupo en **Configuración global → Permisos**.
+- Jerarquía de roles: Public → Guest → Registered → Author → Editor → Publisher → Manager → Administrator → SuperAdmin.
 
 ### Configuración global
 Los valores viven en la tabla `larajoom_configuration` y se cargan **una vez por request** en el boot, disponibles como `config('larajoom.<clave>')` en todo el código. Se editan desde **Configuración global** (`com_config`), organized en pestañas: Site, Metadata, SEO, System, Server, Logging, Filters y Permissions.

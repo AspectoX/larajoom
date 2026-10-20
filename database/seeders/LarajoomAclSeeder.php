@@ -211,6 +211,10 @@ class LarajoomAclSeeder extends Seeder
 
     /**
      * Usuario administrador del panel: siempre con el rol SuperAdmin.
+     *
+     * Se crea en la tabla `users` (la misma que usa el sitio) con las mismas
+     * credenciales que el usuario de la tabla `larajoom_users`, para que el
+     * acceso al panel no cambie.
      */
     protected function seedUsers(): void
     {
@@ -220,6 +224,15 @@ class LarajoomAclSeeder extends Seeder
                 'name' => 'Administrator',
                 'email' => 'admin@site.local',
                 'password' => bcrypt('admin'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // Mismas credenciales que el administrador de larajoom_users
+            DB::table('users')->insertOrIgnore([
+                'name' => 'Administrator',
+                'email' => 'test@test.ax',
+                'password' => bcrypt('password'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
