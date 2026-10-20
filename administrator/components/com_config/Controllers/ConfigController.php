@@ -2,6 +2,7 @@
 
 namespace Aspectox\LaraJoom\Admin\Components\com_config\Controllers;
 
+use Aspectox\LaraJoom\Core\Access;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -93,6 +94,8 @@ class ConfigController extends Controller
             'groups'    => $this->getGroups(),
             'actions'   => $this->getActions(),
             'rules'     => $this->getRules(),
+            'assets'    => $this->getAssets(),
+            'assetRules' => $this->getAssetRules(),
             'filters'   => $this->getFilters(),
         ]);
     }
@@ -126,7 +129,7 @@ class ConfigController extends Controller
             }
         }
 
-        $this->saveRules($request->input('rules', []));
+        $this->savePermissions($request->input('permissions', []));
 
         return redirect()
             ->route('larajoom.admin.config.index')
@@ -134,39 +137,55 @@ class ConfigController extends Controller
     }
 
     /**
-     * Guarda la matriz de permisos en larajoom_assets (formato Joomla).
+     * Guarda la matriz de permisos por componente y grupo.
+     *
+     * Cada celda es un nivel:
+     *   0 = sin acceso | 1 = leer | 2 = leer y escribir | 3 = leer, escribir y borrar
      */
-    protected function saveRules(array $rules): void
+    protected function savePermissions(array $permissions): void
     {
-        if (!DB::getSchemaBuilder()->hasTable('larajoom_assets')) {
+        if (!DB::getSchemaBuilder()->hasTable('larajoom_assets') || empty($permissions)) {
             return;
         }
 
-        $clean = [];
-
-        foreach ($rules as $action => $groups) {
-            if (!isset(self::ACTIONS[$action]) || !is_array($groups)) {
+        foreach ($permissions as $assetName => $groups) {
+            if (!is_array($groups)) {
                 continue;
             }
 
-            $allowed = [];
-            foreach ($groups as $groupId => $value) {
-                if ($value) {
-                    $allowed[(int) $groupId] = 1;
+            $asset = DB::table('larajoom_assets')->where('name', $assetName)->first();
+
+            if (!$asset) {
+                continue;
+            }
+
+            $decoded = json_decode($asset->rules ?? '{}', true);
+            $rules = is_array($decoded) ? $decoded : [];
+
+            foreach ($groups as $groupId => $tier) {
+                $groupId = (string) (int) $groupId;
+                $tier = (int) $tier;
+
+                // Se recalculan todas las acciones del grupo según el nivel elegido
+                foreach (Access::allActions() as $action) {
+                    unset($rules[$action][$groupId]);
+                }
+
+                foreach (Access::actionsForTier($tier) as $action) {
+                    $rules[$action][$groupId] = 1;
                 }
             }
 
-            if ($allowed) {
-                $clean[$action] = $allowed;
+            // Limpia las entradas vacías
+            foreach ($rules as $action => $groupRules) {
+                if (empty($groupRules)) {
+                    unset($rules[$action]);
+                }
             }
-        }
 
-        $asset = DB::table('larajoom_assets')->where('name', 'com_config')->first();
-
-        if ($asset) {
             DB::table('larajoom_assets')
                 ->where('id', $asset->id)
-                ->update(['rules' => json_encode($clean), 'updated_at' => now()]);
+                ->update(['rules' => json_encode($rules), 'updated_at' => now()]);
         }
     }
 
@@ -275,6 +294,37 @@ class ConfigController extends Controller
         $rules = json_decode($asset->rules, true);
 
         return is_array($rules) ? $rules : [];
+    }
+
+    /**
+     * Assets (componentes) del sistema
+     */
+    protected function getAssets(): array
+    {
+        if (!DB::getSchemaBuilder()->hasTable('larajoom_assets')) {
+            return [];
+        }
+
+        return DB::table('larajoom_assets')->orderBy('id')->get()->all();
+    }
+
+    /**
+     * Reglas de permisos de todos los assets (nombre => reglas)
+     */
+    protected function getAssetRules(): array
+    {
+        if (!DB::getSchemaBuilder()->hasTable('larajoom_assets')) {
+            return [];
+        }
+
+        $rules = [];
+
+        foreach (DB::table('larajoom_assets')->get() as $asset) {
+            $decoded = json_decode($asset->rules ?? '{}', true);
+            $rules[$asset->name] = is_array($decoded) ? $decoded : [];
+        }
+
+        return $rules;
     }
 
     public function edit(string $name, string $group = 'general')

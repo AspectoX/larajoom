@@ -15,6 +15,11 @@ return [
     'toggle_sidebar'          => 'Toggle Sidebar Menu',
     'components'              => 'Components',
     'permissions_saved'       => 'Permissions updated.',
+    'permissions_hint'        => 'Choose the permission level of each group on each component. Menus and buttons are shown according to that level.',
+    'tier_none'              => 'No access',
+    'tier_read'              => 'Read',
+    'tier_write'             => 'Read and write',
+    'tier_delete'            => 'Read, write and delete',
 
     // Tabs
     'tab_site'                => 'Site',

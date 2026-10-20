@@ -51,6 +51,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_menus'"
         :ids="$items->pluck('id')"
         :meta="$meta"
         :tree="true"

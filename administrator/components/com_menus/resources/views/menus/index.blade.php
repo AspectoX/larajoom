@@ -46,6 +46,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_menus'"
         :ids="$menus->pluck('id')"
         :reorder-url="route('larajoom.admin.menus.reorder')"
     />

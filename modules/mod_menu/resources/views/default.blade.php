@@ -2,6 +2,7 @@
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Schema;
     use Illuminate\Support\Str;
+    use Aspectox\LaraJoom\Core\Access;
 
     // El módulo de menú de administración conoce su menú
     $menutype = 'mainmenu';
@@ -36,6 +37,18 @@
             $link = $row->link;
             if ($link && $link !== '#' && !Str::startsWith($link, ['http://', 'https://', '//'])) {
                 $link = url($link);
+            }
+
+            // Permisos: el usuario debe tener el nivel de acceso del item
+            // y permiso de lectura (core.manage) sobre el componente destino
+            if (!Access::canAccessLevel((int) $row->access)) {
+                continue;
+            }
+
+            $asset = Access::assetForLink((string) $row->link);
+
+            if ($asset !== null && !Access::canRead($asset)) {
+                continue;
             }
 
             $nodes[] = (object) [

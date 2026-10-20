@@ -44,6 +44,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_content'"
         :draggable="false"
     />
 

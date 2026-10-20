@@ -18,7 +18,7 @@ class LaraJoomUserSeeder extends Seeder
             'username'    => 'admin',
             'email'       => 'test@test.ax',
             'password'    => Hash::make('password'),
-            'group_id'    => 8,
+            'group_id'    => 9,
             'activated'   => 1,
             'params'      => json_encode([]),
             'registerDate' => now(),

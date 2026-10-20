@@ -15,6 +15,11 @@ return [
     'toggle_sidebar'          => 'Mostrar/ocultar menú lateral',
     'components'              => 'Componentes',
     'permissions_saved'       => 'Permisos actualizados.',
+    'permissions_hint'        => 'Elegí el nivel de permisos de cada grupo sobre cada componente. Los menús y los botones se muestran según ese nivel.',
+    'tier_none'              => 'Sin acceso',
+    'tier_read'              => 'Leer',
+    'tier_write'             => 'Leer y escribir',
+    'tier_delete'            => 'Leer, escribir y borrar',
 
     // Pestañas
     'tab_site'                => 'Sitio',

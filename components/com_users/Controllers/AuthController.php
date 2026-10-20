@@ -52,7 +52,8 @@ class AuthController extends Controller
 
         DB::table('larajoom_user_usergroup_map')->insert([
             'user_id'  => $user->id,
-            'group_id' => 2,
+                'group_id' => 3, // Registered
+
         ]);
 
         Auth::login($user);

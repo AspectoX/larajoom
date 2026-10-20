@@ -9,7 +9,17 @@
     'ids' => [],
     'meta' => [],
     'reorderUrl' => null,
+    'asset' => null,
 ])
+
+@php
+    use Aspectox\LaraJoom\Core\Access;
+
+    // Si se indica el asset, los botones se filtran por los permisos del usuario:
+    // editar requiere "leer y escribir", borrar requiere "leer, escribir y borrar"
+    $canWrite  = $asset === null || Access::canWrite($asset);
+    $canDelete = $asset === null || Access::canDelete($asset);
+@endphp
 
 <div class="ax-table-wrapper" data-ax-table data-draggable="{{ $draggable ? '1' : '0' }}" data-tree="{{ $tree ? '1' : '0' }}"
      @if ($reorderUrl) data-reorder-url="{{ $reorderUrl }}" data-csrf="{{ csrf_token() }}" @endif>
@@ -74,13 +84,13 @@
                     @if (!empty($actions))
                         @php($rowActions = $actions[$rowIndex] ?? [])
                         <td class="actions" style="white-space: nowrap;">
-                            @if (isset($rowActions['edit']))
+                            @if (isset($rowActions['edit']) && $canWrite)
                                 <a href="{{ $rowActions['edit'] }}" class="btn transparent circle" title="Editar">
                                     <span class="btn-icon text-info">@icon('edit')</span>
                                 </a>
                             @endif
 
-                            @if (isset($rowActions['delete']))
+                            @if (isset($rowActions['delete']) && $canDelete)
                                 <form method="POST" action="{{ $rowActions['delete'] === false ? '' : $rowActions['delete'] }}" style="display:inline">
                                     @csrf
                                     @method('DELETE')

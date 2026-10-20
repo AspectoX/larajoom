@@ -64,6 +64,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_users'"
         :draggable="false"
     />
 @endsection

@@ -76,6 +76,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_installer'"
         :ids="$extensions->pluck('extension_id')"
     />
 

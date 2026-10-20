@@ -44,6 +44,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_modules'"
         :ids="$modules->pluck('id')"
         :reorder-url="route('larajoom.admin.modules.reorder')"
     />

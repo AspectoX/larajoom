@@ -71,6 +71,7 @@
         ]"
         :rows="$rows"
         :actions="$actions"
+        :asset="'com_plugins'"
         :ids="$plugins->pluck('extension_id')"
         :draggable="false"
     />
