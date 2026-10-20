@@ -34,3 +34,7 @@
 # Sistema
 Thumbs.db
 .DS_Store
+
+# Documentos de trabajo internos (no se versionan)
+/PLAN.md
+/PLAN-CONFIG.md
