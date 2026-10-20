@@ -9,6 +9,7 @@ return [
     'language_en_gb' => 'English (United Kingdom)',
     'language_es_es' => 'Spanish (es-ES)',
     'show_password' => 'Show Password',
+    'hide_password' => 'Hide Password',
     'login_button' => 'Log in',
     'login_form' => 'LaraJoom Administrator Login',
     'javascript_required' => 'Warning! JavaScript must be enabled for proper operation of the Administrator Backend.',

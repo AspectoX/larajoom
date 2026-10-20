@@ -29,6 +29,8 @@ return [
     'search'             => 'Buscar...',
     'no_records'         => 'No se encontraron registros.',
     'confirm_delete'     => '¿Estás seguro de que deseas eliminar este elemento?',
+    'show_password'      => 'Mostrar contraseña',
+    'hide_password'      => 'Ocultar contraseña',
 
     // Claves de framework (estilo Joomla)
     'JALL'               => 'Todas',

@@ -60,6 +60,11 @@
 
     @stack('styles')
     @stack('scripts')
+
+    {{-- Alpine.js: interactividad del panel (ej. mostrar/ocultar contraseña) --}}
+    <script>
+        window.Alpine || document.write('<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"><\/script>');
+    </script>
 </head>
 
 <body
