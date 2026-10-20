@@ -212,37 +212,35 @@ class LarajoomAclSeeder extends Seeder
     /**
      * Usuario administrador del panel: siempre con el rol SuperAdmin.
      *
-     * Se crea en la tabla `users` (la misma que usa el sitio) con las mismas
-     * credenciales que el usuario de la tabla `larajoom_users`, para que el
-     * acceso al panel no cambie.
+     * El administrador se crea en `larajoom_users`, la tabla de usuarios de
+     * LaraJoom (la misma que usan el panel y el sitio), y se le asigna el rol
+     * SuperAdmin (9) en el mapa de roles.
      */
     protected function seedUsers(): void
     {
-        if (Schema::hasTable('users')) {
-            DB::table('users')->insertOrIgnore([
-                'id' => 1,
-                'name' => 'Administrator',
-                'email' => 'admin@site.local',
-                'password' => bcrypt('admin'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // Mismas credenciales que el administrador de larajoom_users
-            DB::table('users')->insertOrIgnore([
-                'name' => 'Administrator',
-                'email' => 'test@test.ax',
-                'password' => bcrypt('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        if (!Schema::hasTable('larajoom_user_usergroup_map') || !Schema::hasTable('users')) {
+        if (!Schema::hasTable('larajoom_users')) {
             return;
         }
 
-        $admin = DB::table('users')->orderBy('id')->first();
+        DB::table('larajoom_users')->insertOrIgnore([
+            'id'           => 1,
+            'name'         => 'Administrator',
+            'username'     => 'admin',
+            'email'        => 'test@test.ax',
+            'password'     => bcrypt('password'),
+            'group_id'     => 9,
+            'activated'    => 1,
+            'params'       => json_encode([]),
+            'registerDate' => now(),
+            'created_at'   => now(),
+            'updated_at'   => now(),
+        ]);
+
+        if (!Schema::hasTable('larajoom_user_usergroup_map')) {
+            return;
+        }
+
+        $admin = DB::table('larajoom_users')->orderBy('id')->first();
 
         if (!$admin) {
             return;

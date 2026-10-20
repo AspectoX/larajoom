@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Aspectox\LaraJoom\Admin\Components\com_users\Models\User;
 
 class UserAdminController extends Controller
 {
@@ -47,7 +47,7 @@ class UserAdminController extends Controller
 
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
+            'email'    => 'required|email|max:255|unique:larajoom_users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
             'groups'   => 'nullable|array',
         ]);

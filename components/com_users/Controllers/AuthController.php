@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use Aspectox\LaraJoom\Admin\Components\com_users\Models\User;
 
 class AuthController extends Controller
 {
@@ -40,20 +40,25 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
+            'username' => 'required|string|max:150|alpha_dash|unique:larajoom_users,username',
+            'email'    => 'required|string|email|max:255|unique:larajoom_users,email',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name'         => $data['name'],
+            'username'     => $data['username'],
+            'email'        => $data['email'],
+            'password'     => Hash::make($data['password']),
+            'group_id'     => 3, // Registered
+            'activated'    => 1,
+            'params'       => json_encode([]),
+            'registerDate' => now(),
         ]);
 
         DB::table('larajoom_user_usergroup_map')->insert([
             'user_id'  => $user->id,
-                'group_id' => 3, // Registered
-
+            'group_id' => 3, // Registered
         ]);
 
         Auth::login($user);

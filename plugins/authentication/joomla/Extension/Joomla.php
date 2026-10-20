@@ -4,7 +4,7 @@ namespace Aspectox\LaraJoom\Plugins\Authentication\Joomla\Extension;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Aspectox\LaraJoom\Admin\Components\com_users\Models\User;
 
 class Joomla
 {
