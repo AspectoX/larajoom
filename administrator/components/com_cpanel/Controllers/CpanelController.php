@@ -27,6 +27,8 @@ class CpanelController extends Controller
      */
     public static function panelData(): array
     {
+        self::ensureDefaultModules();
+
         $options = self::options();
 
         return [
@@ -34,6 +36,49 @@ class CpanelController extends Controller
             'showAddModule' => (bool) ($options['show_add_module'] ?? true),
             'moduleTypes'   => self::moduleTypes(),
         ];
+    }
+
+    /**
+     * Registra los módulos por defecto del panel de control (idempotente).
+     *
+     * Así el dashboard los carga solo, sin que el administrador tenga que
+     * registrarlos a mano.
+     */
+    protected static function ensureDefaultModules(): void
+    {
+        if (!Schema::hasTable('larajoom_modules')) {
+            return;
+        }
+
+        $defaults = [
+            ['title' => 'Información del sitio', 'module' => 'mod_stats_admin'],
+            ['title' => 'Usuarios conectados',    'module' => 'mod_logged'],
+            ['title' => 'Últimas acciones',       'module' => 'mod_latestactions'],
+        ];
+
+        foreach ($defaults as $default) {
+            $exists = DB::table('larajoom_modules')
+                ->where('module', $default['module'])
+                ->where('position', 'cpanel')
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
+
+            DB::table('larajoom_modules')->insert([
+                'title'      => $default['title'],
+                'module'     => $default['module'],
+                'position'   => 'cpanel',
+                'published'  => true,
+                'ordering'   => 0,
+                'showtitle'  => true,
+                'params'     => null,
+                'access'     => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**
