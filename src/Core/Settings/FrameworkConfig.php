@@ -50,13 +50,17 @@ class FrameworkConfig
 
     /**
      * Driver de sesión configurado, normalizado a un valor válido y disponible.
+     *
+     * Si el driver elegido no es utilizable (por ejemplo, el directorio de
+     * sesiones no existe) se conserva el de la aplicación: si no, la sesión no
+     * se guarda y el token CSRF caduca (error 419 al iniciar sesión).
      */
     public static function sessionDriver(?string $value = null): string
     {
         $value = self::normalizeSessionDriver($value);
 
         if (!self::driverAvailable($value, 'session')) {
-            return self::SESSION_DRIVER_FALLBACK;
+            return (string) config('session.driver', self::SESSION_DRIVER_FALLBACK);
         }
 
         return $value;
@@ -288,7 +292,8 @@ class FrameworkConfig
 
     /**
      * Un driver está disponible si sus dependencias existen.
-     * (Laravel: database necesita la tabla, redis/memcached la extensión o el cliente)
+     * (Laravel: database necesita la tabla, file necesita el directorio escribible,
+     *  redis/memcached la extensión o el cliente)
      */
     protected static function driverAvailable(string $driver, string $context): bool
     {
@@ -296,10 +301,32 @@ class FrameworkConfig
             'database' => $context === 'session'
                 ? Schema::hasTable((string) config('session.table', 'sessions'))
                 : Schema::hasTable((string) config('cache.stores.database.table', 'cache')),
+            'file' => $context === 'session'
+                ? self::isUsablePath((string) config('session.files', ''))
+                : self::isUsablePath((string) config('cache.stores.file.path', '')),
             'redis' => extension_loaded('redis') || class_exists(\Predis\Client::class),
             'memcached' => extension_loaded('memcached'),
             default => true,
         };
+    }
+
+    /**
+     * ¿El directorio de almacenamiento existe y se puede escribir?
+     *
+     * Si el driver 'file' no es utilizable, la sesión no se guarda y el token
+     * CSRF caduca entre requests (error 419 al iniciar sesión).
+     */
+    protected static function isUsablePath(string $path): bool
+    {
+        if ($path === '') {
+            return false;
+        }
+
+        if (!is_dir($path)) {
+            @mkdir($path, 0755, true);
+        }
+
+        return is_dir($path) && is_writable($path);
     }
 
     /**
