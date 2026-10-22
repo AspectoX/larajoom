@@ -5,6 +5,7 @@ namespace Aspectox\LaraJoom\Admin\Components\com_modules\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Aspectox\LaraJoom\Admin\Components\com_modules\Models\Module;
+use Aspectox\LaraJoom\Admin\Components\com_modules\Services\ModuleParams;
 
 class ModuleController extends Controller
 {
@@ -28,6 +29,8 @@ class ModuleController extends Controller
     {
         $module = Module::create($this->validated($request));
 
+        $this->saveParams($request, $module);
+
         return match ($request->input('task')) {
             'save'     => redirect()->route('larajoom.admin.modules.edit', $module->id),
             'save2new' => redirect()->route('larajoom.admin.modules.create'),
@@ -43,6 +46,8 @@ class ModuleController extends Controller
             'module'      => $module,
             'moduleTypes' => $this->moduleTypes(),
             'positions'   => $this->positions(),
+            'fields'      => ModuleParams::fields($module->module),
+            'values'      => ModuleParams::values($module->params, ModuleParams::fields($module->module)),
         ]);
     }
 
@@ -50,6 +55,8 @@ class ModuleController extends Controller
     {
         $module = Module::findOrFail($id);
         $module->update($this->validated($request));
+
+        $this->saveParams($request, $module);
 
         return match ($request->input('task')) {
             'save'     => redirect()->route('larajoom.admin.modules.edit', $module->id),
@@ -90,6 +97,33 @@ class ModuleController extends Controller
         $data['published'] = $request->has('published');
 
         return $data;
+    }
+
+    /**
+     * Guarda los params en JSON: bootstrap_size (ancho en columnas del panel)
+     * y los param_fields del manifest. Conserva las claves extra previas.
+     * Si no hay nada nuevo que guardar, no toca nada.
+     */
+    protected function saveParams(Request $request, Module $module): void
+    {
+        $existing = ModuleParams::values($module->params, []);
+        $save     = [];
+
+        $size = $request->input('bootstrap_size');
+        if ($size !== null && $size !== '') {
+            $save['bootstrap_size'] = max(0, min(12, (int) $size));
+        }
+
+        $fields = ModuleParams::fields($module->module);
+        if (!empty($fields)) {
+            $save = array_merge($save, ModuleParams::normalize($request, $fields));
+        }
+
+        if ($save === []) {
+            return;
+        }
+
+        $module->update(['params' => json_encode(array_merge($existing, $save))]);
     }
 
     /**

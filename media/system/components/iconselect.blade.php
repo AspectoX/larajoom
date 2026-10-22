@@ -6,7 +6,7 @@
 
 <div class="form-group">
     @if ($label)
-        <label for="{{ $name }}">{{ $label }}</label>
+        <label for="{{ $name }}" class="form-label">{{ $label }}</label>
     @endif
     <select name="{{ $name }}" id="{{ $name }}" class="form-select-new">
         <button>

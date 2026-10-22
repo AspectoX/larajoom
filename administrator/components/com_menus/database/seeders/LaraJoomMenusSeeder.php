@@ -91,24 +91,6 @@ class LaraJoomMenusSeeder extends Seeder
                     'position'  => 'menu',
                     'showtitle' => false,
                 ],
-                [
-                    'title'     => 'Información del sitio',
-                    'module'    => 'mod_stats_admin',
-                    'position'  => 'cpanel',
-                    'showtitle' => true,
-                ],
-                [
-                    'title'     => 'Usuarios conectados',
-                    'module'    => 'mod_logged',
-                    'position'  => 'cpanel',
-                    'showtitle' => true,
-                ],
-                [
-                    'title'     => 'Últimas acciones',
-                    'module'    => 'mod_latestactions',
-                    'position'  => 'cpanel',
-                    'showtitle' => true,
-                ],
             ];
 
             foreach ($modules as $module) {
@@ -126,6 +108,32 @@ class LaraJoomMenusSeeder extends Seeder
                     ]
                 );
             }
+
+            // Limpia los módulos del panel de control que se habían registrado
+            $this->removeCpanelModules();
+        }
+    }
+
+    /**
+     * Elimina de la base los módulos del panel de control (posición cpanel)
+     * que ya no forman parte del paquete.
+     */
+    protected function removeCpanelModules(): void
+    {
+        if (!Schema::hasTable('larajoom_modules')) {
+            return;
+        }
+
+        DB::table('larajoom_modules')
+            ->where('position', 'cpanel')
+            ->whereIn('module', ['mod_stats_admin', 'mod_logged', 'mod_latestactions'])
+            ->delete();
+
+        if (Schema::hasTable('larajoom_extensions')) {
+            DB::table('larajoom_extensions')
+                ->where('type', 'module')
+                ->whereIn('element', ['mod_stats_admin', 'mod_logged', 'mod_latestactions'])
+                ->delete();
         }
     }
 }

@@ -34,6 +34,12 @@ class ConfigLoader
                 continue;
             }
 
+            // El nombre del sitio vacío tampoco pisa el default: se mantiene
+            // el nombre de la aplicación de Laravel (APP_NAME del .env).
+            if ($key === 'sitename' && $value === '') {
+                continue;
+            }
+
             $config[$key] = $value;
         }
 

@@ -37,7 +37,7 @@
                 <legend>{{ __('com_users::com_users.usergroups') }}</legend>
 
                 @forelse ($groups as $group)
-                    <x-larajoom::checkbox
+                    <x-larajoom::toggle
                         name="groups[]"
                         :id="'user_group_' . $group->id"
                         :value="$group->id"

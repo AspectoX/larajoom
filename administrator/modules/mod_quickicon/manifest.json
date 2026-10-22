@@ -1,0 +1,19 @@
+{
+    "type": "module",
+    "name": "mod_quickicon",
+    "view_namespace": "admin.modules.mod_quickicon",
+    "lang_namespace": "mod_quickicon",
+    "client": "administrator",
+    "param_fields": [
+        {"name": "show_users",      "type": "checkbox", "label": "Usuarios",              "default": 1},
+        {"name": "show_articles",   "type": "checkbox", "label": "Artículos",             "default": 1},
+        {"name": "show_categories", "type": "checkbox", "label": "Categorías",            "default": 1},
+        {"name": "show_tags",       "type": "checkbox", "label": "Tags",                  "default": 1},
+        {"name": "show_media",      "type": "checkbox", "label": "Media",                 "default": 1},
+        {"name": "show_menuitems",  "type": "checkbox", "label": "Elementos de menú",     "default": 1},
+        {"name": "show_modules",    "type": "checkbox", "label": "Módulos",               "default": 1},
+        {"name": "show_authors",    "type": "checkbox", "label": "Autores",               "default": 1},
+        {"name": "show_plugins",    "type": "checkbox", "label": "Plugins",               "default": 1},
+        {"name": "show_config",     "type": "checkbox", "label": "Configuración global",  "default": 1}
+    ]
+}

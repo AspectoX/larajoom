@@ -4,7 +4,20 @@
 @section('icon', 'dashboard')
 
 @section('content')
-    <section id="content" class="content">
-        @include('admin.components.com_cpanel::dashboard')
-    </section>
+    <div class="row">
+        <div class="col-md-12">
+            <main>
+                <x-message />
+                <div id="cpanel-modules">
+                    <div class="cpanel-modules {{ $position ?? 'cpanel' }}">
+                        <div class="col-md-12 module-wrapper">
+                            <div class="card-columns">                    
+                                {!! \Aspectox\LaraJoom\Core\Positions\PositionRenderer::renderInCards($position ?? 'cpanel') !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
 @endsection

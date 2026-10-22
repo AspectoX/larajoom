@@ -6,7 +6,8 @@ use Aspectox\LaraJoom\Admin\Components\com_admin\Controllers\AdminController;
 
 Route::get('/', function () {
     if (!Auth::guard('ax-larajoom')->check()) {
-        return redirect()->route('login');
+        // Guarda la URL como "intended": tras loguearse se vuelve a la última página
+        return redirect()->guest(route('login'));
     }
     return app(AdminController::class)->index(request());
 });

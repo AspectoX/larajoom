@@ -223,6 +223,7 @@
 .form-group {
     display: grid;
     grid-template-columns: 2fr 4fr;
+    width: var(--sz-full);
     height: max-content;
     margin-bottom: var(--sz-16);
 
@@ -332,7 +333,7 @@ textarea.form-input {
 
 .form-label {
     display: block;
-    color: var(--clr-black);
+    color: var(--clr-txt);
 }
 
 .form-error {
@@ -739,7 +740,7 @@ textarea.form-input {
 
 .ts-text input:checked+.slider::after {
     content: "Yes";
-    top: 5px;
+    top: 1px;
     left: 10px;
     right: auto;
     opacity: 1;
@@ -1518,7 +1519,6 @@ td.max-3 {
 
     &:active:not(.alert),
     &.active:not(.alert) {
-        width: 100%;
         color: var(--clr-txt-primary);
         background-color: var(--clr-active-primary) !important;
     }
@@ -1758,7 +1758,7 @@ summary::-webkit-details-marker {
     align-items: center;
     justify-content: center;
     width: min-content;
-    color: var(--clr-black);
+    color: var(--clr-txt);
     font-size: var(--sz-10);
     padding: var(--sz-4) var(--sz-8);
     border: 1px solid transparent;

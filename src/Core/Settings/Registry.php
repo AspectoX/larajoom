@@ -173,7 +173,7 @@ class Registry
         return [
             'scope'    => self::OPTIONS[$key][0],
             'type'     => self::OPTIONS[$key][1],
-            'default'  => self::OPTIONS[$key][2],
+            'default'  => $key === 'sitename' ? self::appName() : self::OPTIONS[$key][2],
             'group'    => self::OPTIONS[$key][3],
             'label'    => self::OPTIONS[$key][4],
             'consumer' => self::OPTIONS[$key][5],
@@ -188,7 +188,25 @@ class Registry
 
     public static function default(string $key): mixed
     {
+        // El nombre del sitio es la única opción que se alimenta del .env
+        // (APP_NAME). El resto de ajustes tienen aquí su valor por defecto
+        // y se guardan en la base de datos (com_config).
+        if ($key === 'sitename') {
+            return self::appName();
+        }
+
         return self::get($key)['default'] ?? null;
+    }
+
+    /**
+     * Nombre del sitio.
+     *
+     * Prioridad: la base de datos (com_config) y, si no hay, el nombre de la
+     * aplicación de Laravel (APP_NAME del .env).
+     */
+    public static function appName(): string
+    {
+        return SiteName::get();
     }
 
     public static function scope(string $key): string
@@ -241,7 +259,7 @@ class Registry
         $defaults = [];
 
         foreach (self::OPTIONS as $key => $option) {
-            $defaults[$key] = $option[2];
+            $defaults[$key] = self::default($key);
         }
 
         return $defaults;

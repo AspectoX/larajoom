@@ -11,11 +11,7 @@
 @endphp
 
 @if ($item->type === 'separator')
-    <li class="divider" role="presentation">
-        @if ($item->title !== '')
-            <span class="sidebar-item-title">{{ $item->title }}</span>
-        @endif
-    </li>
+    <li class="divider" role="presentation"></li>
 @else
     <li class="{{ $classes }}">
         <a href="{{ $item->link }}"

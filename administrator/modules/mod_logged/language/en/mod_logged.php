@@ -3,7 +3,7 @@
 return [
     'name'          => 'Name',
     'client'        => 'Client',
-    'date'          => 'Email',
+    'date'          => 'Date',
     'administrator' => 'Administration',
     'no_users'      => 'No logged-in users.',
 ];

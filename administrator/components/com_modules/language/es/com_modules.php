@@ -8,13 +8,18 @@ return [
 
     'title'           => 'Título',
     'position'        => 'Posición',
+    'bootstrap_size'  => 'Ancho en columnas',
+    'full_width'      => 'Ancho completo',
+    'n_columns'       => ':n columnas',
     'ordering'        => 'Orden',
+    'access'          => 'Acceso',
     'showtitle'       => 'Mostrar título',
     'status'          => 'Estado',
     'published'       => 'Publicado',
     'unpublished'     => 'Despublicado',
     'id'              => 'ID',
     'select_position' => '- Seleccionar posición -',
+    'params'          => 'Configuración del módulo',
 
     'save'            => 'Guardar',
     'save_new'        => 'Guardar y nuevo',

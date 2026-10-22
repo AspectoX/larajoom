@@ -203,6 +203,48 @@ class Access
     }
 
     /**
+     * Todos los niveles de vista disponibles con sus títulos (para selects).
+     *
+     * @return array<int, string>
+     */
+    public static function allAccessLevels(): array
+    {
+        // Todos los roles del sistema
+        if (Schema::hasTable('larajoom_usergroups')) {
+            $roles = DB::table('larajoom_usergroups')->orderBy('id')->pluck('title', 'id')->all();
+            if ($roles) {
+                return $roles;
+            }
+        }
+
+        // Respaldo: niveles de acceso
+        if (Schema::hasTable('larajoom_viewlevels')) {
+            $levels = DB::table('larajoom_viewlevels')->orderBy('id')->pluck('title', 'id')->all();
+            if ($levels) {
+                return $levels;
+            }
+        }
+
+        return self::defaultAccessLevels();
+    }
+
+    /**
+     * Niveles de acceso por defecto (estilo Joomla).
+     *
+     * @return array<int, string>
+     */
+    public static function defaultAccessLevels(): array
+    {
+        return [
+            1 => 'Public',
+            2 => 'Registered',
+            3 => 'Special',
+            4 => 'Guest',
+            5 => 'Super Users',
+        ];
+    }
+
+    /**
      * Asset (componente) al que apunta un enlace del menú.
      * Ej: '/administrator/menus' → 'com_menus'
      */

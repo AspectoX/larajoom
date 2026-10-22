@@ -9,7 +9,9 @@
     $view = request()->get('view', '');
     $layout = request()->get('layout', 'default');
     $task = request()->get('task', 'display');
-    $cpanel = $option === 'com_cpanel' || ($option === 'com_admin' && $view === 'help');
+    // Panel de control por ruta real (pretty URL) o por option legado (query ?option=)
+    $cpanel = $option === 'com_cpanel' || ($option === 'com_admin' && $view === 'help')
+        || in_array(request()->path(), ['administrator', 'administrator/index.php', 'administrator/cpanel', 'administrator/cpanel/index.php'], true);
     $hiddenMenu = request()->get('hidemainmenu');
     $sidebarState = request()->cookie('atumSidebarState', '');
 
@@ -133,13 +135,10 @@
                     @yield('toolbar')
                 </div>
             @endif
-            <section id="section-content" class="section-content">
+            <section id="content" class="content">
                 @position('top')
 
-                <main class="main">
-                    <x-message />
-                    @yield('content')
-                </main>
+                @yield('content')
 
                 @if (Schema::hasTable('larajoom_modules'))
                     @position('bottom')

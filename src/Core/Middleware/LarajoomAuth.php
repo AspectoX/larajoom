@@ -10,7 +10,8 @@ class LarajoomAuth
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::guard('ax-larajoom')->check()) {
-            return redirect()->route('login');
+            // Guarda la URL actual como "intended": tras loguearse se vuelve a la última página
+            return redirect()->guest(route('login'));
         }
 
         return $next($request);

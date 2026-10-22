@@ -15,11 +15,12 @@
     }
 @endphp
 
-<table class="ax-table">
+<table class="table ax-table" id="latestactions{{ $module->id ?? '' }}">
+    <caption hidden>{{ $title ?? '' }}</caption>
     <thead>
         <tr>
-            <th>{{ __('mdl::mod_latestactions.action') }}</th>
-            <th>{{ __('mdl::mod_latestactions.date') }}</th>
+            <th scope="col" class="w-70">{{ __('mdl::mod_latestactions.action') }}</th>
+            <th scope="col" class="w-30">{{ __('mdl::mod_latestactions.date') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -31,7 +32,7 @@
                         <span class="text-muted">({{ $item->extension }}@if ($item->item_id)-{{ $item->item_id }}@endif)</span>
                     @endif
                 </td>
-                <td>{{ $item->created_at }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</td>
             </tr>
         @empty
             <tr>

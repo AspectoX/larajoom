@@ -5,34 +5,46 @@
     $rows = [];
 
     // Versión de PHP
-    $rows[] = ['title' => __('mdl::mod_stats_admin.php'), 'icon' => 'config', 'data' => PHP_VERSION];
+    $rows[] = ['title' => __('mdl::mod_stats_admin.php'), 'icon' => 'php', 'data' => PHP_VERSION];
 
     // Versión de Laravel
-    $rows[] = ['title' => __('mdl::mod_stats_admin.laravel'), 'icon' => 'source', 'data' => app()->version()];
+    $rows[] = ['title' => __('mdl::mod_stats_admin.laravel'), 'icon' => 'laravel', 'data' => app()->version()];
 
     // Base de datos
     if (Schema::hasTable('larajoom_users')) {
         try {
             $database = DB::connection()->getDatabaseName();
-            $version  = DB::selectOne('select version() as v')->v ?? '';
+            $version  = (string) (DB::selectOne('select version() as v')->v ?? '');
+
+            $driver = 'MySQL';
+            if (str_contains($version, 'MariaDB')) {
+                $driver  = 'MariaDB';
+                $version = trim(explode('-', $version)[0]);
+            }
         } catch (\Throwable $e) {
             $database = config('database.default');
             $version  = '';
+            $driver   = '';
         }
 
-        $rows[] = ['title' => $database, 'icon' => 'database', 'data' => $version];
+        $rows[] = [
+            'title' => __('mdl::mod_stats_admin.database'),
+            'icon'  => 'database',
+            'data'  => trim($driver . ' ' . $version),
+            'sub'   => 'Name: ' . $database,
+        ];
     }
 
     // Sistema operativo
-    $rows[] = ['title' => __('mdl::mod_stats_admin.os'), 'icon' => 'memory', 'data' => PHP_OS_FAMILY];
+    $rows[] = ['title' => __('mdl::mod_stats_admin.os'), 'icon' => 'os', 'data' => PHP_OS_FAMILY];
 
     // Espacio en disco
-    $free = @disk_free(base_path());
+    $free = @disk_free_space(base_path());
 
     if ($free !== false) {
         $rows[] = [
             'title' => __('mdl::mod_stats_admin.disk'),
-            'icon'  => 'files',
+            'icon'  => 'hdd',
             'data'  => number_format($free / 1073741824, 2) . ' GB',
         ];
     }
@@ -74,16 +86,29 @@
         ];
     }
 @endphp
-
-<ul class="list-unstyled">
+<ul class="list-group list-group-flush stats-module">
     @foreach ($rows as $row)
-        <li>
+        <li class="list-group-item">
             <span class="icon" aria-hidden="true">@icon($row['icon'])</span>
-            {{ $row['title'] }}:
-            @if (!empty($row['link']))
-                <a href="{{ $row['link'] }}">{{ $row['data'] }}</a>
+            @if (!empty($row['sub']))
+                <div class="list-group-item__text-group">
+                    <span>
+                        {{ $row['title'] }}:
+                        @if (!empty($row['link']))
+                            <a class="btn transparent" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
+                        @else
+                            {{ $row['data'] }}
+                        @endif
+                    </span>
+                    <small>{{ $row['sub'] }}</small>
+                </div>
             @else
-                {{ $row['data'] }}
+                {{ $row['title'] }}:
+                @if (!empty($row['link']))
+                    <a class="btn transparent" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
+                @else
+                    {{ $row['data'] }}
+                @endif
             @endif
         </li>
     @endforeach

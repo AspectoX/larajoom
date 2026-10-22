@@ -16,17 +16,38 @@
     $logoBrandLarge = url('media/templates/administrator/atum/images/logos/LaraJoom-white.png');
     $logoBrandSmall = url('media/templates/administrator/atum/images/logos/iso-LaraJoom.png');
 
-    $logoBrandLargeAlt = '';
-    $logoBrandSmallAlt = '';
+    $panelName = 'LaraJoom';
+    $cpanelManifest = app(\Aspectox\LaraJoom\Core\ExtensionLoader::class)->getBasePath()
+        . DIRECTORY_SEPARATOR . 'administrator'
+        . DIRECTORY_SEPARATOR . 'components'
+        . DIRECTORY_SEPARATOR . 'com_login'
+        . DIRECTORY_SEPARATOR . 'manifest.json';
+
+    if (is_file($cpanelManifest)) {
+        $manifest = json_decode((string) file_get_contents($cpanelManifest), true);
+        $pageTitle = trim((string) ($manifest['title'] ?? ''));
+    }
+
 
     $statusModules = \Aspectox\LaraJoom\Core\LayoutHelper::render('status', ['modules' => 'status']);
 
-    // Título del documento según sitename_pagetitles: 0 = solo título, 1 = título + sitio, 2 = sitio + título
-    $siteName = $params['sitename'] ?? 'LaraJoom';
-    $pageTitle = trim((string) view()->yieldContent('title')) ?: $siteName;
+
+    $siteName = '';
+    try {
+        $siteName = trim((string) DB::table('larajoom_configuration')
+            ->where('name', 'sitename')
+            ->value('value'));
+    } catch (\Throwable $e) {
+        $siteName = '';
+    }
+    if ($siteName === '') {
+        $siteName = env('APP_NAME');
+    }
+
+
     $documentTitle = match ((int) ($params['sitename_pagetitles'] ?? 0)) {
-        1 => $pageTitle . ' - ' . $siteName,
-        2 => $siteName . ' - ' . $pageTitle,
+        1 => $pageTitle . ' - ' . $panelName,
+        2 => $panelName . ' - ' . $pageTitle,
         default => $pageTitle,
     };
 @endphp
@@ -68,20 +89,18 @@
         <div class="header-title">
             <div class="content-logo">
                 <div class="logo">
-                    <img src="{{ $logoBrandLarge }}" alt="{{ $logoBrandLargeAlt }}" loading="eager" decoding="async">
-                    <img src="{{ $logoBrandSmall }}" class="logo-collapsed" alt="{{ $logoBrandSmallAlt }}"
-                        loading="eager" decoding="async">
+                    <img src="{{ $logoBrandLarge }}" alt="{{ $panelName }}" loading="eager" decoding="async">
+                    <img src="{{ $logoBrandSmall }}" class="logo-collapsed" alt="{{ $panelName }}" loading="eager" decoding="async">
                 </div>
             </div>
         </div>
         <div class="header-items">
             <div class="header-item">
-                <a href="{{ url('/') }}" class="header-item-content"
-                    title="{{ __('com_login::com_login.open_frontend') }}" target="_blank">
+                <a href="{{ url('/') }}" class="header-item-content" title="{{ __('com_login::com_login.open_frontend') }}" target="_blank">
                     <span class="icon" aria-hidden="true">
                         @icon('go-to')
                     </span>
-                    <div class="header-item-text">{{ $sitename ?? config('app.name') }}</div>
+                    <div class="header-item-text">{{ $siteName }}</div>
                 </a>
             </div>
         </div>
@@ -97,9 +116,8 @@
         </div>
 
         <aside id="sidebar-wrapper" class="sidebar-wrapper" aria-labelledby="sidebar-section-heading">
-            {{-- <h2 id="sidebar-section-heading" class="visually-hidden">{{ __('com_login::com_login.help_support') }}</h2> --}}
             <div id="main-brand" class="main-brand">
-                <p class="h1">{{ $sitename ?? config('app.name') }}</p>
+                <p class="h1">{{ $siteName }}</p>
                 <p class="h2">{{ __('com_login::com_login.login_form') }}</p>
             </div>
             <div id="sidebar">

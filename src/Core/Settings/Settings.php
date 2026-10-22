@@ -31,7 +31,15 @@ class Settings
             return self::$values;
         }
 
-        return self::$values = array_merge(Registry::defaults(), self::stored());
+        $stored = self::stored();
+
+        // El nombre del sitio vacío no pisa el default: se mantiene el nombre
+        // de la aplicación de Laravel (APP_NAME del .env).
+        if (($stored['sitename'] ?? '') === '') {
+            unset($stored['sitename']);
+        }
+
+        return self::$values = array_merge(Registry::defaults(), $stored);
     }
 
     /**

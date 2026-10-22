@@ -42,7 +42,8 @@ class LoginController
                 ->update(['lastvisitDate' => now(), 'updated_at' => now()]);
         }
 
-        return redirect('/administrator');
+        // Vuelve a la última página visitada ("intended" del middleware), o al dashboard si no hay
+        return redirect()->intended('/administrator');
     }
 
     /**

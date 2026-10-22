@@ -33,18 +33,47 @@ class PositionRenderer
     {
         return SafeRunner::execute("position.{$positionName}", function () use ($positionName, $params) {
             $output = '';
+            $canManage = \Aspectox\LaraJoom\Core\Access::canWrite('com_modules');
 
             foreach (self::modulesOf($positionName) as $module) {
-                $title = trim((string) ($module->title ?? ''));
+                $title     = trim((string) ($module->title ?? ''));
+                $showTitle = (bool) ($module->showtitle ?? true);
 
+                // Ancho en columnas (bootstrap_size de los params del módulo): 0 = ancho completo
+                $moduleParams = json_decode((string) ($module->params ?? ''), true) ?: [];
+                $columns      = (int) ($moduleParams['bootstrap_size'] ?? 0);
+                $wrapperClass = 'module-wrapper ' . ($columns > 0 && $columns < 12 ? 'col-md-' . min(11, $columns) : 'col-md-12');
+
+                // Estructura tipo Joomla (chrome "well"): module-wrapper > card > card-header + card-body
+                $output .= '<div class="' . $wrapperClass . '">';
                 $output .= '<div class="card">';
 
-                if ($title !== '') {
-                    $output .= '<div class="card-header"><div class="card-header-title">'
-                        . e($title) . '</div></div>';
+                if ($showTitle || $canManage) {
+                    $output .= '<div class="card-header">';
+
+                    if ($canManage) {
+                        $modId = (int) ($module->id ?? 0);
+
+                        $output .= '<div class="module-actions dropdown">'
+                            . '<button type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-haspopup="true" aria-expanded="false" class="btn circle transparet" id="dropdownMenuButton-' . $modId . '">'
+                            . larajoom_icon('config')
+                            . '</button>'
+                            . '<div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton-' . $modId . '">'
+                            . '<a class="dropdown-item" href="' . e(route('larajoom.admin.modules.edit', ['id' => $modId])) . '">' . e(__('tmp::atum.lj_action_edit')) . '</a>'
+                            . '<button type="button" class="dropdown-item unpublish-module" data-module-id="' . $modId . '">' . e(__('tmp::atum.lj_action_unpublish')) . '</button>'
+                            . '</div>'
+                            . '</div>';
+                    }
+
+                    if ($showTitle) {
+                        $output .= '<h2>' . e($title) . '</h2>';
+                    }
+
+                    $output .= '</div>';
                 }
 
                 $output .= '<div class="card-body">' . self::renderModule($module, $params) . '</div>';
+                $output .= '</div>';
                 $output .= '</div>' . "\n";
             }
 

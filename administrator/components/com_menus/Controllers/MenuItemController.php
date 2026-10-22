@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Aspectox\LaraJoom\Core\Access;
 use Illuminate\Support\Str;
 use Aspectox\LaraJoom\Admin\Components\com_menus\Models\MenuItem;
 
@@ -23,9 +24,7 @@ class MenuItemController extends Controller
         }
         $items = $this->orderTree($query->get());
 
-        $levels = Schema::hasTable('larajoom_viewlevels')
-            ? DB::table('larajoom_viewlevels')->orderBy('id')->pluck('title', 'id')
-            : collect();
+        $levels = Access::allAccessLevels();
 
         return view('admin.components.com_menus::items.index', compact('items', 'menuTypes', 'menutype', 'levels'));
     }
@@ -159,6 +158,7 @@ class MenuItemController extends Controller
 
         $data['alias'] = !empty($data['alias']) ? Str::slug($data['alias']) : Str::slug($data['title']);
         $data['type'] = $data['type'] ?? 'url';
+        $data['link'] = $data['link'] ?? ''; // separators/headings no llevan link: '' (la columna es NOT NULL)
         $data['parent_id'] = (int) $request->input('parent_id', 0);
         $data['published'] = $request->has('published');
         $data['home'] = $request->has('home');
@@ -178,9 +178,7 @@ class MenuItemController extends Controller
             return (object) ['id' => $item->id, 'label' => $prefix . $item->title];
         });
 
-        $levels = Schema::hasTable('larajoom_viewlevels')
-            ? DB::table('larajoom_viewlevels')->orderBy('id')->get()
-            : collect();
+        $levels = Access::allAccessLevels();
 
         return [$menuTypes, $parents, $levels];
     }
