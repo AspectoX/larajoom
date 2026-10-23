@@ -49,6 +49,18 @@ class LaraJoomServiceProvider extends ServiceProvider
 
         $this->loader->discoverAll();
 
+        // Disco de medios del gestor: apunta a storage/images
+        $mediaRoot = storage_path('images');
+        if (!is_dir($mediaRoot)) {
+            @mkdir($mediaRoot, 0755, true);
+        }
+        $disks = (array) config('filesystems.disks', []);
+        $disks['media'] = [
+            'driver' => 'local',
+            'root' => $mediaRoot,
+        ];
+        config(['filesystems.disks' => $disks]);
+
         // Load package-level migrations (core + extensions discovered by loader)
         foreach ($this->loader->getMigrationPaths() as $migrationPath) {
             $this->loadMigrationsFrom($migrationPath);
@@ -111,7 +123,7 @@ class LaraJoomServiceProvider extends ServiceProvider
                         }
                         $langNs = match($type) {
                             'template'  => 'tmp',
-                            'module'    => 'mdl',
+                            'module'    => $manifest['lang_namespace'] ?? $item,
                             'component' => $manifest['lang_namespace'] ?? $item,
                             'plugin'    => 'pgi',
                             default     => null,
@@ -123,6 +135,29 @@ class LaraJoomServiceProvider extends ServiceProvider
                             }
                         }
                     }
+                }
+            }
+        }
+
+        // Garantía explícita: traducciones de los módulos del panel bajo su propio
+        // namespace único (FileLoader guarda UNA ruta por namespace, así que un
+        // namespace compartido como 'mdl' haría que cada módulo sobrescriba al
+        // anterior). (Redundante con el descubrimiento automático.)
+        $adminModulesLangDir = $baseDir . DIRECTORY_SEPARATOR . 'administrator' . DIRECTORY_SEPARATOR . 'modules';
+        if (is_dir($adminModulesLangDir)) {
+            foreach (scandir($adminModulesLangDir) as $modItem) {
+                if ($modItem === '.' || $modItem === '..' || !str_starts_with($modItem, 'mod_')) continue;
+                $modManifestPath = $adminModulesLangDir . DIRECTORY_SEPARATOR . $modItem . DIRECTORY_SEPARATOR . 'manifest.json';
+                $modNs = $modItem;
+                if (file_exists($modManifestPath)) {
+                    $modManifest = json_decode(file_get_contents($modManifestPath), true);
+                    if (is_array($modManifest) && !empty($modManifest['lang_namespace'])) {
+                        $modNs = $modManifest['lang_namespace'];
+                    }
+                }
+                $modLangPath = $adminModulesLangDir . DIRECTORY_SEPARATOR . $modItem . DIRECTORY_SEPARATOR . 'language';
+                if (is_dir($modLangPath)) {
+                    $this->loadTranslationsFrom($modLangPath, $modNs);
                 }
             }
         }

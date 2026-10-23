@@ -1,0 +1,8 @@
+{
+    "type": "plugin",
+    "group": "media-action",
+    "name": "resize",
+    "view_namespace": "plugins.media_action.resize",
+    "lang_namespace": "plg_media_action_resize",
+    "description": "Resize images in Media Manager"
+}

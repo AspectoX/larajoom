@@ -126,4 +126,39 @@ class PluginManager
 
         return $ns[1] . '\\' . $cls[1];
     }
+
+    /**
+     * Obtiene todos los plugins de un grupo (instalados, no necesariamente habilitados).
+     */
+    public function getPluginsByGroup(string $group): array
+    {
+        if (!Schema::hasTable('larajoom_extensions')) {
+            return [];
+        }
+
+        $plugins = DB::table('larajoom_extensions')
+            ->where('type', 'plugin')
+            ->where('folder', $group)
+            ->orderBy('ordering')
+            ->orderBy('element')
+            ->get(['element', 'folder', 'params', 'enabled']);
+
+        $result = [];
+        foreach ($plugins as $row) {
+            $plugin = $this->resolve($row->folder, $row->element);
+            if ($plugin !== null) {
+                $result[] = $plugin;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Obtiene solo los plugins habilitados de un grupo.
+     */
+    public function getEnabledPluginsByGroup(string $group): array
+    {
+        return array_filter($this->getPluginsByGroup($group), fn ($p) => $p->isEnabled());
+    }
 }

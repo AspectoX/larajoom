@@ -35,7 +35,7 @@ class ArticleAdminController extends Controller
         ]);
 
         $data['alias'] = empty($data['alias']) ? Str::slug($data['title']) : Str::slug($data['alias']);
-        $data['published'] = $request->has('published');
+        $data['published'] = $request->boolean('published');
 
         Article::create($data);
         larajoom_plugins()->dispatch('content', 'onContentAfterSave', ['com_content.article', $article, true]);
@@ -62,7 +62,7 @@ class ArticleAdminController extends Controller
         ]);
 
         $data['alias'] = empty($data['alias']) ? Str::slug($data['title']) : Str::slug($data['alias']);
-        $data['published'] = $request->has('published');
+        $data['published'] = $request->boolean('published');
 
         $article->update($data);
         larajoom_plugins()->dispatch('content', 'onContentAfterSave', ['com_content.article', $article, false]);

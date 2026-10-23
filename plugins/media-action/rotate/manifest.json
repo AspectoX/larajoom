@@ -1,0 +1,8 @@
+{
+    "type": "plugin",
+    "group": "media-action",
+    "name": "rotate",
+    "view_namespace": "plugins.media_action.rotate",
+    "lang_namespace": "plg_media_action_rotate",
+    "description": "Rotate images in Media Manager"
+}

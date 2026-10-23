@@ -1,0 +1,8 @@
+{
+    "type": "plugin",
+    "group": "media-action",
+    "name": "crop",
+    "view_namespace": "plugins.media_action.crop",
+    "lang_namespace": "plg_media_action_crop",
+    "description": "Crop images in Media Manager"
+}

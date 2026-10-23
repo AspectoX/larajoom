@@ -5,10 +5,10 @@
     $rows = [];
 
     // Versión de PHP
-    $rows[] = ['title' => __('mdl::mod_stats_admin.php'), 'icon' => 'php', 'data' => PHP_VERSION];
+    $rows[] = ['title' => __('mod_stats_admin::mod_stats_admin.php'), 'icon' => 'php', 'data' => PHP_VERSION];
 
     // Versión de Laravel
-    $rows[] = ['title' => __('mdl::mod_stats_admin.laravel'), 'icon' => 'laravel', 'data' => app()->version()];
+    $rows[] = ['title' => __('mod_stats_admin::mod_stats_admin.laravel'), 'icon' => 'laravel', 'data' => app()->version()];
 
     // Base de datos
     if (Schema::hasTable('larajoom_users')) {
@@ -28,7 +28,7 @@
         }
 
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.database'),
+            'title' => __('mod_stats_admin::mod_stats_admin.database'),
             'icon'  => 'database',
             'data'  => trim($driver . ' ' . $version),
             'sub'   => 'Name: ' . $database,
@@ -36,14 +36,14 @@
     }
 
     // Sistema operativo
-    $rows[] = ['title' => __('mdl::mod_stats_admin.os'), 'icon' => 'os', 'data' => PHP_OS_FAMILY];
+    $rows[] = [            'title' => __('mod_stats_admin::mod_stats_admin.os'), 'icon' => 'os', 'data' => PHP_OS_FAMILY];
 
     // Espacio en disco
     $free = @disk_free_space(base_path());
 
     if ($free !== false) {
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.disk'),
+            'title' => __('mod_stats_admin::mod_stats_admin.disk'),
             'icon'  => 'hdd',
             'data'  => number_format($free / 1073741824, 2) . ' GB',
         ];
@@ -52,7 +52,7 @@
     // Contadores del sitio
     if (Schema::hasTable('larajoom_users')) {
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.users'),
+            'title' => __('mod_stats_admin::mod_stats_admin.users'),
             'icon'  => 'users',
             'data'  => DB::table('larajoom_users')->count(),
             'link'  => route('larajoom.admin.users.index'),
@@ -61,7 +61,7 @@
 
     if (Schema::hasTable('larajoom_content')) {
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.articles'),
+            'title' => __('mod_stats_admin::mod_stats_admin.articles'),
             'icon'  => 'article',
             'data'  => DB::table('larajoom_content')->count(),
             'link'  => route('larajoom.admin.articles.index'),
@@ -70,7 +70,7 @@
 
     if (Schema::hasTable('larajoom_extensions')) {
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.extensions'),
+            'title' => __('mod_stats_admin::mod_stats_admin.extensions'),
             'icon'  => 'component',
             'data'  => DB::table('larajoom_extensions')->count(),
             'link'  => route('larajoom.admin.installer.index'),
@@ -79,7 +79,7 @@
 
     if (Schema::hasTable('larajoom_modules')) {
         $rows[] = [
-            'title' => __('mdl::mod_stats_admin.modules'),
+            'title' => __('mod_stats_admin::mod_stats_admin.modules'),
             'icon'  => 'module',
             'data'  => DB::table('larajoom_modules')->count(),
             'link'  => route('larajoom.admin.modules.index'),

@@ -93,8 +93,8 @@ class ModuleController extends Controller
 
         $data['ordering']  = $data['ordering'] ?? 0;
         $data['access']    = $data['access'] ?? 1;
-        $data['showtitle'] = $request->has('showtitle');
-        $data['published'] = $request->has('published');
+        $data['showtitle'] = $request->boolean('showtitle');
+        $data['published'] = $request->boolean('published');
 
         return $data;
     }

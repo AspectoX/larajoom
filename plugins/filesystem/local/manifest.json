@@ -1,0 +1,8 @@
+{
+    "type": "plugin",
+    "group": "filesystem",
+    "name": "local",
+    "view_namespace": "plugins.filesystem.local",
+    "lang_namespace": "plg_filesystem_local",
+    "description": "Local filesystem storage provider for Media Manager"
+}

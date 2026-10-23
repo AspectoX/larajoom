@@ -19,15 +19,15 @@
     <caption hidden>{{ $title ?? '' }}</caption>
     <thead>
         <tr>
-            <th scope="col" class="w-70">{{ __('mdl::mod_latestactions.action') }}</th>
-            <th scope="col" class="w-30">{{ __('mdl::mod_latestactions.date') }}</th>
+            <th scope="col" class="w-70">{{ __('mod_latestactions::mod_latestactions.action') }}</th>
+            <th scope="col" class="w-30">{{ __('mod_latestactions::mod_latestactions.date') }}</th>
         </tr>
     </thead>
     <tbody>
         @forelse ($items as $item)
             <tr>
                 <td>
-                    {{ __('mdl::mod_latestactions.action_' . $item->action) }}
+                    {{ __('mod_latestactions::mod_latestactions.action_' . $item->action) }}
                     @if ($item->extension)
                         <span class="text-muted">({{ $item->extension }}@if ($item->item_id)-{{ $item->item_id }}@endif)</span>
                     @endif
@@ -36,7 +36,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="2">{{ __('mdl::mod_latestactions.no_results') }}</td>
+                <td colspan="2">{{ __('mod_latestactions::mod_latestactions.no_results') }}</td>
             </tr>
         @endforelse
     </tbody>

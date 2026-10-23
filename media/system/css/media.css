@@ -1,0 +1,735 @@
+/* Media Manager Styles - LaraJoom */
+@charset "UTF-8";
+
+/* ==========================================================================
+   CSS Variables mapping from Joomla Atum to LaraJoom
+   ========================================================================== */
+:root {
+    --com-media-bg: var(--body-bg);
+    --com-media-bg-secondary: var(--bg-details__body);
+    --com-media-bg-tertiary: var(--bg-details);
+    --com-media-border: var(--clr-br-gray);
+    --com-media-border-dark: var(--clr-br-primary);
+    --com-media-text: var(--clr-txt);
+    --com-media-text-muted: var(--clr-txto-gray);
+    --com-media-text-dark: var(--clr-txt-gray);
+    --com-media-primary: var(--clr-bg-primary);
+    --com-media-primary-hover: var(--clr-hover-primary);
+    --com-media-success: var(--clr-bg-success);
+    --com-media-success-hover: var(--clr-hover-success);
+    --com-media-danger: var(--clr-bg-danger);
+    --com-media-danger-hover: var(--clr-hover-danger);
+    --com-media-warning: var(--clr-bg-warning);
+    --com-media-info: var(--clr-bg-info);
+    --com-media-shadow: var(--sdw-m);
+    --com-media-radius: var(--brr-8);
+    --com-media-transition: 0.2s ease;
+}
+
+/* ==========================================================================
+   Layout - Split view (tree sidebar + main grid/list)
+   ========================================================================== */
+.media-split {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    gap: var(--sz-16);
+}
+
+.media-sidebar {
+    flex: 0 0 var(--sidebar-width, 280px);
+    max-width: 350px;
+    min-width: 220px;
+    background: var(--com-media-bg-secondary);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.media-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sz-16);
+}
+
+/* ==========================================================================
+   Toolbar integration (uses existing .navSecond + .toolbar-button-list)
+   ========================================================================== */
+.media-toolbar {
+    margin-bottom: var(--sz-16);
+}
+
+.media-toolbar .toolbar-button-list {
+    flex-wrap: wrap;
+    gap: var(--sz-8);
+}
+
+.media-toolbar .btn-joomla {
+    height: 36px;
+    padding: 0 var(--sz-16);
+    font-size: var(--sz-14);
+}
+
+.media-toolbar .icon-joomla {
+    width: 32px;
+    height: 32px;
+    margin-right: var(--sz-8);
+}
+
+.media-toolbar .icon-joomla svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.media-breadcrumb {
+    padding: var(--sz-8) var(--sz-16);
+    background: var(--com-media-bg-secondary);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    font-size: var(--sz-14);
+}
+
+.media-breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sz-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.media-breadcrumb li {
+    display: flex;
+    align-items: center;
+    color: var(--com-media-text-muted);
+}
+
+.media-breadcrumb li:not(:last-child)::after {
+    content: "/";
+    margin-left: var(--sz-8);
+    color: var(--com-media-text-muted);
+}
+
+.media-breadcrumb a {
+    color: var(--com-media-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--sz-4);
+}
+
+.media-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.media-breadcrumb li:last-child {
+    color: var(--com-media-text);
+    font-weight: 600;
+}
+
+.media-breadcrumb .icon-joomla {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.media-breadcrumb .icon-joomla svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* ==========================================================================
+   Search + View Toggle (uses .navSecond)
+   ========================================================================== */
+.media-search {
+    background: var(--com-media-bg-secondary);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    padding: var(--sz-12) var(--sz-16);
+}
+
+.media-search .navSecond-search {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.media-search .form-input {
+    width: 100%;
+    max-width: 320px;
+    height: 36px;
+}
+
+.media-search .btn {
+    height: 36px;
+    margin-left: var(--sz-8);
+}
+
+.media-search .view-toggle {
+    display: inline-flex;
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    overflow: hidden;
+}
+
+.media-search .view-toggle .btn {
+    border-radius: 0;
+    border-right: 1px solid var(--com-media-border);
+    background: transparent;
+    color: var(--com-media-text);
+    padding: 0 var(--sz-12);
+    height: 36px;
+}
+
+.media-search .view-toggle .btn:last-child {
+    border-right: none;
+}
+
+.media-search .view-toggle .btn.active {
+    background: var(--com-media-primary);
+    color: white;
+}
+
+/* ==========================================================================
+   Sidebar - Folder Tree
+   ========================================================================== */
+.media-sidebar-header {
+    padding: var(--sz-12) var(--sz-16);
+    border-bottom: 1px solid var(--com-media-border);
+    background: var(--com-media-bg-tertiary);
+    font-weight: 600;
+    font-size: var(--sz-14);
+    display: flex;
+    align-items: center;
+    gap: var(--sz-8);
+}
+
+.media-sidebar-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sz-8);
+}
+
+.media-tree-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sz-8);
+    padding: var(--sz-6) var(--sz-10);
+    border-radius: var(--sz-4);
+    cursor: pointer;
+    transition: background var(--com-media-transition);
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.media-tree-item:hover {
+    background: var(--com-media-bg-tertiary);
+}
+
+.media-tree-item.active {
+    background: var(--com-media-primary);
+    color: white;
+}
+
+.media-tree-item.active .icon-joomla svg {
+    fill: currentColor;
+}
+
+.media-tree-item .icon-joomla {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.media-tree-item .icon-joomla svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.media-tree-item .tree-name {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--sz-13);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.media-tree-children {
+    margin-left: var(--sz-12);
+    border-left: 1px solid var(--com-media-border);
+    padding-left: var(--sz-8);
+}
+
+/* ==========================================================================
+   Grid View - Cards
+   ========================================================================== */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--sz-12);
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--sz-8);
+}
+
+.media-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--com-media-bg);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    overflow: hidden;
+    transition: box-shadow var(--com-media-transition), border-color var(--com-media-transition);
+}
+
+.media-card:hover {
+    box-shadow: var(--com-media-shadow);
+    border-color: var(--com-media-border-dark);
+}
+
+.media-card-thumb {
+    aspect-ratio: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--com-media-bg-secondary);
+    overflow: hidden;
+}
+
+.media-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.media-card:hover .media-card-thumb img {
+    transform: scale(1.05);
+}
+
+.media-card-thumb .icon-joomla {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+}
+
+.media-card-thumb .icon-joomla svg {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--com-media-text-muted);
+}
+
+.media-card-body {
+    padding: var(--sz-10);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.media-card-name {
+    font-size: var(--sz-13);
+    font-weight: 500;
+    color: var(--com-media-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: var(--sz-4);
+}
+
+.media-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--sz-11);
+    color: var(--com-media-text-muted);
+}
+
+.media-card-actions {
+    display: flex;
+    gap: var(--sz-4);
+    padding: var(--sz-8) var(--sz-10);
+    border-top: 1px solid var(--com-media-border);
+    background: var(--com-media-bg-secondary);
+}
+
+.media-card-actions .btn {
+    flex: 1;
+    padding: var(--sz-6) var(--sz-8);
+    font-size: var(--sz-11);
+}
+
+/* ==========================================================================
+   List View - Table (uses .ax-table-wrapper + .ax-table)
+   ========================================================================== */
+.media-list {
+    flex: 1;
+    overflow: auto;
+    padding: var(--sz-8);
+}
+
+.media-list .ax-table-wrapper {
+    background: var(--com-media-bg);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+}
+
+.media-list .ax-table th,
+.media-list .ax-table td {
+    padding: var(--sz-10) var(--sz-12);
+    font-size: var(--sz-13);
+}
+
+.media-list .ax-table th {
+    background: var(--com-media-bg-tertiary);
+    color: var(--com-media-text-dark);
+    font-weight: 600;
+    border-bottom: 2px solid var(--com-media-border);
+}
+
+.media-list .ax-table td {
+    border-bottom: 1px solid var(--com-media-border);
+    color: var(--com-media-text);
+}
+
+.media-list .ax-table tr:hover td {
+    background: var(--com-media-bg-secondary);
+}
+
+.media-list .ax-table td.name-col {
+    display: flex;
+    align-items: center;
+    gap: var(--sz-10);
+    min-width: 200px;
+}
+
+.media-list .ax-table td.size-col,
+.media-list .ax-table td.type-col,
+.media-list .ax-table td.date-col {
+    white-space: nowrap;
+    width: 1%;
+}
+
+.media-list .ax-table td.actions-col {
+    width: 120px;
+    text-align: center;
+}
+
+.media-list .file-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.media-list .file-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.media-list .file-icon.folder svg {
+    color: var(--com-media-warning);
+}
+
+.media-list .file-icon.image svg {
+    color: var(--com-media-success);
+}
+
+.media-list .file-icon.document svg {
+    color: var(--com-media-primary);
+}
+
+.media-list .file-icon.archive svg {
+    color: var(--com-media-text-muted);
+}
+
+.media-list .file-icon.generic svg {
+    color: var(--com-media-text-muted);
+}
+
+.media-list .btn.circle {
+    width: 32px;
+    height: 32px;
+}
+
+.media-list .btn.circle .icon-joomla {
+    width: 28px;
+    height: 28px;
+}
+
+.media-list .btn.circle .icon-joomla svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.media-list .badge {
+    font-size: var(--sz-11);
+    padding: var(--sz-4) var(--sz-8);
+}
+
+/* ==========================================================================
+   Empty State
+   ========================================================================== */
+.media-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: var(--sz-32);
+    text-align: center;
+    color: var(--com-media-text-muted);
+}
+
+.media-empty .icon-joomla {
+    width: 80px;
+    height: 80px;
+    margin-bottom: var(--sz-16);
+    opacity: 0.5;
+}
+
+.media-empty .icon-joomla svg {
+    width: 100%;
+    height: 100%;
+}
+
+.media-empty p {
+    margin: 0;
+    font-size: var(--sz-14);
+}
+
+/* ==========================================================================
+   Details Panels (modals replacement) - Uses native <details>
+   ========================================================================== */
+.media-details {
+    background: var(--com-media-bg);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+    margin-top: var(--sz-12);
+    overflow: hidden;
+}
+
+.media-details summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sz-12) var(--sz-16);
+    background: var(--com-media-bg-tertiary);
+    border-bottom: 1px solid var(--com-media-border);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: var(--sz-14);
+}
+
+.media-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.media-details summary::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--com-media-text-muted);
+    transition: transform var(--com-media-transition);
+}
+
+.media-details[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.media-details summary .icon-joomla {
+    width: 24px;
+    height: 24px;
+    margin-right: var(--sz-10);
+}
+
+.media-details summary .icon-joomla svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.media-details-body {
+    padding: var(--sz-16);
+}
+
+.media-details-body .form-group {
+    margin-bottom: var(--sz-16);
+}
+
+.media-details-body .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.media-details-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--sz-8);
+    padding: var(--sz-12) var(--sz-16);
+    border-top: 1px solid var(--com-media-border);
+    background: var(--com-media-bg-secondary);
+}
+
+/* ==========================================================================
+   Upload Progress
+   ========================================================================== */
+.media-upload-progress {
+    margin-top: var(--sz-12);
+    padding: var(--sz-12);
+    background: var(--com-media-bg-secondary);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+}
+
+.media-upload-file {
+    display: flex;
+    align-items: center;
+    gap: var(--sz-12);
+    padding: var(--sz-8) 0;
+}
+
+.media-upload-file:not(:last-child) {
+    border-bottom: 1px solid var(--com-media-border);
+    margin-bottom: var(--sz-8);
+}
+
+.media-upload-file .file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.media-upload-file .file-name {
+    font-size: var(--sz-13);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.media-upload-file .file-size {
+    font-size: var(--sz-11);
+    color: var(--com-media-text-muted);
+}
+
+.media-upload-file .progress-bar {
+    width: 120px;
+    height: 6px;
+    background: var(--com-media-border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.media-upload-file .progress-bar-fill {
+    height: 100%;
+    background: var(--com-media-primary);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.media-upload-file .btn.circle {
+    width: 28px;
+    height: 28px;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+    .media-split {
+        flex-direction: column;
+    }
+
+    .media-sidebar {
+        flex: none;
+        max-width: none;
+        min-width: 0;
+        max-height: 300px;
+    }
+
+    .media-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: var(--sz-8);
+    }
+
+    .media-search .navSecond-search {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--sz-12);
+    }
+
+    .media-search .form-input {
+        max-width: none;
+    }
+
+    .media-search .view-toggle {
+        justify-content: center;
+    }
+
+    .media-card-actions {
+        flex-wrap: wrap;
+    }
+
+    .media-card-actions .btn {
+        flex: 1 1 calc(50% - 4px);
+    }
+}
+}
+
+.media-details-container {
+    margin-top: var(--sz-16);
+    padding: var(--sz-16);
+    background: var(--com-media-bg);
+    border: 1px solid var(--com-media-border);
+    border-radius: var(--com-media-radius);
+}
+
+.media-details-container details {
+    margin-bottom: var(--sz-12);
+}
+
+.media-details-container details:last-child {
+    margin-bottom: 0;
+}
+
+/* ==========================================================================
+   Print
+   ========================================================================== */
+@media print {
+    .media-toolbar,
+    .media-search,
+    .media-sidebar,
+    .media-card-actions,
+    .media-list .ax-table td.actions-col,
+    .media-details {
+        display: none !important;
+    }
+
+    .media-split {
+        display: block;
+    }
+
+    .media-main {
+        padding: 0;
+    }
+}

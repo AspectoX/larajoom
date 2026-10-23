@@ -19,7 +19,7 @@
         $boxes[] = [
             'color' => 'info',
             'icon'  => 'users',
-            'title' => __('mdl::mod_quickicon.user_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.user_manager'),
             'number' => DB::table('larajoom_users')->count(),
             'url'   => route('larajoom.admin.users.index'),
         ];
@@ -34,7 +34,7 @@
         $boxes[] = [
             'color' => 'acent',
             'icon'  => 'author',
-            'title' => __('mdl::mod_quickicon.authors'),
+            'title' => __('mod_quickicon::mod_quickicon.authors'),
             'number' => DB::table('larajoom_content')->distinct()->count('created_by'),
             'url'   => route('larajoom.admin.users.index'),
         ];
@@ -48,7 +48,7 @@
         $boxes[] = [
             'color' => 'success',
             'icon'  => 'article',
-            'title' => __('mdl::mod_quickicon.article_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.article_manager'),
             'number' => DB::table('larajoom_content')->count(),
             'url'   => route('larajoom.admin.articles.index'),
         ];
@@ -62,7 +62,7 @@
         $boxes[] = [
             'color' => 'warning',
             'icon'  => 'category',
-            'title' => __('mdl::mod_quickicon.category_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.category_manager'),
             'number' => DB::table('larajoom_categories')->count(),
             'url'   => route('larajoom.admin.categories.index'),
         ];
@@ -76,7 +76,7 @@
         $boxes[] = [
             'color' => 'success',
             'icon'  => 'tag',
-            'title' => __('mdl::mod_quickicon.tags_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.tags_manager'),
             'number' => DB::table('larajoom_tags')->count(),
             'url'   => route('larajoom.admin.tags.index'),
         ];
@@ -89,7 +89,7 @@
         $boxes[] = [
             'color' => 'info',
             'icon'  => 'media',
-            'title' => __('mdl::mod_quickicon.media_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.media_manager'),
             'number' => '',
             'url'   => route('larajoom.admin.media.index'),
         ];
@@ -103,7 +103,7 @@
         $boxes[] = [
             'color' => 'acent',
             'icon'  => 'list',
-            'title' => __('mdl::mod_quickicon.menuitems_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.menuitems_manager'),
             'number' => DB::table('larajoom_menu')->count(),
             'url'   => route('larajoom.admin.menuitems.index'),
         ];
@@ -117,7 +117,7 @@
         $boxes[] = [
             'color' => 'warning',
             'icon'  => 'module',
-            'title' => __('mdl::mod_quickicon.module_manager'),
+            'title' => __('mod_quickicon::mod_quickicon.module_manager'),
             'number' => DB::table('larajoom_modules')->count(),
             'url'   => route('larajoom.admin.modules.index'),
         ];
@@ -131,7 +131,7 @@
         $boxes[] = [
             'color' => 'danger',
             'icon'  => 'plugins',
-            'title' => __('mdl::mod_quickicon.plugins'),
+            'title' => __('mod_quickicon::mod_quickicon.plugins'),
             'number' => DB::table('larajoom_extensions')->where('type', 'plugin')->count(),
             'url'   => route('larajoom.admin.plugins.index'),
         ];
@@ -145,15 +145,24 @@
         $boxes[] = [
             'color' => 'success',
             'icon'  => 'config',
-            'title' => __('mdl::mod_quickicon.global_configuration'),
+            'title' => __('mod_quickicon::mod_quickicon.global_configuration'),
             'number' => DB::table('larajoom_configuration')->count(),
             'url'   => route('larajoom.admin.config.index'),
         ];
     }
+
+    // Barra de progreso relativa al mayor contador entre las cajas visibles
+    $maxCount = max(array_map(fn ($b) => is_numeric($b['number']) ? (int) $b['number'] : 0, $boxes));
+    foreach ($boxes as &$box) {
+        $box['percent'] = $maxCount > 0 && is_numeric($box['number'])
+            ? (int) round(((int) $box['number'] / $maxCount) * 100)
+            : 0;
+    }
+    unset($box);
 @endphp
 
 <section class="body">
     @foreach ($boxes as $box)
-        <x-larajoom::info-box :color="$box['color']" :icon="$box['icon']" :title="$box['title']" :number="$box['number']" />
+        <x-larajoom::info-box :color="$box['color']" :icon="$box['icon']" :title="$box['title']" :number="$box['number']" :percent="$box['percent']" />
     @endforeach
 </section>

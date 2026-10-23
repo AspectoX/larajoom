@@ -76,7 +76,7 @@ class PluginController extends Controller
             'note'     => 'nullable|string|max:255',
         ]);
 
-        $plugin->enabled      = $request->has('enabled');
+        $plugin->enabled      = $request->boolean('enabled');
         $plugin->access       = $data['access'] ?? 1;
         $plugin->ordering     = $data['ordering'] ?? 0;
         $plugin->note         = $data['note'] ?? null;

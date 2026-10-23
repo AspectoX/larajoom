@@ -160,9 +160,9 @@ class MenuItemController extends Controller
         $data['type'] = $data['type'] ?? 'url';
         $data['link'] = $data['link'] ?? ''; // separators/headings no llevan link: '' (la columna es NOT NULL)
         $data['parent_id'] = (int) $request->input('parent_id', 0);
-        $data['published'] = $request->has('published');
-        $data['home'] = $request->has('home');
-        $data['show_icon'] = $request->has('show_icon');
+        $data['published'] = $request->boolean('published');
+        $data['home'] = $request->boolean('home');
+        $data['show_icon'] = $request->boolean('show_icon');
         $data['icon'] = $data['icon'] ?? null;
 
         return $data;

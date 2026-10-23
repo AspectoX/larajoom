@@ -29,9 +29,9 @@
     <caption hidden>{{ $title ?? '' }}</caption>
     <thead>
         <tr>
-            <th scope="col" class="w-50">{{ __('mdl::mod_logged.name') }}</th>
-            <th scope="col" class="w-30">{{ __('mdl::mod_logged.client') }}</th>
-            <th scope="col" class="w-20">{{ __('mdl::mod_logged.date') }}</th>
+            <th scope="col" class="w-50">{{ __('mod_logged::mod_logged.name') }}</th>
+            <th scope="col" class="w-30">{{ __('mod_logged::mod_logged.client') }}</th>
+            <th scope="col" class="w-20">{{ __('mod_logged::mod_logged.date') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -44,12 +44,12 @@
                         {{ $row->name }}
                     @endif
                 </th>
-                <td>{{ __('mdl::mod_logged.administrator') }}</td>
+                <td>{{ __('mod_logged::mod_logged.administrator') }}</td>
                 <td>@if (!empty($row->last_activity)){{ \Carbon\Carbon::parse($row->last_activity)->format('d-m-Y H:i') }}@else—@endif</td>
             </tr>
         @empty
             <tr>
-                <td colspan="3">{{ __('mdl::mod_logged.no_users') }}</td>
+                <td colspan="3">{{ __('mod_logged::mod_logged.no_users') }}</td>
             </tr>
         @endforelse
     </tbody>

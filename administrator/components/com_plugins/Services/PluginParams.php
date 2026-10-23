@@ -63,7 +63,7 @@ class PluginParams
             $type = $field['type'] ?? 'text';
 
             $data[$name] = match ($type) {
-                'checkbox' => $request->has('params.' . $name) ? 1 : 0,
+                'checkbox' => $request->boolean('params.' . $name) ? 1 : 0,
                 'number'   => $request->input('params.' . $name) !== null ? (int) $request->input('params.' . $name) : null,
                 default    => $request->input('params.' . $name),
             };

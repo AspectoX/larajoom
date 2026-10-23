@@ -16,7 +16,7 @@
         <span class="info-box-number">{{ $number }}</span>
         @if (! is_null($percent))
             <div class="progress">
-                <div class="progress-bar" style="width: {{ $number }}%"></div>
+                <div class="progress-bar" style="width: {{ $percent }}%"></div>
             </div>
             <span class="progress-description">{{ $description }}</span>
         @endif
