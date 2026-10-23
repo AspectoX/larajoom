@@ -118,8 +118,8 @@
                         @icon('search-plus')
                     </button>
                     <button type="button" class="media-toolbar-icon media-toolbar-list-view"
-                            aria-label="{{ __('com_media::com_media.list_view') }}">
-                        @icon('menus')
+                            aria-label="{{ __('com_media::com_media.list_view') }}" @click="toggleView()">
+                        {!! larajoom_icon_toggle('menus', 'list') !!}
                     </button>
                     <button type="button" class="media-toolbar-icon media-toolbar-info"
                             aria-label="{{ __('com_media::com_media.info') }}">
@@ -129,6 +129,47 @@
             </div>
 
             {{-- Browser --}}
+            {{-- Panel de orden (Sort): Order By + Direction --}}
+            <div id="media-sort-panel" class="row g-3 pt-2 pb-2 pe-3 justify-content-end media-sort-panel" style="display:none">
+                <div class="col-3">
+                    <select name="media-sort-by" id="media-sort-by" class="form-select-new">
+                        <button>
+                            <selectedcontent></selectedcontent>
+                            <span class="icon-svg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="m6 9 6 6 6-6"></path>
+                                </svg>
+                            </span>
+                        </button>
+                        <optgroup>
+                            <option value="name" @selected(true && false)>{{ __('com_media::com_media.name') }}</option>
+                            <option value="size" @selected(true && false)>{{ __('com_media::com_media.size') }}</option>
+                            <option value="dimension" @selected(true)>{{ __('com_media::com_media.dimensions') }}</option>
+                            <option value="date_created" @selected(true && false)>{{ __('com_media::com_media.created') }}</option>
+                            <option value="date_modified" @selected(true && false)>{{ __('com_media::com_media.modified') }}</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select name="media-sort-dir" id="media-sort-dir" class="form-select-new">
+                        <button>
+                            <selectedcontent></selectedcontent>
+                            <span class="icon-svg">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="m6 9 6 6 6-6"></path>
+                                </svg>
+                            </span>
+                        </button>
+                        <optgroup>
+                            <option value="asc" @selected(true && false)>{{ __('com_media::com_media.asc') }}</option>
+                            <option value="desc" @selected(true)>{{ __('com_media::com_media.desc') }}</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
             <div class="media-browser" style="height: 100%;">
                 <div class="media-dragoutline">
                     <span class="icon upload-icon">@icon('upload')</span>
@@ -140,7 +181,10 @@
 
                         @foreach ($folders as $folder)
                         <div class="media-browser-item" data-type="dir"
-                             data-path="{{ $folder['relative_path'] }}" data-name="{{ $folder['name'] }}">
+                             data-path="{{ $folder['relative_path'] }}" data-name="{{ $folder['name'] }}"
+                             data-size="" data-modified="" data-ext="dir"
+                             data-mime="" data-width="" data-height=""
+                             data-directory="{{ dirname($folder['relative_path']) === '.' ? '/' : dirname($folder['relative_path']) }}">
                             <div class="media-browser-item-directory" focused="false">
                                 <div class="media-browser-item-preview" tabindex="0"
                                      @click="navigate('{{ $folder['relative_path'] }}')">
@@ -187,7 +231,13 @@
 
                         @foreach ($files as $file)
                         <div class="media-browser-item" data-type="file"
-                             data-path="{{ $file['relative_path'] }}" data-name="{{ $file['name'] }}">
+                             data-path="{{ $file['relative_path'] }}" data-name="{{ $file['name'] }}"
+                             data-size="{{ $file['size'] }}" data-modified="{{ $file['modified'] }}"
+                             data-ext="{{ $file['extension'] }}"
+                             data-mime="{{ $file['mime'] ?? '' }}"
+                             data-width="{{ $file['width'] ?? '' }}"
+                             data-height="{{ $file['height'] ?? '' }}"
+                             data-directory="{{ dirname($file['relative_path']) === '.' ? '/' : dirname($file['relative_path']) }}">
                             <div class="media-browser-image" tabindex="0">
                                 <div class="media-browser-item-preview" title="{{ $file['name'] }}">
                                     <div class="image-background">
@@ -245,6 +295,56 @@
                         @endif
 
                     </div>
+
+                    {{-- Vista lista (tabla) como Joomla --}}
+                    <table id="media-browser-table" class="table media-browser-table" style="display:none; width:100%">
+                        <thead class="media-browser-table-head">
+                            <tr>
+                                <th class="type" scope="col"></th>
+                                <th class="name" scope="col"><button type="button" class="btn btn-link" data-sort="name">{{ __('com_media::com_media.name') }} <span class="ms-1 icon-sort">@icon('sort')</span></button></th>
+                                <th class="size" scope="col"><button type="button" class="btn btn-link" data-sort="size">{{ __('com_media::com_media.size') }} <span class="ms-1 icon-sort">@icon('sort')</span></button></th>
+                                <th class="dimension" scope="col"><button type="button" class="btn btn-link" data-sort="dimension">{{ __('com_media::com_media.dimensions') }} <span class="ms-1 icon-sort">@icon('sort')</span></button></th>
+                                <th class="created" scope="col"><button type="button" class="btn btn-link" data-sort="created">{{ __('com_media::com_media.created') }} <span class="ms-1 icon-sort">@icon('sort')</span></button></th>
+                                <th class="modified" scope="col"><button type="button" class="btn btn-link" data-sort="modified">{{ __('com_media::com_media.modified') }} <span class="ms-1 icon-sort">@icon('sort')</span></button></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($folders as $folder)
+                            <tr class="media-browser-item" data-size="0" data-dimension="0" data-created="" data-modified="">
+                                <td class="type" data-type=""><span class="icon">@icon('folder')</span></td>
+                                <th scope="row" class="name">{{ $folder['name'] }}</th>
+                                <td class="size"></td>
+                                <td class="dimension"></td>
+                                <td class="created"></td>
+                                <td class="modified"></td>
+                            </tr>
+                            @endforeach
+
+                            @foreach ($files as $file)
+                            @php
+                                $fileIcon = in_array($file['extension'], ['jpg','jpeg','png','gif','webp','bmp','svg'])
+                                    ? 'image'
+                                    : (in_array($file['extension'], ['pdf']) ? 'file-pdf'
+                                        : (in_array($file['extension'], ['doc','docx']) ? 'file-word'
+                                            : (in_array($file['extension'], ['xls','xlsx']) ? 'file-excel'
+                                                : (in_array($file['extension'], ['zip','rar','tar','gz']) ? 'file-archive' : 'file'))));
+                                $fileSize = number_format($file['size'] / 1024, 2) . ' KB';
+                                $fileDate = \Carbon\Carbon::createFromTimestamp($file['modified'])->format('Y-m-d H:i');
+                                $fileDim = ($file['width'] ?? null) && ($file['height'] ?? null)
+                                    ? $file['width'] . 'px * ' . $file['height'] . 'px'
+                                    : '';
+                            @endphp
+                            <tr class="media-browser-item" data-size="{{ $file['size'] }}" data-dimension="{{ ($file['width'] ?? 0) * ($file['height'] ?? 0) }}" data-created="{{ $file['modified'] }}" data-modified="{{ $file['modified'] }}">
+                                <td class="type" data-type="{{ $file['extension'] }}"><span class="icon">@icon($fileIcon)</span></td>
+                                <th scope="row" class="name">{{ $file['name'] }}</th>
+                                <td class="size">{{ $fileSize }}</td>
+                                <td class="dimension">{{ $fileDim }}</td>
+                                <td class="created">{{ $fileDate }}</td>
+                                <td class="modified">{{ $fileDate }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -446,7 +546,22 @@
 
     function mediaManager() {
         return {
+            listView: false,
+
             init() {},
+
+            toggleView() {
+                this.listView = !this.listView;
+                var grid = document.querySelector('.media-browser-items');
+                var tbl = document.getElementById('media-browser-table');
+                if (this.listView) {
+                    if (grid) grid.style.display = 'none';
+                    if (tbl) tbl.style.display = '';
+                } else {
+                    if (grid) grid.style.display = '';
+                    if (tbl) tbl.style.display = 'none';
+                }
+            },
 
             navigate(path) {
                 window.location.href = '{{ route("larajoom.admin.media.folder", ":path") }}'.replace(':path', path);
@@ -512,6 +627,214 @@
                 });
             }
         };
+    }
+
+    // ===== Botones de la toolbar (sort / grid / lista / info) =====
+    function initMediaToolbar() {
+        var sizes = ['sm', 'md', 'lg', 'xl'];
+        var idx = 1;
+
+        function grid() {
+            return document.querySelector('.media-browser-items');
+        }
+
+        function applyGrid() {
+            var items = grid();
+            if (!items) return;
+            items.className = items.className.replace(/\bmedia-browser-items-(sm|md|lg|xl)\b/g, '').trim();
+            items.classList.add('media-browser-items-' + sizes[idx]);
+        }
+
+        // Sort — muestra/oculta el panel de orden (Order By + Direction)
+        var allToolbarIcons = document.querySelectorAll('.media-view-icons .media-toolbar-icon');
+        var btnSort = Array.prototype.find.call(allToolbarIcons, function (el) {
+            return el.tagName === 'BUTTON'
+                && !el.classList.contains('media-toolbar-select-all')
+                && !el.classList.contains('media-toolbar-decrease-grid-size')
+                && !el.classList.contains('media-toolbar-increase-grid-size')
+                && !el.classList.contains('media-toolbar-list-view')
+                && !el.classList.contains('media-toolbar-info');
+        });
+
+        function sortKey(el, key) {
+            switch (key) {
+                case 'name': {
+                    var n = el.dataset.name || (el.querySelector('.name') || {}).textContent || '';
+                    return n.toLowerCase();
+                }
+                case 'size': return parseFloat(el.dataset.size) || 0;
+                case 'dimension': return (parseFloat(el.dataset.width) || 0) * (parseFloat(el.dataset.height) || 0);
+                case 'date_created':
+                case 'date_modified': return parseInt(el.dataset.modified, 10) || 0;
+            }
+            return 0;
+        }
+
+        function applyMediaSort() {
+            var bySel = document.getElementById('media-sort-by');
+            var dirSel = document.getElementById('media-sort-dir');
+            if (!bySel || !dirSel) return;
+            var by = bySel.value, dir = dirSel.value;
+
+            var grid = document.querySelector('.media-browser-items');
+            var tbl = document.getElementById('media-browser-table');
+
+            if (grid && grid.style.display !== 'none') {
+                var els = Array.prototype.slice.call(grid.children);
+                els.sort(function (a, b) {
+                    var va = sortKey(a, by), vb = sortKey(b, by);
+                    return typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+                });
+                if (dir === 'desc') els.reverse();
+                els.forEach(function (el) { grid.appendChild(el); });
+            } else if (tbl && tbl.style.display !== 'none') {
+                var rows = Array.prototype.slice.call(tbl.querySelectorAll('tbody tr'));
+                rows.sort(function (a, b) {
+                    var va = sortKey(a, by), vb = sortKey(b, by);
+                    return typeof va === 'string' ? va.localeCompare(vb) : va - vb;
+                });
+                if (dir === 'desc') rows.reverse();
+                rows.forEach(function (r) { tbl.querySelector('tbody').appendChild(r); });
+            }
+        }
+
+        if (btnSort) {
+            btnSort.addEventListener('click', function () {
+                var panel = document.getElementById('media-sort-panel');
+                if (!panel) return;
+                panel.style.display = (panel.style.display === 'none') ? '' : 'none';
+            });
+        }
+
+        var sortBySel = document.getElementById('media-sort-by');
+        var sortDirSel = document.getElementById('media-sort-dir');
+        if (sortBySel) sortBySel.addEventListener('change', applyMediaSort);
+        if (sortDirSel) sortDirSel.addEventListener('change', applyMediaSort);
+
+        var btnDec = document.querySelector('.media-toolbar-decrease-grid-size');
+        if (btnDec) {
+            btnDec.addEventListener('click', function () {
+                if (idx > 0) { idx--; applyGrid(); }
+            });
+        }
+
+        var btnInc = document.querySelector('.media-toolbar-increase-grid-size');
+        if (btnInc) {
+            btnInc.addEventListener('click', function () {
+                if (idx < sizes.length - 1) { idx++; applyGrid(); }
+            });
+        }
+
+
+
+        // Info
+        function hideInfo() {
+            var bar = document.getElementById('media-infobar');
+            if (bar) bar.style.display = 'none';
+        }
+
+        function populateInfo() {
+            var bar = document.getElementById('media-infobar');
+            if (!bar) return;
+            var sel = Array.prototype.slice.call(document.querySelectorAll('.media-browser-item.active'));
+            var inner = bar.querySelector('.media-infobar-inner');
+            if (!inner) return;
+
+            if (!sel.length) {
+                inner.innerHTML =
+                    '<h2>{{ __('com_media::com_media.info') }}</h2>' +
+                    '<div class="text-center">{{ __('com_media::com_media.no_files') }}</div>';
+                return;
+            }
+
+            var item = sel[0];
+            var name = item.dataset.name || '';
+            var isDir = item.dataset.type === 'dir';
+            var dir = item.dataset.directory || '/';
+            var size = item.dataset.size;
+            var sizeKb = size ? (parseInt(size, 10) / 1024).toFixed(2) + ' KB' : '-';
+            var modified = item.dataset.modified;
+            var modStr = modified ? new Date(parseInt(modified, 10) * 1000).toLocaleString() : '-';
+            var createdStr = modStr;
+            var w = item.dataset.width, h = item.dataset.height;
+            var dimension = (w || h) ? w + 'px * ' + h + 'px' : '-';
+            var type = isDir ? '{{ __('com_media::com_media.folder') }}' : '{{ __('com_media::com_media.file') }}';
+            var mime = item.dataset.mime || '-';
+            var ext = item.dataset.ext || '-';
+
+            inner.innerHTML =
+                '<h2>' + name + '</h2>' +
+                '<dl>' +
+                    '<dt>{{ __('com_media::com_media.folder') }}</dt><dd>' + dir + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.type') }}</dt><dd>' + type + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.created') }}</dt><dd>' + createdStr + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.modified') }}</dt><dd>' + modStr + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.dimensions') }}</dt><dd>' + dimension + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.size') }}</dt><dd>' + sizeKb + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.mime_type') }}</dt><dd>' + mime + '</dd>' +
+                    '<dt>{{ __('com_media::com_media.extension') }}</dt><dd>' + ext + '</dd>' +
+                '</dl>';
+        }
+
+        function toggleInfo() {
+            var bar = document.getElementById('media-infobar');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.className = 'media-infobar';
+                bar.id = 'media-infobar';
+                bar.innerHTML = '<button type="button" class="infobar-close" aria-label="{{ __('com_media::com_media.close') }}">&times;</button><div class="media-infobar-inner"></div>';
+                var browser = document.querySelector('.media-browser');
+                if (browser) browser.appendChild(bar);
+                bar.querySelector('.infobar-close').addEventListener('click', hideInfo);
+            }
+            if (bar.style.display === 'none') {
+                populateInfo();
+                bar.style.display = '';
+            } else {
+                bar.style.display = 'none';
+            }
+        }
+
+        var btnInfo = document.querySelector('.media-toolbar-info');
+        if (btnInfo) {
+            btnInfo.addEventListener('click', toggleInfo);
+        }
+
+        // Ordenar columnas de la tabla
+        var tblHead = document.querySelector('.media-browser-table-head');
+        if (tblHead) {
+            tblHead.addEventListener('click', function (e) {
+                var btn = e.target.closest('button[data-sort]');
+                if (!btn) return;
+                var tbody = document.querySelector('#media-browser-table tbody');
+                if (!tbody) return;
+
+                var field = btn.dataset.sort;
+                var dir = btn.dataset.dir === 'asc' ? 'desc' : 'asc';
+                btn.dataset.dir = dir;
+
+                var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+                rows.sort(function (a, b) {
+                    var va = a.dataset[field], vb = b.dataset[field];
+                    if (field === 'name') {
+                        return (va || '').localeCompare(vb || '');
+                    }
+                    return (parseFloat(va) || 0) - (parseFloat(vb) || 0);
+                });
+                if (dir === 'desc') rows.reverse();
+                rows.forEach(function (r) { tbody.appendChild(r); });
+
+                tblHead.querySelectorAll('button[data-sort]').forEach(function (b) {
+                    b.classList.toggle('active', b === btn);
+                });
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMediaToolbar);
+    } else {
+        initMediaToolbar();
     }
     </script>
 @endpush

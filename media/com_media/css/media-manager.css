@@ -1455,3 +1455,152 @@ html[dir="rtl"] ul.media-tree ul {
     line-height: 1;
     cursor: pointer;
 }
+
+/* ==========================================================================
+   Vista lista + Infobar (botones de la toolbar)
+   ========================================================================== */
+.media-browser-items.media-browser-list {
+    grid-template-columns: 1fr;
+    gap: 6px;
+}
+
+.media-browser-items.media-browser-list .media-browser-item-directory,
+.media-browser-items.media-browser-list .media-browser-image {
+    flex-direction: row;
+    align-items: center;
+    min-height: 58px;
+}
+
+.media-browser-items.media-browser-list .media-browser-item-preview {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.media-browser-items.media-browser-list .media-browser-item-info {
+    text-align: left;
+    flex: 1;
+}
+
+.media-infobar {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    width: 260px;
+    background: var(--com-media-manager-overlay-bg, #f0f0f0);
+    border-left: 1px solid var(--template-bg-dark-7);
+    box-shadow: 0 2px 10px -8px var(--template-bg-dark-50);
+    padding: 12px;
+    z-index: 20;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.media-infobar h2 {
+    margin: 0 0 8px;
+    font-size: 1rem;
+}
+
+.media-infobar .infobar-close {
+    float: right;
+    border: 0;
+    background: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.media-infobar-item {
+    padding: 2px 0;
+    font-size: .85rem;
+    word-break: break-all;
+}
+
+/* No usamos fuentes de iconos (Font Awesome): los iconos van en SVG (@icon).
+   Neutralizamos los pseudo-elementos de fuente de la columna "type" de la tabla. */
+.media-browser-table .type:before,
+.media-browser-table .type::before,
+.media-browser-table .type[data-type]:before,
+.media-browser-table .selected .type:before {
+    content: none !important;
+    font-family: inherit !important;
+}
+
+/* ==========================================================================
+   Tabla (media-browser-table): base + separadores
+   ========================================================================== */
+.media-browser-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.media-browser-table th,
+.media-browser-table td {
+    padding: .6rem .75rem;
+    border-bottom: 1px solid hsl(var(--hue), 35%, 92%);
+    vertical-align: middle;
+    font-size: .9rem;
+}
+
+.media-browser-table-head th {
+    border-bottom: 2px solid hsl(var(--hue), 35%, 88%);
+}
+
+.media-browser-table-head .btn-link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--link-color, #2a69b8);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.media-browser-table-head .btn-link.active {
+    color: var(--body-color, #212529);
+}
+
+.media-browser-table .type {
+    text-align: center;
+    width: 49px;
+    min-width: 49px;
+}
+
+.media-browser-table .type .icon svg {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.media-browser-table .size {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.media-browser-table .icon-sort svg {
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   Panel de orden (Sort)
+   ========================================================================== */
+.media-sort-panel {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    border-inline-start: 1px solid var(--template-bg-dark-7);
+    background: var(--com-media-manager-content-bg, #fff);
+    border-bottom: 1px solid var(--template-bg-dark-7);
+}
+
+.media-sort-panel .form-select {
+    padding: .3rem .5rem;
+    font-size: .85rem;
+    color: var(--body-color, #212529);
+    background: var(--bg-input, #fff);
+    border: var(--bor-input, 1px solid #ccc);
+    border-radius: .25rem;
+}

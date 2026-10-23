@@ -15,6 +15,19 @@ if (!function_exists('larajoom_icon')) {
     }
 }
 
+if (!function_exists('larajoom_icon_toggle')) {
+    function larajoom_icon_toggle(string $iconGrid, string $iconList): string
+    {
+        $grid = larajoom_icon($iconGrid);
+        $list = larajoom_icon($iconList);
+
+        $grid = str_replace('<svg', '<svg x-show="!listView"', $grid);
+        $list = str_replace('<svg', '<svg x-show="listView"', $list);
+
+        return $grid . $list;
+    }
+}
+
 if (!function_exists('larajoom_icons')) {
     function larajoom_icons(): array
     {

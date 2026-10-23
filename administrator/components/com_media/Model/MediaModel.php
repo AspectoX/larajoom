@@ -105,6 +105,7 @@ class MediaModel
         try {
             $allFiles = $disk->files($path);
             foreach ($allFiles as $file) {
+                $dimensions = $this->getImageDimensions($file);
                 $files[] = [
                     'name' => basename($file),
                     'path' => $file,
@@ -113,6 +114,8 @@ class MediaModel
                     'mime' => $disk->mimeType($file),
                     'modified' => $disk->lastModified($file),
                     'extension' => strtolower(pathinfo($file, PATHINFO_EXTENSION)),
+                    'width' => $dimensions['width'] ?? null,
+                    'height' => $dimensions['height'] ?? null,
                 ];
             }
         } catch (\Throwable) {
