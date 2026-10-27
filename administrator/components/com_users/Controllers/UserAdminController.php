@@ -40,7 +40,60 @@ class UserAdminController extends Controller
     public function create()
     {
         $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
-        return view('admin.components.com_users::users.create', compact('groups'));
+        $fieldsets = $this->userCreateFieldsets();
+
+        return view('admin.components.com_users::users.create', compact('groups', 'fieldsets'));
+    }
+
+    /**
+     * Definición de fieldsets para crear un usuario.
+     */
+    protected function userCreateFieldsets(): array
+    {
+        return [
+            'account_details' => [
+                'label'  => __('com_users::com_users.new_user'),
+                'fields' => [
+                    [
+                        'name'     => 'name',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.user_name'),
+                        'required' => true,
+                    ],
+                    [
+                        'name'     => 'username',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.user_name_username'),
+                        'required' => true,
+                    ],
+                    [
+                        'name'     => 'email',
+                        'type'     => 'email',
+                        'label'    => __('com_users::com_users.email'),
+                        'required' => true,
+                    ],
+                    [
+                        'name'         => 'password',
+                        'type'         => 'password',
+                        'label'        => __('com_users::com_users.password'),
+                        'required'   => true,
+                        'autocomplete' => 'new-password',
+                        'hint'         => __('com_users::com_users.password_requirements'),
+                    ],
+                ],
+            ],
+            'usergroups' => [
+                'label'   => __('com_users::com_users.usergroups'),
+                'fields' => [
+                    [
+                        'name'  => 'groups',
+                        'type'  => 'toggle',
+                        'label' => __('com_users::com_users.usergroups'),
+                        'value' => [],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function store(Request $request)
@@ -92,7 +145,95 @@ class UserAdminController extends Controller
                   ->get()
             : collect();
 
-        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes'));
+        $profile = Schema::hasTable('larajoom_user_profile')
+            ? DB::table('larajoom_user_profile')->where('user_id', $id)->first()
+            : null;
+
+        $fieldsets = $this->userEditFieldsets($user, $profile);
+
+        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes', 'fieldsets'));
+    }
+
+    /**
+     * Definición de fieldsets para editar un usuario.
+     */
+    protected function userEditFieldsets($user, ?object $profile = null): array
+    {
+        $profile = $profile ?? (object) [];
+
+        return [
+            'account_details' => [
+                'label'  => __('com_users::com_users.account_details'),
+                'fields' => [
+                    [
+                        'name'     => 'id',
+                        'type'     => 'text',
+                        'label'    => 'ID',
+                        'value'    => $user->getKey(),
+                        'readonly' => true,
+                    ],
+                    [
+                        'name'     => 'name',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.user_name'),
+                        'value'    => $profile->name ?? $user->name,
+                        'required' => true,
+                    ],
+                    [
+                        'name'     => 'username',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.user_name_username'),
+                        'value'    => $profile->username ?? $user->username,
+                        'required' => true,
+                    ],
+                    [
+                        'name'     => 'email',
+                        'type'     => 'email',
+                        'label'    => __('com_users::com_users.email'),
+                        'value'    => $profile->email ?? $user->email,
+                        'required' => true,
+                    ],
+                    [
+                        'name'         => 'password',
+                        'type'         => 'password',
+                        'label'        => __('com_users::com_users.password'),
+                        'autocomplete' => 'new-password',
+                        'hint'         => __('com_users::com_users.password_requirements'),
+                    ],
+                    [
+                        'name'         => 'password_confirmation',
+                        'type'         => 'password',
+                        'label'        => __('com_users::com_users.password_confirm'),
+                        'autocomplete' => 'new-password',
+                    ],
+                    [
+                        'name'     => 'registerDate',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.registration_date'),
+                        'value'    => $this->formatDate($profile->registerDate ?? $user->created_at),
+                        'readonly' => true,
+                    ],
+                    [
+                        'name'     => 'lastvisitDate',
+                        'type'     => 'text',
+                        'label'    => __('com_users::com_users.last_visit_date'),
+                        'value'    => $this->formatDate($profile->lastvisitDate ?? null),
+                        'readonly' => true,
+                    ],
+                ],
+            ],
+            'usergroups' => [
+                'label'   => __('com_users::com_users.usergroups'),
+                'fields' => [
+                    [
+                        'name'  => 'groups',
+                        'type'  => 'toggle',
+                        'label' => __('com_users::com_users.usergroups'),
+                        'value' => $userGroupIds,
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function update(Request $request, int $id)

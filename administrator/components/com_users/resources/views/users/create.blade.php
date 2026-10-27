@@ -25,29 +25,58 @@
 @section('content')
     <x-larajoom::form :action="route('larajoom.admin.users.store')" method="POST" id="adminForm">
         @csrf
-        <fieldset>
-            <legend>{{ __('com_users::com_users.new_user') }}</legend>
+        <div class="details">
+            @foreach ($fieldsets as $fieldset)
+                <details class="details__item" @if ($loop->first) open @endif name="profile">
+                    <summary class="details__link">{{ $fieldset['label'] }}</summary>
+                    <div class="details__body">
+                        <fieldset class="options-form">
+                            <legend>{{ $fieldset['label'] }}</legend>
 
-            <x-larajoom::input name="name" :label="__('com_users::com_users.user_name')" :value="old('name')" required />
-            <x-larajoom::input name="username" :label="__('com_users::com_users.username')" :value="old('username')" required />
-            <x-larajoom::input name="email" type="email" :label="__('com_users::com_users.email')" :value="old('email')" required />
-            <x-larajoom::input name="password" type="password" :label="__('com_users::com_users.password')" required />
+                            @foreach ($fieldset['fields'] ?? [] as $field)
+                                @if ($field['type'] === 'password')
+                                    <x-larajoom::password
+                                        :name="$field['name']"
+                                        :label="$field['label']"
+                                        :required="$field['required'] ?? false"
+                                        :autocomplete="$field['autocomplete'] ?? 'new-password'" />
+                                @elseif ($field['type'] === 'file')
+                                    <x-larajoom::file
+                                        :name="$field['name']"
+                                        :label="$field['label']"
+                                        :preview="$field['preview'] ?? null"
+                                        accept="image/*" />
+                                @elseif ($field['type'] === 'toggle')
+                                    <x-larajoom::toggle
+                                        :name="$field['name']"
+                                        :label="$field['label']"
+                                        :checked="$field['value'] ?? false" />
+                                @elseif ($field['readonly'] ?? false)
+                                    <div class="form-group">
+                                        <label class="form-label">{{ $field['label'] }}</label>
+                                        <div class="form-input">{{ $field['value'] }}</div>
+                                    </div>
+                                @else
+                                    <x-larajoom::input
+                                        :name="$field['name']"
+                                        :type="$field['type'] ?? 'text'"
+                                        :label="$field['label']"
+                                        :value="old($field['name'], $field['value'] ?? null)"
+                                        :required="$field['required'] ?? false" />
+                                @endif
 
-            <fieldset>
-                <legend>{{ __('com_users::com_users.usergroups') }}</legend>
+                                @if (!empty($field['hint']))
+                                    <p><small>{{ $field['hint'] }}</small></p>
+                                @endif
+                            @endforeach
 
-                @forelse ($groups as $group)
-                    <x-larajoom::toggle
-                        name="groups[]"
-                        :id="'user_group_' . $group->id"
-                        :value="$group->id"
-                        :label="$group->title"
-                        :checked="old('groups', []) && in_array((int) $group->id, old('groups', []))"
-                    />
-                @empty
-                    <p>{{ __('com_users::com_users.no_records_groups') }}</p>
-                @endforelse
-            </fieldset>
-        </fieldset>
+                            @if (!empty($fieldset['message']))
+                                <p>{{ $fieldset['message'] }}</p>
+                            @endif
+                        </fieldset>
+                    </div>
+                </details>
+            @endforeach
+        </div>
     </x-larajoom::form>
 @endsection
