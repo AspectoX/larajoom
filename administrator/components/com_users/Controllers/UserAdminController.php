@@ -41,7 +41,7 @@ class UserAdminController extends Controller
     {
         $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
         $fieldsets = $this->userCreateFieldsets();
-        $newUser = (object) [
+        $user = (object) [
             'id' => null,
             'name' => '',
             'username' => '',
