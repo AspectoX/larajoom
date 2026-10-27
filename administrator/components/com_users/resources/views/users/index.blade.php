@@ -225,56 +225,64 @@
     <script>
     (function () {
         var checkAll = document.getElementById('check-all');
-        if (checkAll) {
-            checkAll.addEventListener('change', function () {
-                var checked = checkAll.checked;
-                document.querySelectorAll('tbody tr td:first-child input.form-check').forEach(function (cb) {
-                    cb.checked = checked;
-                });
-                updateToolbarButtons();
-            });
-        }
-
         var rowCheckboxes = document.querySelectorAll('tbody tr td:first-child input.form-check');
-        if (!rowCheckboxes.length) return;
+        if (!checkAll || !rowCheckboxes.length) return;
 
-        var toolbar = document.querySelector('.toolbar') || document.body;
-        var toolbarButtons = toolbar.querySelectorAll('button');
-
-        var actionTexts = {
+        var actionLabels = {
             activate: "{{ __('com_users::com_users.activate') }}",
             block: "{{ __('com_users::com_users.block') }}",
             unblock: "{{ __('com_users::com_users.unblock') }}",
             delete: "{{ __('larajoom_admin::admin.delete') }}",
         };
 
-        var actionButtons = {};
-        toolbarButtons.forEach(function (btn) {
-            var text = btn.textContent.trim();
-            if (text === actionTexts.activate) actionButtons.activate = btn;
-            if (text === actionTexts.block) actionButtons.block = btn;
-            if (text === actionTexts.unblock) actionButtons.unblock = btn;
-            if (text === actionTexts.delete) actionButtons.delete = btn;
-        });
-
-        function updateToolbarButtons() {
-            var anyChecked = document.querySelectorAll('tbody tr td:first-child input.form-check:checked').length > 0;
-            Object.values(actionButtons).forEach(function (btn) {
-                if (btn) {
+        function setToolbarButtonsState(anyChecked) {
+            var toolbarList = document.querySelector('.panelbar .toolbar-button-list');
+            if (!toolbarList) return;
+            toolbarList.querySelectorAll('.toolbar-button-item a, .toolbar-button-item button').forEach(function (link) {
+                var text = link.textContent.trim();
+                var isAction = false;
+                Object.values(actionLabels).forEach(function (label) {
+                    if (text === label) isAction = true;
+                });
+                if (isAction) {
                     if (anyChecked) {
-                        btn.removeAttribute('disabled');
+                        link.classList.remove('disabled');
+                        link.removeAttribute('aria-disabled');
                     } else {
-                        btn.setAttribute('disabled', 'disabled');
+                        link.classList.add('disabled');
+                        link.setAttribute('aria-disabled', 'true');
                     }
                 }
             });
         }
 
-        rowCheckboxes.forEach(function (cb) {
-            cb.addEventListener('change', updateToolbarButtons);
+        // Prevenir clic en botones deshabilitados
+        document.querySelector('.panelbar .toolbar-button-list').addEventListener('click', function (e) {
+            var target = e.target.closest('a.disabled, button.disabled');
+            if (target) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
         });
 
-        updateToolbarButtons();
+        checkAll.addEventListener('change', function () {
+            var checked = checkAll.checked;
+            document.querySelectorAll('tbody tr td:first-child input.form-check').forEach(function (cb) {
+                cb.checked = checked;
+            });
+            setToolbarButtonsState(checked);
+        });
+
+        rowCheckboxes.forEach(function (cb) {
+            cb.addEventListener('change', function () {
+                var anyChecked = document.querySelectorAll('tbody tr td:first-child input.form-check:checked').length > 0;
+                setToolbarButtonsState(anyChecked);
+            });
+        });
+
+        // Estado inicial: deshabilitar botones de acción
+        setToolbarButtonsState(false);
     })();
 </script>
 @endsection
