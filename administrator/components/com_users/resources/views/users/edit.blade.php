@@ -23,12 +23,7 @@
 @endsection
 
 @section('content')
-    <x-larajoom::form
-        :action="$user->id ? route('larajoom.admin.users.update', $user->id) : route('larajoom.admin.users.store')"
-        :method="$user->id ? 'PUT' : 'POST'"
-        id="adminForm"
-        enctype="multipart/form-data"
-    >
+    <x-larajoom::form :action="$user->id ? route('larajoom.admin.users.update', $user->id) : route('larajoom.admin.users.store')" :method="$user->id ? 'PUT' : 'POST'" id="adminForm" enctype="multipart/form-data">
         @csrf
         <div class="details">
             @foreach ($fieldsets as $fieldset)
@@ -115,5 +110,46 @@
                 @endforeach
             </fieldset>
         @endif
+
+        <x-larajoom::form :action="route('larajoom.admin.users.twofactor')" method="POST" id="twofactorForm">
+            @csrf
+            <fieldset>
+                <legend>{{ __('com_users::com_users.two_factor_auth') }}</legend>
+
+                <h4>{{ __('com_users::com_users.two_factor_auth') }}</h4>
+
+                @if ($twoFactorStatus['enabled'])
+                    <p>{{ __('com_users::com_users.two_factor_enabled') }}</p>
+                    <ul>
+                        @foreach ($twoFactorStatus['methods'] as $method)
+                            <li>
+                                <strong>{{ $method['label'] }}</strong><br>
+                                <small>{{ __('com_users::com_users.two_factor_secret') }}: <code>{{ $method['secret'] }}</code></small>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <form method="POST" action="{{ route('larajoom.admin.users.remove2fa', $user->id) }}" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn danger">
+                            @icon('delete') {{ __('com_users::com_users.disable_two_factor') }}
+                        </button>
+                    </form>
+                @else
+                    <p>{{ __('com_users::com_users.two_factor_not_enabled') }}</p>
+                    <button type="button" class="btn" onclick="document.getElementById('setup2faForm').submit()">
+                        @icon('key') {{ __('com_users::com_users.setup_two_factor') }}
+                    </button>
+                    <form method="POST" action="{{ route('larajoom.admin.users.setup2fa', $user->id) }}" id="setup2faForm" style="display: none;">
+                        @csrf
+                        @method('POST')
+                        <input type="hidden" name="method" value="totp">
+                        <button type="submit" class="btn">
+                            @icon('key') {{ __('com_users::com_users.setup_two_factor') }}
+                        </button>
+                    </form>
+                @endif
+            </fieldset>
+        </x-larajoom::form>
     @endif
 @endsection

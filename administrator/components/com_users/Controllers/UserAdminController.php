@@ -943,4 +943,35 @@ class UserAdminController extends Controller
         return redirect()->route('larajoom.admin.users.index')
             ->with('success', __('com_users::com_users.users_deleted'));
     }
+
+    /**
+     * Obtiene el estado de autenticación de dos factores (2FA) de un usuario.
+     */
+    protected function getTwoFactorStatus(int $userId): array
+    {
+        $mfaTable = 'larajoom_user_mfa';
+
+        if (!Schema::hasTable($mfaTable)) {
+            return [];
+        }
+
+        $mfaMethods = DB::table($mfaTable)
+            ->where('user_id', $userId)
+            ->where('enabled', 1)
+            ->get();
+
+        $methods = [];
+        foreach ($mfaMethods as $mfa) {
+            $methods[] = [
+                'method' => $mfa->method,
+                'label'  => $mfa->label,
+                'secret' => $mfa->secret,
+            ];
+        }
+
+        return [
+            'enabled'   => count($methods) > 0,
+            'methods'   => $methods,
+        ];
+    }
 }
