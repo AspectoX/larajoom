@@ -118,6 +118,21 @@
         {{ $users->links() }}
     </div>
 
+    <x-larajoom::form :action="route('larajoom.admin.users.massMail')" method="POST" id="massMailForm">
+        <fieldset>
+            <legend>{{ __('com_users::com_users.mass_mail') }}</legend>
+            <x-larajoom::input name="subject" :label="__('com_users::com_users.subject')" required />
+            <x-larajoom::textarea name="message" :label="__('com_users::com_users.message')" required />
+            @foreach ($users as $user)
+                <input type="checkbox" name="user_ids[]" value="{{ $user->id }}" class="form-check">
+                {{ $user->name }} ({{ $user->email }})<br>
+            @endforeach
+            <button type="submit" class="btn">
+                @icon('mail') {{ __('com_users::com_users.send_mass_mail') }}
+            </button>
+        </fieldset>
+    </x-larajoom::form>
+
     <script>
     (function () {
         var wrap = document.currentScript.closest('[data-ax-table]');

@@ -61,4 +61,9 @@ return [
     'note_added'     => 'Note added.',
     'note_updated'   => 'Note updated.',
     'note_deleted'   => 'Note deleted.',
+    'mass_mail'      => 'Mass Mail',
+    'subject'        => 'Subject',
+    'message'        => 'Message',
+    'send_mass_mail' => 'Send Mass Mail',
+    'mass_mail_sent' => ':count emails sent.',
 ];

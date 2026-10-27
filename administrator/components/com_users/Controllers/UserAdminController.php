@@ -73,6 +73,8 @@ class UserAdminController extends Controller
             }
         }
 
+        $this->logUserAction($request, $user->id, 'user_created', 'com_users', 'Se creó el usuario ' . $data['username']);
+
         return redirect()->route('larajoom.admin.users.index')
             ->with('success', __('com_users::com_users.user_saved'));
     }
@@ -118,6 +120,8 @@ class UserAdminController extends Controller
         }
 
         $this->syncUserGroups($user->id, $data['groups'] ?? []);
+
+        $this->logUserAction($request, $user->id, 'user_updated', 'com_users', 'Se actualizó el usuario ' . $data['email']);
 
         $log = \larajoom_plugins()->resolve('actionlog', 'joomla');
         if ($log && method_exists($log, 'onUserSaved')) {
@@ -618,5 +622,53 @@ class UserAdminController extends Controller
 
         return redirect()->route('larajoom.admin.users.edit', $note->user_id)
             ->with('success', __('com_users::com_users.note_deleted'));
+    }
+
+    /**
+     * Loguea una acción de usuario.
+     */
+    protected function logUserAction(Request $request, int $userId, string $action, string $module, string $description): void
+    {
+        $ip = $request->ip();
+        DB::table('larajoom_user_action_log')->insert([
+            'user_id'      => $userId,
+            'action'       => $action,
+            'module'       => $module,
+            'ip'           => $ip,
+            'created_at'   => now(),
+        ]);
+    }
+
+    public function massMail(Request $request)
+    {
+        $request->validate([
+            'subject'   => 'required|string|max:255',
+            'message'   => 'required|string',
+            'user_ids'  => 'required|array',
+            'user_ids.*' => 'integer|exists:larajoom_users,id',
+        ]);
+
+        $userIds = $request->input('user_ids');
+        $subject = $request->input('subject');
+        $message = $request->input('message');
+
+        $users = User::whereIn('id', $userIds)->whereNotNull('email')->get();
+
+        $sent = 0;
+        foreach ($users as $user) {
+            try {
+                \Illuminate\Support\Facades\Mail::raw($message, function ($mail) use ($user, $subject) {
+                    $mail->to($user->email)
+                        ->subject($subject);
+                });
+                $sent++;
+            } catch (\Exception $e) {
+                // Log the error but continue with other users
+                \Log::warning('Mass mail failed for user ' . $user->id . ': ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.mass_mail_sent', ['count' => $sent]));
     }
 }

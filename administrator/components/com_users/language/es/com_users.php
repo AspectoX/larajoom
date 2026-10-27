@@ -61,4 +61,9 @@ return [
     'note_added'     => 'Nota agregada.',
     'note_updated'   => 'Nota actualizada.',
     'note_deleted'   => 'Nota eliminada.',
+    'mass_mail'      => 'Envío Masivo de Correo',
+    'subject'        => 'Asunto',
+    'message'        => 'Mensaje',
+    'send_mass_mail' => 'Enviar Correo Masivo',
+    'mass_mail_sent' => ':count correos enviados.',
 ];
