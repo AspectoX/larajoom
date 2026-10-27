@@ -671,4 +671,61 @@ class UserAdminController extends Controller
         return redirect()->route('larajoom.admin.users.index')
             ->with('success', __('com_users::com_users.mass_mail_sent', ['count' => $sent]));
     }
+
+    public function sendMessage(Request $request)
+    {
+        $request->validate([
+            'to_user_id'  => 'required|integer|exists:larajoom_users,id',
+            'subject'     => 'required|string|max:255',
+            'message'     => 'required|string',
+        ]);
+
+        $fromUserId = auth()->id();
+
+        DB::table('larajoom_messages')->insert([
+            'from_user_id' => $fromUserId,
+            'to_user_id'   => $request->to_user_id,
+            'subject'      => $request->subject,
+            'message'      => $request->message,
+            'created_at'   => now(),
+        ]);
+
+        return redirect()->route('larajoom.admin.users.messages')
+            ->with('success', __('com_users::com_users.message_sent'));
+    }
+
+    public function messages()
+    {
+        $userId = auth()->id();
+        $messages = DB::table('larajoom_messages')
+            ->join('larajoom_users as from_user', 'larajoom_messages.from_user_id', '=', 'from_user.id')
+            ->select(
+                'larajoom_messages.*',
+                'from_user.name as from_name',
+                'from_user.email as from_email'
+            )
+            ->where('to_user_id', $userId)
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('admin.components.com_users::users.messages', compact('messages'));
+    }
+
+    public function markMessageAsRead(int $messageId)
+    {
+        DB::table('larajoom_messages')
+            ->where('id', $messageId)
+            ->update(['is_read' => true, 'read_at' => now()]);
+
+        return redirect()->route('larajoom.admin.users.messages')
+            ->with('success', __('com_users::com_users.message_marked_read'));
+    }
+
+    public function destroyMessage(int $messageId)
+    {
+        DB::table('larajoom_messages')->where('id', $messageId)->delete();
+
+        return redirect()->route('larajoom.admin.users.messages')
+            ->with('success', __('com_users::com_users.message_deleted'));
+    }
 }

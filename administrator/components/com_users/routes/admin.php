@@ -32,6 +32,12 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
 
     Route::post('/mass-mail', [UserAdminController::class, 'massMail'])->name('larajoom.admin.users.massMail');
 
+    // Mensajes
+    Route::get('/messages', [UserAdminController::class, 'messages'])->name('larajoom.admin.users.messages');
+    Route::post('/messages/send', [UserAdminController::class, 'sendMessage'])->name('larajoom.admin.users.sendMessage');
+    Route::put('/messages/{messageId}/read', [UserAdminController::class, 'markMessageAsRead'])->name('larajoom.admin.users.markMessageAsRead');
+    Route::delete('/messages/{messageId}', [UserAdminController::class, 'destroyMessage'])->name('larajoom.admin.users.destroyMessage');
+
     // Niveles de acceso
     Route::get('/levels', [UserAdminController::class, 'levels'])->name('larajoom.admin.levels.index');
     Route::get('/levels/{id}/edit', [UserAdminController::class, 'editLevel'])->name('larajoom.admin.levels.edit');
