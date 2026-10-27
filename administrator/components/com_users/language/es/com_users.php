@@ -77,4 +77,11 @@ return [
     'unread'         => 'No leído',
     'read'           => 'Leído',
     'mark_read'      => 'Marcar como leído',
+    'activate'       => 'Activar',
+    'block'          => 'Bloquear',
+    'unblock'        => 'Desbloquear',
+    'users_activated'=> 'Usuarios activados.',
+    'users_blocked'  => 'Usuarios bloqueados.',
+    'users_unblocked'=> 'Usuarios desbloqueados.',
+    'users_deleted'  => 'Usuarios eliminados.',
 ];

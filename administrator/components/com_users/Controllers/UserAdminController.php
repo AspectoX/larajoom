@@ -869,4 +869,71 @@ class UserAdminController extends Controller
         return redirect()->route('larajoom.admin.users.messages')
             ->with('success', __('com_users::com_users.message_deleted'));
     }
+
+    public function bulkActivate(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'integer|exists:larajoom_users,id',
+        ]);
+
+        foreach ($request->input('user_ids') as $userId) {
+            DB::table('larajoom_users')->where('id', $userId)->update(['enabled' => 1]);
+            $this->logUserAction($request, $userId, 'user_activated', 'com_users', 'Usuario activado');
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.users_activated'));
+    }
+
+    public function bulkBlock(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'integer|exists:larajoom_users,id',
+        ]);
+
+        foreach ($request->input('user_ids') as $userId) {
+            DB::table('larajoom_users')->where('id', $userId)->update(['enabled' => 0]);
+            $this->logUserAction($request, $userId, 'user_blocked', 'com_users', 'Usuario bloqueado');
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.users_blocked'));
+    }
+
+    public function bulkUnblock(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'integer|exists:larajoom_users,id',
+        ]);
+
+        foreach ($request->input('user_ids') as $userId) {
+            DB::table('larajoom_users')->where('id', $userId)->update(['enabled' => 1]);
+            $this->logUserAction($request, $userId, 'user_unblocked', 'com_users', 'Usuario desbloqueado');
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.users_unblocked'));
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'integer|exists:larajoom_users,id',
+        ]);
+
+        foreach ($request->input('user_ids') as $userId) {
+            DB::table('larajoom_user_usergroup_map')->where('user_id', $userId)->delete();
+            DB::table('larajoom_user_notes')->where('user_id', $userId)->delete();
+            DB::table('larajoom_user_profile')->where('user_id', $userId)->delete();
+            DB::table('larajoom_users')->where('id', $userId)->delete();
+            $this->logUserAction($request, $userId, 'user_deleted', 'com_users', 'Usuario eliminado');
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.users_deleted'));
+    }
 }

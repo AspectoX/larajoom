@@ -18,6 +18,12 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
     Route::delete('/{id}', [UserAdminController::class, 'destroy'])->name('larajoom.admin.users.destroy');
     Route::post('/{id}/toggle', [UserAdminController::class, 'toggle'])->name('larajoom.admin.users.toggle');
 
+    // Acciones en lote sobre usuarios
+    Route::post('/bulk/activate', [UserAdminController::class, 'bulkActivate'])->name('larajoom.admin.users.bulkActivate');
+    Route::post('/bulk/block', [UserAdminController::class, 'bulkBlock'])->name('larajoom.admin.users.bulkBlock');
+    Route::post('/bulk/unblock', [UserAdminController::class, 'bulkUnblock'])->name('larajoom.admin.users.bulkUnblock');
+    Route::delete('/bulk/delete', [UserAdminController::class, 'bulkDelete'])->name('larajoom.admin.users.bulkDelete');
+
     // Grupos de usuarios
     Route::get('/groups', [UserAdminController::class, 'groups'])->name('larajoom.admin.groups.index');
     Route::get('/groups/{id}/edit', [UserAdminController::class, 'editGroup'])->name('larajoom.admin.groups.edit');

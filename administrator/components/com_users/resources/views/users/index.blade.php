@@ -12,20 +12,36 @@
             'color' => 'success',
         ],
         [
-            'label' => __('larajoom_admin::admin.edit'),
-            'icon'  => 'edit',
-            'color' => 'primary',
+            'label' => __('com_users::com_users.activate'),
+            'icon'  => 'circle-check',
+            'url'   => route('larajoom.admin.users.bulkActivate'),
+            'method'=> 'POST',
+            'color' => 'success',
+            'disabled' => true,
+        ],
+        [
+            'label' => __('com_users::com_users.block'),
+            'icon'  => 'circle-times',
+            'url'   => route('larajoom.admin.users.bulkBlock'),
+            'method'=> 'POST',
+            'color' => 'danger',
+            'disabled' => true,
+        ],
+        [
+            'label' => __('com_users::com_users.unblock'),
+            'icon'  => 'circle-check',
+            'url'   => route('larajoom.admin.users.bulkUnblock'),
+            'method'=> 'POST',
+            'color' => 'success',
+            'disabled' => true,
         ],
         [
             'label' => __('larajoom_admin::admin.delete'),
             'icon'  => 'delete',
+            'url'   => route('larajoom.admin.users.bulkDelete'),
+            'method'=> 'DELETE',
             'color' => 'danger',
-        ],
-        [
-            'label' => __('com_users::com_users.messaging'),
-            'icon'  => 'message',
-            'url'   => route('larajoom.admin.users.messages'),
-            'color' => 'info',
+            'disabled' => true,
         ],
     ]" />
 @endsection
@@ -215,8 +231,50 @@
                 document.querySelectorAll('tbody tr td:first-child input.form-check').forEach(function (cb) {
                     cb.checked = checked;
                 });
+                updateToolbarButtons();
             });
         }
+
+        var rowCheckboxes = document.querySelectorAll('tbody tr td:first-child input.form-check');
+        if (!rowCheckboxes.length) return;
+
+        var toolbar = document.querySelector('.toolbar') || document.body;
+        var toolbarButtons = toolbar.querySelectorAll('button');
+
+        var actionTexts = {
+            activate: "{{ __('com_users::com_users.activate') }}",
+            block: "{{ __('com_users::com_users.block') }}",
+            unblock: "{{ __('com_users::com_users.unblock') }}",
+            delete: "{{ __('larajoom_admin::admin.delete') }}",
+        };
+
+        var actionButtons = {};
+        toolbarButtons.forEach(function (btn) {
+            var text = btn.textContent.trim();
+            if (text === actionTexts.activate) actionButtons.activate = btn;
+            if (text === actionTexts.block) actionButtons.block = btn;
+            if (text === actionTexts.unblock) actionButtons.unblock = btn;
+            if (text === actionTexts.delete) actionButtons.delete = btn;
+        });
+
+        function updateToolbarButtons() {
+            var anyChecked = document.querySelectorAll('tbody tr td:first-child input.form-check:checked').length > 0;
+            Object.values(actionButtons).forEach(function (btn) {
+                if (btn) {
+                    if (anyChecked) {
+                        btn.removeAttribute('disabled');
+                    } else {
+                        btn.setAttribute('disabled', 'disabled');
+                    }
+                }
+            });
+        }
+
+        rowCheckboxes.forEach(function (cb) {
+            cb.addEventListener('change', updateToolbarButtons);
+        });
+
+        updateToolbarButtons();
     })();
 </script>
 @endsection
