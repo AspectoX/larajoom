@@ -23,7 +23,13 @@
 @endsection
 
 @section('content')
-    <x-larajoom::form :action="route('larajoom.admin.users.update', $user->id)" method="PUT" id="adminForm" enctype="multipart/form-data">
+    <x-larajoom::form
+        :action="$user->id ? route('larajoom.admin.users.update', $user->id) : route('larajoom.admin.users.store')"
+        :method="$user->id ? 'PUT' : 'POST'"
+        id="adminForm"
+        enctype="multipart/form-data"
+    >
+        @csrf
         <div class="details">
             @foreach ($fieldsets as $fieldset)
                 <details class="details__item" @if ($loop->first) open @endif name="profile">

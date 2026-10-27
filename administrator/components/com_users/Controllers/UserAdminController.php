@@ -41,8 +41,15 @@ class UserAdminController extends Controller
     {
         $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
         $fieldsets = $this->userCreateFieldsets();
+        $newUser = (object) [
+            'id' => null,
+            'name' => '',
+            'username' => '',
+            'email' => '',
+            'password' => '',
+        ];
 
-        return view('admin.components.com_users::users.create', compact('groups', 'fieldsets'));
+        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'fieldsets'));
     }
 
     /**

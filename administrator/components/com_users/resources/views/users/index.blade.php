@@ -112,22 +112,10 @@
                         </div>
                     </th>
                     <th>
-                        <div class="col-sort">
-                            <span class="th-label">{{ __('com_users::com_users.mfa') }}</span>
-                            <span class="th-sort-icon">
-                                <span class="sort-arrow sort-arrow-top">@icon('sort-top')</span>
-                                <span class="sort-arrow sort-arrow-down">@icon('sort-down')</span>
-                            </span>
-                        </div>
+                        <span class="th-label">{{ __('com_users::com_users.mfa') }}</span>
                     </th>
                     <th>
-                        <div class="col-sort">
-                            <span class="th-label">{{ __('com_users::com_users.usergroups') }}</span>
-                            <span class="th-sort-icon">
-                                <span class="sort-arrow sort-arrow-top">@icon('sort-top')</span>
-                                <span class="sort-arrow sort-arrow-down">@icon('sort-down')</span>
-                            </span>
-                        </div>
+                        <span class="th-label">{{ __('com_users::com_users.usergroups') }}</span>
                     </th>
                     <th data-sort>
                         <div class="col-sort">
