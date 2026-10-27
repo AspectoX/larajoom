@@ -47,7 +47,9 @@
         <table class="ax-table">
             <thead>
                 <tr>
-                    <th style="white-space: nowrap;"></th>
+                    <th style="white-space: nowrap;">
+                        <input type="checkbox" id="check-all" class="form-check">
+                    </th>
                     <th data-sort>
                         <div class="col-sort">
                             <span class="th-label">{{ __('com_users::com_users.id') }}</span>
@@ -93,7 +95,7 @@
                             </span>
                         </div>
                     </th>
-                    <th data-sort>
+                    <th>
                         <div class="col-sort">
                             <span class="th-label">{{ __('com_users::com_users.mfa') }}</span>
                             <span class="th-sort-icon">
@@ -102,7 +104,7 @@
                             </span>
                         </div>
                     </th>
-                    <th data-sort>
+                    <th>
                         <div class="col-sort">
                             <span class="th-label">{{ __('com_users::com_users.usergroups') }}</span>
                             <span class="th-sort-icon">
@@ -204,20 +206,17 @@
         {{ $users->links() }}
     </div>
 
-    <x-larajoom::form :action="route('larajoom.admin.users.massMail')" method="POST" id="massMailForm">
-        <fieldset>
-            <legend>{{ __('com_users::com_users.mass_mail') }}</legend>
-            <x-larajoom::input name="subject" :label="__('com_users::com_users.subject')" required />
-            <x-larajoom::textarea name="message" :label="__('com_users::com_users.message')" required />
-            @foreach ($users as $user)
-                <input type="checkbox" name="user_ids[]" value="{{ $user->id }}" class="form-check">
-                {{ $user->name }} ({{ $user->email }})<br>
-            @endforeach
-            <button type="submit" class="btn">
-                @icon('mail') {{ __('com_users::com_users.send_mass_mail') }}
-            </button>
-        </fieldset>
-    </x-larajoom::form>
-
-    <a href="{{ route('larajoom.admin.users.messages') }}" class="btn">{{ __('com_users::com_users.messaging') }}</a>
-</section>
+    <script>
+    (function () {
+        var checkAll = document.getElementById('check-all');
+        if (checkAll) {
+            checkAll.addEventListener('change', function () {
+                var checked = checkAll.checked;
+                document.querySelectorAll('tbody tr td:first-child input.form-check').forEach(function (cb) {
+                    cb.checked = checked;
+                });
+            });
+        }
+    })();
+</script>
+@endsection
