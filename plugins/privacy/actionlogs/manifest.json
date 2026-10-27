@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "privacy",
+    "name":  "actionlogs",
+    "title":  "Privacy - Action Logs",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Registra las solicitudes de privacidad en el registro de acciones (GDPR).",
+    "view_namespace":  "plugins.privacy.actionlogs",
+    "lang_namespace":  "plg_privacy_actionlogs"
+}

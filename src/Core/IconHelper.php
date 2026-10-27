@@ -37,7 +37,9 @@ if (!function_exists('larajoom_icons')) {
         }
         require_once $iconsPath;
         if (function_exists('aspectox\AxAdminLara\Support\getIcons')) {
-            return \aspectox\AxAdminLara\Support\getIcons();
+            $icons = \aspectox\AxAdminLara\Support\getIcons();
+            ksort($icons);
+            return $icons;
         }
         return [];
     }

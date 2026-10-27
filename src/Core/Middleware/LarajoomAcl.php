@@ -38,9 +38,9 @@ class LarajoomAcl
         $asset = $this->assetFor($request);
         $action = Access::actionForRouteName((string) $route->getName());
 
-        // Sin asset reconocible (p.ej. rutas del core) se deja pasar
+        // Sin asset reconocible se deniega por defecto (deny-by-default)
         if ($asset === null) {
-            return $next($request);
+            abort(403, 'No se reconoce el asset para esta ruta.');
         }
 
         if (!Access::can($asset, $action)) {

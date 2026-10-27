@@ -84,8 +84,8 @@ class Access
         $rules = self::rulesFor($asset);
 
         if (empty($rules)) {
-            // Sin asset configurado: se permite (comportamiento por defecto)
-            return self::TIER_READ;
+            // Sin asset configurado: se deniega por defecto (deny-by-default)
+            return self::TIER_NONE;
         }
 
         $tier = self::TIER_NONE;
@@ -140,7 +140,7 @@ class Access
         $rules = self::rulesFor($asset);
 
         if (empty($rules)) {
-            return true;
+            return false;
         }
 
         foreach (self::userGroupIds() as $groupId) {

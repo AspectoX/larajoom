@@ -184,6 +184,8 @@ class PackageInstaller
             throw new \RuntimeException('El manifest.json está incompleto (falta "name").');
         }
 
+        $this->verifyPackageSignature($dir, $manifest);
+
         $element = $manifest['name'];
         $type    = $this->resolveType($manifest, $element);
         $client  = $this->resolveClient($manifest, $element, $type);

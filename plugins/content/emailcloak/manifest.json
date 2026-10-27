@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "content",
+    "name":  "emailcloak",
+    "title":  "Content - Email Cloak",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Protege las direcciones de correo del contenido con ofuscación JavaScript.",
+    "view_namespace":  "plugins.content.emailcloak",
+    "lang_namespace":  "plg_content_emailcloak"
+}

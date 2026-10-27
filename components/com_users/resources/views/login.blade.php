@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -33,6 +33,16 @@
             <div>
                 <x-larajoom::checkbox name="remember" label="Recordarme" />
             </div>
+
+            @php
+                $captchaType = config('larajoom.captcha', '0');
+                $captcha = ($captchaType && $captchaType !== '0')
+                    ? app(\Aspectox\LaraJoom\Core\Plugins\PluginManager::class)->resolve('captcha', $captchaType)
+                    : null;
+            @endphp
+            @if ($captcha && method_exists($captcha, 'onDisplay'))
+                <div>{!! $captcha->onDisplay() !!}</div>
+            @endif
 
             <div>
                 <button type="submit">Entrar</button>

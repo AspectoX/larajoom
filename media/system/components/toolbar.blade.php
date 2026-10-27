@@ -28,5 +28,8 @@
                 @endif
             </li>
         @endforeach
+        @if (!empty($slot))
+            <li class="toolbar-button-item toolbar-extra">{{ $slot }}</li>
+        @endif
     </ul>
 </div>

@@ -1,6 +1,12 @@
 {
-    "type": "template",
-    "name": "system",
-    "view_path": "administrator/templates/system",
-    "lang_path": "administrator/templates/system/language"
+    "type":  "template",
+    "name":  "system",
+    "title": "System",
+    "client": "administrator",
+    "version": "1.0.0",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "description": "Template de sistema (layouts base).",
+    "view_path":  "administrator/templates/system",
+    "lang_path":  "administrator/templates/system/language"
 }

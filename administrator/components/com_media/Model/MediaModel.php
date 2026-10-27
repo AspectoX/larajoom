@@ -188,6 +188,36 @@ class MediaModel
         return $files;
     }
 
+    public function countImages(): int
+    {
+        return $this->countImagesIn($this->mediaRoot());
+    }
+
+    protected function countImagesIn(string $dir): int
+    {
+        if (!is_dir($dir)) {
+            return 0;
+        }
+
+        $count = 0;
+        foreach (scandir($dir) as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+            $p = $dir . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($p)) {
+                $count += $this->countImagesIn($p);
+            } else {
+                $ext = strtolower(pathinfo($item, PATHINFO_EXTENSION));
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'])) {
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
+    }
+
     public function getBreadcrumbs(): array
     {
         $breadcrumbs = [['name' => $this->rootName(), 'path' => '']];

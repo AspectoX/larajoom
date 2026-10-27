@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "content",
+    "name":  "loadmodule",
+    "title":  "Content - Load Module",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Inserta módulos y posiciones dentro del contenido mediante {loadmodule} y {loadposition}.",
+    "view_namespace":  "plugins.content.loadmodule",
+    "lang_namespace":  "plg_content_loadmodule"
+}

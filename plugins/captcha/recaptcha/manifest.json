@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "captcha",
+    "name":  "recaptcha",
+    "title":  "Captcha - reCAPTCHA",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Protege los formularios con Google reCAPTCHA v2.",
+    "view_namespace":  "plugins.captcha.recaptcha",
+    "lang_namespace":  "plg_captcha_recaptcha"
+}

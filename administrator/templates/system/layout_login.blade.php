@@ -97,7 +97,7 @@
         <div class="header-items">
             <div class="header-item">
                 <a href="{{ url('/') }}" class="header-item-content" title="{{ __('com_login::com_login.open_frontend') }}" target="_blank">
-                    <span class="icon" aria-hidden="true">
+                    <span class="text-white icon" aria-hidden="true">
                         @icon('go-to')
                     </span>
                     <div class="header-item-text">{{ $siteName }}</div>

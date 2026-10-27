@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "system",
+    "name":  "logout",
+    "title":  "System - Logout",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Limpia la sesión y las cookies al cerrar sesión.",
+    "view_namespace":  "plugins.system.logout",
+    "lang_namespace":  "plg_system_logout"
+}

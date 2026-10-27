@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "content",
+    "name":  "pagebreak",
+    "title":  "Content - Pagebreak",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Divide el artículo en varias páginas con {pagebreak}.",
+    "view_namespace":  "plugins.content.pagebreak",
+    "lang_namespace":  "plg_content_pagebreak"
+}

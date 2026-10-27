@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_templates",
+    "view_namespace":  "admin.components.com_templates",
+    "lang_namespace":  "com_templates"
+}

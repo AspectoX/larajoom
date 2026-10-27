@@ -17,8 +17,8 @@
             </header>
 
             <div>
-                {!! $article->introtext !!}
-                {!! $article->fulltext !!}
+                {{ $article->introtext }}
+                {{ $article->fulltext }}
             </div>
 
             <footer>

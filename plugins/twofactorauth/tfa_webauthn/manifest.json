@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "twofactorauth",
+    "name":  "tfa_webauthn",
+    "title":  "Two Factor Auth - WebAuthn",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Segundo factor mediante llaves de seguridad paskeys (WebAuthn / FIDO2).",
+    "view_namespace":  "plugins.twofactorauth.tfa_webauthn",
+    "lang_namespace":  "plg_twofactorauth_webauthn"
+}

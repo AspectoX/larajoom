@@ -25,7 +25,7 @@ class InstallerController extends Controller
         $type = $request->input('type');
         $search = $request->input('search');
 
-        $query = Extension::query()->whereNotIn('type', ['plugin'])->orderBy('type')->orderBy('element');
+        $query = Extension::query()->orderBy('type')->orderBy('element');
         if ($type) {
             $query->where('type', $type);
         }

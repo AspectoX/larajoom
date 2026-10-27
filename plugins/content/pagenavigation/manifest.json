@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "content",
+    "name":  "pagenavigation",
+    "title":  "Content - Page Navigation",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Agrega enlaces Anterior / Siguiente al artículo.",
+    "view_namespace":  "plugins.content.pagenavigation",
+    "lang_namespace":  "plg_content_pagenavigation"
+}

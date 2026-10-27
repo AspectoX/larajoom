@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         // Tabla de perfiles de usuario (equivalente a #__user_profiles de Joomla)
-        if (!Schema::hasTable('larajoom_user_profiles')) {
-            Schema::create('larajoom_user_profiles', function (Blueprint $table) {
+        if (!Schema::hasTable('larajoom_user_profile')) {
+            Schema::create('larajoom_user_profile', function (Blueprint $table) {
                 $table->unsignedBigInteger('user_id');
                 $table->string('profile_key', 100);
                 $table->text('profile_value')->nullable();
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('larajoom_user_profiles');
+        Schema::dropIfExists('larajoom_user_profile');
     }
 };

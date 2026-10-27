@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "twofactorauth",
+    "name":  "tfa_yubikey",
+    "title":  "Two Factor Auth - YubiKey",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Segundo factor mediante OTP de YubiKey (protocolo de validación de Yubico v2.0).",
+    "view_namespace":  "plugins.twofactorauth.tfa_yubikey",
+    "lang_namespace":  "plg_twofactorauth_yubikey"
+}

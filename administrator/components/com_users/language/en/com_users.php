@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'new_user'           => 'New User',
     'users'              => 'Users',
     'usergroups'         => 'User Groups',
     'access_levels'      => 'Access Levels',
@@ -46,4 +47,12 @@ return [
     'user_status_hint' => 'Blocked: the user cannot log in.',
     'avatar' => 'Avatar',
     'profile_table_missing' => 'The profile table is missing: run php artisan migrate.',
+    'activated'      => 'Activated',
+    'id'             => 'ID',
+    'username'       => 'Username',
+    'enabled'        => 'Enabled',
+    'mfa'            => 'MFA',
+    'last_visit'     => 'Last Visit',
+    'add_note'       => 'Add Note',
+    'permissions'    => 'Permissions',
 ];

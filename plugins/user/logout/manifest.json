@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "user",
+    "name":  "logout",
+    "title":  "User - Logout",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Registra e invalida el cierre de sesión del usuario.",
+    "view_namespace":  "plugins.user.logout",
+    "lang_namespace":  "plg_user_logout"
+}

@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "content",
+    "name":  "contact",
+    "title":  "Content - Contact",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Oculta las direcciones de correo en el contenido (anti-spam).",
+    "view_namespace":  "plugins.content.contact",
+    "lang_namespace":  "plg_content_contact"
+}

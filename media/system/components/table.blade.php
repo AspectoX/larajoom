@@ -39,12 +39,14 @@
                     <th style="white-space: nowrap;"></th>
                 @endif
                 @foreach ($headers as $i => $header)
-                    <th @if ($sortable) data-sort @endif style="cursor:pointer;white-space: nowrap;">
-                        <span class="th-label">{{ $header }}</span>
-                        <span class="th-sort-icon">
-                            <span class="sort-arrow sort-arrow-top">▲</span>
-                            <span class="sort-arrow sort-arrow-down">▼</span>
-                        </span>
+                    <th @if ($sortable) data-sort @endif>
+                        <div class="col-sort">
+                            <span class="th-label">{{ $header }}</span>
+                            <span class="th-sort-icon">
+                                <span class="sort-arrow sort-arrow-top">@icon('sort-top')</span>
+                                <span class="sort-arrow sort-arrow-down">@icon('sort-down')</span>
+                            </span>
+                        </div>
                     </th>
                 @endforeach
                 @if (!empty($actions))

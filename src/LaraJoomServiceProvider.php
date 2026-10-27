@@ -3,8 +3,12 @@
 namespace Aspectox\LaraJoom;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Blade;
+use Aspectox\LaraJoom\Core\Policies\ArticlePolicy;
+use Aspectox\LaraJoom\Admin\Components\com_content\Models\Article;
+use Aspectox\LaraJoom\Admin\Components\com_users\Models\User;
 use Aspectox\LaraJoom\Core\ExtensionLoader;
 use Aspectox\LaraJoom\Core\Positions\PositionRenderer;
 use Aspectox\LaraJoom\Core\ConfigLoader;
@@ -48,6 +52,7 @@ class LaraJoomServiceProvider extends ServiceProvider
         $baseDir = dirname(__DIR__);
 
         $this->loader->discoverAll();
+        $this->syncExtensionsFromDisk();
 
         // Disco de medios del gestor: apunta a storage/images
         $mediaRoot = storage_path('images');
@@ -196,6 +201,13 @@ class LaraJoomServiceProvider extends ServiceProvider
         config()->set('auth.guards.ax-larajoom', ['driver' => 'session', 'provider' => 'ax-larajoom-users']);
         config()->set('auth.providers.ax-larajoom-users', ['driver' => 'eloquent', 'model' => 'Aspectox\LaraJoom\Admin\Components\com_users\Models\User']);
 
+        // Gates y políticas de autorización centralizadas.
+        Gate::policy(Article::class, ArticlePolicy::class);
+        Gate::define('core.view.article', fn (User $user) => $user->hasGroup('Registered'));
+        Gate::define('core.create.article', fn (User $user) => $user->hasGroup('Author'));
+        Gate::define('core.edit.article', fn (User $user) => $user->hasGroup('Author'));
+        Gate::define('core.delete.article', fn (User $user) => $user->hasGroup('SuperAdmin'));
+
         // Blade directives (like AxAdminLara)
         Blade::directive('icon', function ($expression) {
             return "<?php echo function_exists('larajoom_icon') ? larajoom_icon({$expression}) : ''; ?>";
@@ -251,6 +263,44 @@ class LaraJoomServiceProvider extends ServiceProvider
             $this->publishes([
                 $baseDir . DIRECTORY_SEPARATOR . 'media' => public_path('media'),
             ], ['larajoom-all-assets', 'larajoom-assets']);
+        }
+    }
+
+    /**
+     * Auto-registro de extensiones (componentes, módulos y plugins) desde el
+     * disco hacia larajoom_extensions.
+     *
+     * Antes esto solo ocurría bajo demanda (botón "Detectar plugins" en
+     * com_plugins o el index de com_installer). Ahora se sincroniza en el
+     * boot con una guarda de caché (TTL) para no escanear el disco en cada
+     * request. Los plugins sin manifest.json se ignoran (estándar Joomla).
+     */
+    protected function syncExtensionsFromDisk(): void
+    {
+        if (!\Illuminate\Support\Facades\Schema::hasTable('larajoom_extensions')) {
+            return;
+        }
+
+        $cacheKey = 'larajoom.extensions.sync';
+        $ttl     = 300; // segundos
+
+        try {
+            if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
+                return;
+            }
+        } catch (\Throwable $e) {
+            // Si el cache no está disponible, sincronizar igualmente.
+        }
+
+        try {
+            $installer = new \Aspectox\LaraJoom\Admin\Components\com_installer\Services\PackageInstaller();
+            $installer->syncFromDisk();
+            $installer->syncPluginsFromDisk();
+
+            \Illuminate\Support\Facades\Cache::put($cacheKey, true, $ttl);
+        } catch (\Throwable $e) {
+            // Nunca romper el arranque por un fallo de sincronización.
+            \Illuminate\Support\Facades\Log::warning('LaraJoom sync de extensiones falló: ' . $e->getMessage());
         }
     }
 }

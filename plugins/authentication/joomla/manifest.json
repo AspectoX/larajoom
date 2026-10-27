@@ -2,6 +2,11 @@
     "type":  "plugin",
     "group":  "authentication",
     "name":  "joomla",
+    "title":  "Joomla",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Autenticación local contra la tabla de usuarios de LaraJoom.",
     "view_namespace":  "plugins.authentication.joomla",
     "lang_namespace":  "plg_authentication_joomla"
 }

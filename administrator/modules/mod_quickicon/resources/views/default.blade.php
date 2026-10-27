@@ -86,11 +86,20 @@
     if ((int) ($moduleParams['show_media'] ?? 1) !== 0
         && Route::has('larajoom.admin.media.index')
         && Access::canWrite('com_media')) {
+        $mediaImages = 0;
+        if (class_exists(\Aspectox\LaraJoom\Admin\Components\com_media\Model\MediaModel::class)) {
+            try {
+                $mediaImages = (new \Aspectox\LaraJoom\Admin\Components\com_media\Model\MediaModel())->countImages();
+            } catch (\Throwable) {
+                $mediaImages = 0;
+            }
+        }
+
         $boxes[] = [
             'color' => 'info',
             'icon'  => 'media',
             'title' => __('mod_quickicon::mod_quickicon.media_manager'),
-            'number' => '',
+            'number' => $mediaImages ?: '',
             'url'   => route('larajoom.admin.media.index'),
         ];
     }

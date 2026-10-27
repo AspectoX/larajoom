@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "actionlog",
+    "name":  "joomla",
+    "title":  "Action Log - Joomla",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Registra las acciones administrativas en el registro de actividades (auditoría).",
+    "view_namespace":  "plugins.actionlog.joomla",
+    "lang_namespace":  "plg_actionlog_joomla"
+}

@@ -95,7 +95,7 @@
                     <span>
                         {{ $row['title'] }}:
                         @if (!empty($row['link']))
-                            <a class="btn transparent" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
+                            <a class="btn transparent info" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
                         @else
                             {{ $row['data'] }}
                         @endif
@@ -105,7 +105,7 @@
             @else
                 {{ $row['title'] }}:
                 @if (!empty($row['link']))
-                    <a class="btn transparent" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
+                    <a class="btn transparent info" href="{{ $row['link'] }}">{{ $row['data'] }}</a>
                 @else
                     {{ $row['data'] }}
                 @endif

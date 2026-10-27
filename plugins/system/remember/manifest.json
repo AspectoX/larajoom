@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "system",
+    "name":  "remember",
+    "title":  "System - Remember Me",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Recuerda al usuario con una cookie de sesión persistente y segura (Recordarme).",
+    "view_namespace":  "plugins.system.remember",
+    "lang_namespace":  "plg_system_remember"
+}

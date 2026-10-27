@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "api-authentication",
+    "name":  "token",
+    "title":  "API Authentication - Token",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Autenticación mediante Bearer token para la API.",
+    "view_namespace":  "plugins.api-authentication.token",
+    "lang_namespace":  "plg_api_authentication_token"
+}

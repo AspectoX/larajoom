@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "privacy",
+    "name":  "user",
+    "title":  "Privacy - User",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Exporta y elimina los datos personales del usuario (GDPR).",
+    "view_namespace":  "plugins.privacy.user",
+    "lang_namespace":  "plg_privacy_user"
+}

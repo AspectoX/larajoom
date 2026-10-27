@@ -22,20 +22,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
 
-            // Datos de la cuenta
-            $table->string('name', 100);
-            $table->string('username', 255)->nullable();
-            $table->string('email', 155)->nullable();
-            $table->string('password', 255)->nullable();
-
             // Estado y preferencias
             $table->boolean('block')->default(0);
-            $table->boolean('activated')->default(1);
             $table->boolean('sendEmail')->default(1);
             $table->text('params')->nullable();
 
             // Fechas
-            $table->timestamp('registerDate')->useCurrent();
             $table->timestamp('lastvisitDate')->nullable();
             $table->timestamp('lastResetTime')->nullable();
             $table->unsignedInteger('resetCount')->default(0);

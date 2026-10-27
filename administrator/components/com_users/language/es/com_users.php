@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'new_user'           => 'Nuevo Usuario',
     'users'              => 'Usuarios',
     'usergroups'         => 'Grupos de Usuarios',
     'access_levels'      => 'Niveles de Acceso',
@@ -46,4 +47,12 @@ return [
     'user_status_hint' => 'Bloqueado: el usuario no puede iniciar sesión.',
     'avatar' => 'Avatar',
     'profile_table_missing' => 'Falta la tabla del perfil: ejecutá php artisan migrate.',
+    'activated'      => 'Activado',
+    'id'             => 'ID',
+    'username'       => 'Nombre de usuario',
+    'enabled'        => 'Habilitado',
+    'mfa'            => 'MFA',
+    'last_visit'     => 'Última visita',
+    'add_note'       => 'Crear Nota',
+    'permissions'    => 'Permissions',
 ];

@@ -200,6 +200,24 @@ class ExtensionLoader
             }
         }
 
+        // Plugins: plugins/<grupo>/<nombre>/database/migrations
+        $pluginsBase = $this->basePath . DIRECTORY_SEPARATOR . 'plugins';
+        if (is_dir($pluginsBase)) {
+            foreach (scandir($pluginsBase) as $group) {
+                if ($group === '.' || $group === '..') continue;
+                $groupDir = $pluginsBase . DIRECTORY_SEPARATOR . $group;
+                if (!is_dir($groupDir)) continue;
+                foreach (scandir($groupDir) as $plugin) {
+                    if ($plugin === '.' || $plugin === '..') continue;
+                    $migrationDir = $groupDir . DIRECTORY_SEPARATOR . $plugin
+                        . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'migrations';
+                    if (is_dir($migrationDir)) {
+                        $paths[] = $migrationDir;
+                    }
+                }
+            }
+        }
+
         return $paths;
     }
 }

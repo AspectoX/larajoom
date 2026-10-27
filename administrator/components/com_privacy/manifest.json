@@ -1,0 +1,6 @@
+{
+    "type":  "component",
+    "name":  "com_privacy",
+    "view_namespace":  "admin.components.com_privacy",
+    "lang_namespace":  "com_privacy"
+}

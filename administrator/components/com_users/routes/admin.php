@@ -6,6 +6,8 @@ use Aspectox\LaraJoom\Admin\Components\com_users\Controllers\UserAdminController
 Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(function () {
     // Usuarios
     Route::get('/', [UserAdminController::class, 'index'])->name('larajoom.admin.users.index');
+    Route::get('/create', [UserAdminController::class, 'create'])->name('larajoom.admin.users.create');
+    Route::post('/', [UserAdminController::class, 'store'])->name('larajoom.admin.users.store');
 
     // Perfil del usuario conectado
     Route::get('/profile', [UserAdminController::class, 'profile'])->name('larajoom.admin.profile');
@@ -14,6 +16,7 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
     Route::get('/{id}/edit', [UserAdminController::class, 'edit'])->name('larajoom.admin.users.edit');
     Route::put('/{id}', [UserAdminController::class, 'update'])->name('larajoom.admin.users.update');
     Route::delete('/{id}', [UserAdminController::class, 'destroy'])->name('larajoom.admin.users.destroy');
+    Route::post('/{id}/toggle', [UserAdminController::class, 'toggle'])->name('larajoom.admin.users.toggle');
 
     // Grupos de usuarios
     Route::get('/groups', [UserAdminController::class, 'groups'])->name('larajoom.admin.groups.index');

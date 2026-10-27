@@ -38,3 +38,5 @@ Thumbs.db
 # Documentos de trabajo internos (no se versionan)
 /PLAN.md
 /PLAN-CONFIG.md
+/seguridad.md
+/permissions.php

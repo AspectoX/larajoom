@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "authentication",
+    "name":  "ldap",
+    "title":  "LDAP",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Autenticación contra un servidor LDAP (bind + búsqueda).",
+    "view_namespace":  "plugins.authentication.ldap",
+    "lang_namespace":  "plg_authentication_ldap"
+}

@@ -28,7 +28,53 @@ class UserAdminController extends Controller
                 ->groupBy('user_id');
         }
 
-        return view('admin.components.com_users::users.index', compact('users', 'groups', 'userGroups'));
+        $lastVisits = [];
+        if (Schema::hasTable('larajoom_user_profile')) {
+            $lastVisits = DB::table('larajoom_user_profile')
+                ->pluck('lastvisitDate', 'user_id');
+        }
+
+        return view('admin.components.com_users::users.index', compact('users', 'groups', 'userGroups', 'lastVisits'));
+    }
+
+    public function create()
+    {
+        $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
+        return view('admin.components.com_users::users.create', compact('groups'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'username' => 'required|string|max:150|alpha_dash|unique:larajoom_users,username',
+            'email'    => 'required|email|max:255|unique:larajoom_users,email',
+            'password' => 'required|string|min:8',
+            'groups'   => 'nullable|array',
+        ]);
+
+        $user = User::create([
+            'name'         => $data['name'],
+            'username'     => $data['username'],
+            'email'        => $data['email'],
+            'password'     => Hash::make($data['password']),
+            'activated'    => 1,
+            'params'       => json_encode([]),
+            'registerDate' => now(),
+        ]);
+
+        if (!empty($data['groups'])) {
+            DB::table('larajoom_user_usergroup_map')->where('user_id', $user->id)->delete();
+            foreach ($data['groups'] as $groupId) {
+                DB::table('larajoom_user_usergroup_map')->insert([
+                    'user_id'  => $user->id,
+                    'group_id' => $groupId,
+                ]);
+            }
+        }
+
+        return redirect()->route('larajoom.admin.users.index')
+            ->with('success', __('com_users::com_users.user_saved'));
     }
 
     public function edit(int $id)
@@ -61,7 +107,16 @@ class UserAdminController extends Controller
 
         $user->save();
 
+        if (!Access::isSuperAdmin()) {
+            abort(403, 'Solo un SuperAdmin puede cambiar los grupos de un usuario.');
+        }
+
         $this->syncUserGroups($user->id, $data['groups'] ?? []);
+
+        $log = \larajoom_plugins()->resolve('actionlog', 'joomla');
+        if ($log && method_exists($log, 'onUserSaved')) {
+            $log->onUserSaved($user->id, ['groups' => $data['groups'] ?? []]);
+        }
 
         return redirect()
             ->route('larajoom.admin.users.index')
@@ -328,6 +383,15 @@ class UserAdminController extends Controller
         return redirect()->route('larajoom.admin.profile')->with('success', __('com_users::com_users.profile_saved'));
     }
 
+    public function toggle(int $id)
+    {
+        $user = User::findOrFail($id);
+        $user->enabled = ! $user->enabled;
+        $user->save();
+
+        return redirect()->route('larajoom.admin.users.index');
+    }
+
     public function destroy(int $id)
     {
         $user = User::findOrFail($id);
@@ -337,6 +401,11 @@ class UserAdminController extends Controller
         }
 
         $user->delete();
+
+        $log = \larajoom_plugins()->resolve('actionlog', 'joomla');
+        if ($log && method_exists($log, 'onUserDeleted')) {
+            $log->onUserDeleted($user->id);
+        }
 
         return redirect()
             ->route('larajoom.admin.users.index')

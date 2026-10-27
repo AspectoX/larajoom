@@ -157,9 +157,9 @@ function getIcons(): array
 
         'sort' => '<svg data-icon="sort" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M272 288H48.1c-42.6 0-64.2 51.7-33.9 81.9l111.9 112c18.7 18.7 49.1 18.7 67.9 0l112-112c30-30.1 8.7-81.9-34-81.9zM160 448L48 336h224L160 448zM48 224h223.9c42.6 0 64.2-51.7 33.9-81.9l-111.9-112c-18.7-18.7-49.1-18.7-67.9 0l-112 112C-16 172.2 5.3 224 48 224zM160 64l112 112H48L160 64z"></path></svg>',
 
-        'sort-top' => '<svg data-icon="sort-up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M48 224h223.9c42.6 0 64.2-51.7 33.9-81.9l-111.9-112c-18.7-18.7-49.1-18.7-67.9 0l-112 112C-16 172.2 5.3 224 48 224zM160 64l112 112H48L160 64z"></path></svg>',
+        'sort-top' => '<svg data-icon="sort-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 168"><path fill="currentColor" d="M262.68,167.05H24.68c-21.4,0-32.1-25.9-17-41L126.68,7.05c9.4-9.4,24.6-9.4,33.9,0l119,119c15.2,15.1,4.5,41-16.9,41Z"/></svg>',
 
-        'sort-down' => '<svg data-icon="sort-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M272 288H48.1c-42.6 0-64.2 51.7-33.9 81.9l111.9 112c18.7 18.7 49.1 18.7 67.9 0l112-112c30-30.1 8.7-81.9-34-81.9zM160 448L48 336h224L160 448z"></path></svg>',
+        'sort-down' => '<svg data-icon="sort-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 168"><path fill="currentColor" d="M25,.95h238c21.4,0,32.1,25.9,17,41l-119,119c-9.4,9.4-24.6,9.4-33.9,0L8,41.95C-7.1,26.85,3.6.95,25,.95Z"/></svg>',
 
         'sort-top-filled' => '<svg data-icon="sort-top-filled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="var(--clr-active-acent)" d="M48,224h223.9c42.6,0,64.2-51.7,33.9-81.9L193.9,30.1c-18.7-18.7-49.1-18.7-67.9,0L14,142.1c-30,30.1-8.7,81.9,34,81.9Z"/></svg>',
 

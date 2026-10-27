@@ -1,6 +1,12 @@
 {
     "type":  "template",
     "name":  "atum",
+    "title": "Atum",
+    "client": "administrator",
+    "version": "1.0.0",
+    "creationDate": "2026-10-23",
+    "author": "Joomla! Project admin@joomla.org",
+    "description": "Template del panel de administración (adaptado Atum de Joomla).",
     "view_path":  "administrator/templates/atum",
     "lang_path":  "administrator/templates/atum/language"
 }

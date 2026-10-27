@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "passwordless",
+    "name":  "webauthn",
+    "title":  "Passwordless - WebAuthn",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Inicio de sesión sin contraseña mediante WebAuthn (passkeys / FIDO2).",
+    "view_namespace":  "plugins.passwordless.webauthn",
+    "lang_namespace":  "plg_passwordless_webauthn"
+}

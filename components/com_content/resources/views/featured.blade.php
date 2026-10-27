@@ -24,7 +24,7 @@
                 </header>
 
                 <div>
-                    {!! $article->introtext !!}
+                    {{ $article->introtext }}
                 </div>
 
                 <footer>

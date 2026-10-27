@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -39,6 +39,16 @@
                 <label for="password_confirmation">Confirmar Contraseña:</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required>
             </div>
+
+            @php
+                $captchaType = config('larajoom.captcha', '0');
+                $captcha = ($captchaType && $captchaType !== '0')
+                    ? app(\Aspectox\LaraJoom\Core\Plugins\PluginManager::class)->resolve('captcha', $captchaType)
+                    : null;
+            @endphp
+            @if ($captcha && method_exists($captcha, 'onDisplay'))
+                <div>{!! $captcha->onDisplay() !!}</div>
+            @endif
 
             <div>
                 <button type="submit">Registrarse</button>

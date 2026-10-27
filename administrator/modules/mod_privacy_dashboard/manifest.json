@@ -1,0 +1,11 @@
+{
+    "type": "module",
+    "name": "mod_privacy_dashboard",
+    "view_namespace": "admin.modules.mod_privacy_dashboard",
+    "lang_namespace": "mod_privacy_dashboard",
+    "client": "administrator",
+    "param_fields": [
+        {"name": "show_requests", "type": "checkbox", "label": "Mostrar solicitudes", "default": 1},
+        {"name": "show_consents", "type": "checkbox", "label": "Mostrar consentimientos", "default": 1}
+    ]
+}

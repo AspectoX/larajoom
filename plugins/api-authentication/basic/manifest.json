@@ -1,0 +1,12 @@
+{
+    "type":  "plugin",
+    "group":  "api-authentication",
+    "name":  "basic",
+    "title":  "API Authentication - Basic",
+    "creationDate": "2026-10-23",
+    "author": "LaraJoom",
+    "version": "1.0.0",
+    "description": "Autenticación HTTP Basic para la API.",
+    "view_namespace":  "plugins.api-authentication.basic",
+    "lang_namespace":  "plg_api_authentication_basic"
+}

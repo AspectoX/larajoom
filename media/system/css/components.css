@@ -215,7 +215,7 @@
 }
 
 .text-white {
-    color: var(--clr-white);
+    color: var(--clr-white)!important;
 }
 
 
@@ -264,7 +264,7 @@
     font-size: var(--sz-16);
     font-weight: 400;
     line-height: 1.5;
-    color: var(--clr-black);
+    color: contrast-color(var(--bg-input));
     padding: var(--sz-6) var(--sz-12);
     background-color: var(--bg-input);
     background-clip: padding-box;
@@ -923,6 +923,7 @@ textarea.form-input {
 .btn.transparent svg {
     width: var(--sz-16);
     height: var(--sz-16);
+    color: var(--clr-txt);
 }
 
 .btn-menu {
@@ -1757,12 +1758,12 @@ summary::-webkit-details-marker {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: min-content;
+    width: fit-content;
     color: var(--clr-txt);
     font-size: var(--sz-10);
     padding: var(--sz-4) var(--sz-8);
     border: 1px solid transparent;
-    border-radius: 99px;
+    border-radius: 20px;
 
     .badge-info {
         background-color: var(--clr-bg-info);

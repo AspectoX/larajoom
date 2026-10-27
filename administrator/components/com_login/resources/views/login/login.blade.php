@@ -19,8 +19,13 @@
                 <x-larajoom::password name="passwd" id="mod-login-password" :label="__('com_login::com_login.password')" required
                     autocomplete="current-password" />
 
-                <x-larajoom::select id="lang" name="lang" class="form-select" :label="__('com_login::com_login.language')">
-
+                <x-larajoom::select id="lang" name="lang" :label="__('com_login::com_login.language')">
+                    <button>
+                        <selectedcontent></selectedcontent>
+                        <span class="icon-svg text-white">
+                            <svg data-icon="caret-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></svg>
+                        </span>
+                    </button>
                     <option value="" selected="selected">{{ __('com_login::com_login.language_default') }}</option>
                     <option value="en-GB">{{ __('com_login::com_login.language_en_gb') }}</option>
                     <option value="es-ES">{{ __('com_login::com_login.language_es_es') }}</option>
