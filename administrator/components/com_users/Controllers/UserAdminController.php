@@ -531,6 +531,17 @@ class UserAdminController extends Controller
             ->with('success', __('com_users::com_users.level_deleted'));
     }
 
+    public function updateGroups(Request $request, int $id)
+    {
+        $request->validate([
+            'groups' => 'nullable|array',
+        ]);
+
+        $this->syncUserGroups($id, $request->input('groups', []));
+
+        return redirect()->route('larajoom.admin.users.index');
+    }
+
     /**
      * IDs de los grupos asignados a un usuario.
      */

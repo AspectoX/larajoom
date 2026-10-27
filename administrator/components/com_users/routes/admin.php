@@ -17,6 +17,7 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
     Route::put('/{id}', [UserAdminController::class, 'update'])->name('larajoom.admin.users.update');
     Route::delete('/{id}', [UserAdminController::class, 'destroy'])->name('larajoom.admin.users.destroy');
     Route::post('/{id}/toggle', [UserAdminController::class, 'toggle'])->name('larajoom.admin.users.toggle');
+    Route::post('/{id}/groups', [UserAdminController::class, 'updateGroups'])->name('larajoom.admin.users.updateGroups');
 
     // Grupos de usuarios
     Route::get('/groups', [UserAdminController::class, 'groups'])->name('larajoom.admin.groups.index');
