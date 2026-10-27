@@ -83,8 +83,14 @@ class UserAdminController extends Controller
 
         $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
         $userGroupIds = $this->userGroupIds($user->id);
+        $userNotes = Schema::hasTable('larajoom_user_notes')
+            ? DB::table('larajoom_user_notes')
+                  ->where('user_id', $id)
+                  ->orderBy('created_at', 'desc')
+                  ->get()
+            : collect();
 
-        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds'));
+        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes'));
     }
 
     public function update(Request $request, int $id)
@@ -531,17 +537,6 @@ class UserAdminController extends Controller
             ->with('success', __('com_users::com_users.level_deleted'));
     }
 
-    public function updateGroups(Request $request, int $id)
-    {
-        $request->validate([
-            'groups' => 'nullable|array',
-        ]);
-
-        $this->syncUserGroups($id, $request->input('groups', []));
-
-        return redirect()->route('larajoom.admin.users.index');
-    }
-
     /**
      * IDs de los grupos asignados a un usuario.
      */
@@ -577,5 +572,51 @@ class UserAdminController extends Controller
                 ]);
             }
         }
+    }
+
+    public function addNote(Request $request, int $id)
+    {
+        $request->validate([
+            'note_text' => 'required|string|max:1000',
+        ]);
+
+        DB::table('larajoom_user_notes')->insert([
+            'user_id'      => $id,
+            'note_text'    => $request->note_text,
+            'created_at'   => now(),
+        ]);
+
+        return redirect()->route('larajoom.admin.users.edit', $id)
+            ->with('success', __('com_users::com_users.note_added'));
+    }
+
+    public function editNote(Request $request, int $noteId)
+    {
+        $request->validate([
+            'note_text' => 'required|string|max:1000',
+        ]);
+
+        DB::table('larajoom_user_notes')
+            ->where('id', $noteId)
+            ->update([
+                'note_text' => $request->note_text,
+            ]);
+
+        $note = DB::table('larajoom_user_notes')->where('id', $noteId)->first();
+
+        return redirect()->route('larajoom.admin.users.edit', $note->user_id)
+            ->with('success', __('com_users::com_users.note_updated'));
+    }
+
+    public function destroyNote(int $noteId)
+    {
+        $note = DB::table('larajoom_user_notes')->where('id', $noteId)->first();
+
+        DB::table('larajoom_user_notes')
+            ->where('id', $noteId)
+            ->delete();
+
+        return redirect()->route('larajoom.admin.users.edit', $note->user_id)
+            ->with('success', __('com_users::com_users.note_deleted'));
     }
 }

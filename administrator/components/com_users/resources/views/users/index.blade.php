@@ -102,19 +102,8 @@
                                  @icon('cancel') {{-- para Si --}}
                             </span>
                         </td>
-                        @php
-                            $userGroupIds = isset($userGroups[$user->id]) ? $userGroups[$user->id]->pluck('group_id')->all() : [];
-                        @endphp
-                        <td>
-                            <form method="POST" action="{{ route('larajoom.admin.users.updateGroups', $user->id) }}">
-                                @csrf
-                                @foreach ($groups as $groupId => $group)
-                                    <input type="checkbox" name="groups[]" value="{{ $groupId }}" @if (in_array($groupId, $userGroupIds)) checked @endif class="form-check">
-                                    {{ $group->title }}
-                                    <br>
-                                @endforeach
-                                <button type="submit" class="btn transparent circle">@icon('save')</button>
-                            </form>
+                        <td>{{ $groupNames !== '' ? $groupNames : __('com_users::com_users.no_user_group') }}
+                            <a href="{{ $firstGroupId ? route('larajoom.admin.groups.edit', $firstGroupId) : '#' }}" class="btn-table">@icon('permissions') {{ __('com_users::com_users.permissions') }}</a>
                         </td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $lastVisits[$user->id] ?? '—' }}</td>

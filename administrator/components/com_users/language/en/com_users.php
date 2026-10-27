@@ -55,4 +55,10 @@ return [
     'last_visit'     => 'Last Visit',
     'add_note'       => 'Add Note',
     'permissions'    => 'Permissions',
+    'notes'          => 'Notes',
+    'note_text'      => 'Note text',
+    'notes_list'     => 'Notes list',
+    'note_added'     => 'Note added.',
+    'note_updated'   => 'Note updated.',
+    'note_deleted'   => 'Note deleted.',
 ];

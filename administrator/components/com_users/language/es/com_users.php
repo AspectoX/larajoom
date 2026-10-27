@@ -55,4 +55,10 @@ return [
     'last_visit'     => 'Última visita',
     'add_note'       => 'Crear Nota',
     'permissions'    => 'Permissions',
+    'notes'          => 'Notas',
+    'note_text'      => 'Texto de la nota',
+    'notes_list'     => 'Lista de notas',
+    'note_added'     => 'Nota agregada.',
+    'note_updated'   => 'Nota actualizada.',
+    'note_deleted'   => 'Nota eliminada.',
 ];

@@ -17,7 +17,6 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
     Route::put('/{id}', [UserAdminController::class, 'update'])->name('larajoom.admin.users.update');
     Route::delete('/{id}', [UserAdminController::class, 'destroy'])->name('larajoom.admin.users.destroy');
     Route::post('/{id}/toggle', [UserAdminController::class, 'toggle'])->name('larajoom.admin.users.toggle');
-    Route::post('/{id}/groups', [UserAdminController::class, 'updateGroups'])->name('larajoom.admin.users.updateGroups');
 
     // Grupos de usuarios
     Route::get('/groups', [UserAdminController::class, 'groups'])->name('larajoom.admin.groups.index');
@@ -25,6 +24,11 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
     Route::post('/groups', [UserAdminController::class, 'storeGroup'])->name('larajoom.admin.groups.store');
     Route::put('/groups/{id}', [UserAdminController::class, 'updateGroup'])->name('larajoom.admin.groups.update');
     Route::delete('/groups/{id}', [UserAdminController::class, 'destroyGroup'])->name('larajoom.admin.groups.destroy');
+
+    // Notas de usuario
+    Route::post('/{id}/notes', [UserAdminController::class, 'addNote'])->name('larajoom.admin.users.addNote');
+    Route::put('/notes/{noteId}', [UserAdminController::class, 'editNote'])->name('larajoom.admin.users.editNote');
+    Route::delete('/notes/{noteId}', [UserAdminController::class, 'destroyNote'])->name('larajoom.admin.users.destroyNote');
 
     // Niveles de acceso
     Route::get('/levels', [UserAdminController::class, 'levels'])->name('larajoom.admin.levels.index');
