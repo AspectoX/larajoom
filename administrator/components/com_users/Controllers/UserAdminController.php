@@ -333,8 +333,15 @@ class UserAdminController extends Controller
         }
 
         if (Schema::hasTable('larajoom_user_profile')) {
-            $profileData = [
+            $allColumns = Schema::getColumnListing('larajoom_user_profile');
+
+            $fullData = [
+                'name'          => $data['name'],
+                'username'      => $data['username'],
+                'email'         => $data['email'],
+                'password'      => $profile->password ?? $user->password,
                 'block'         => (int) ($profile->block ?? 0),
+                'activated'     => 1,
                 'sendEmail'     => (int) ($profile->sendEmail ?? 1),
                 'params'        => $profile->params ?? null,
                 'registerDate'  => $profile->registerDate ?? now(),
@@ -345,6 +352,8 @@ class UserAdminController extends Controller
                 'created_at'    => $profile->created_at ?? now(),
                 'updated_at'    => now(),
             ];
+
+            $profileData = array_intersect_key($fullData, array_flip($allColumns));
 
             DB::table('larajoom_user_profile')->updateOrInsert(
                 ['user_id' => $user->getKey()],
