@@ -17,6 +17,7 @@ return [
     'save_close'         => 'Save & Close',
     'cancel'             => 'Cancel',
     'back'               => 'Back',
+    'copy'               => 'Copy',
     'delete'             => 'Delete',
     'edit'               => 'Edit',
     'title'              => 'Title',

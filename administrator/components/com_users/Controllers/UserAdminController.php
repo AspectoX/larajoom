@@ -158,7 +158,11 @@ class UserAdminController extends Controller
 
         $fieldsets = $this->userEditFieldsets($user, $profile, $userGroupIds);
 
-        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes', 'fieldsets'));
+        $apiToken    = $user->api_token ?? null;
+        $apiEnabled  = (bool) ($user->api_enabled ?? true);
+        $apiReset    = (bool) ($user->api_reset ?? false);
+
+        return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes', 'fieldsets', 'apiToken', 'apiEnabled', 'apiReset'));
     }
 
     /**

@@ -32,6 +32,22 @@
                 'view'    => 'admin.components.com_users::users.profile-tabs.details',
                 'data'    => ['fieldset' => $fieldsets['account_details'] ?? null],
             ],
+            [
+                'name'    => 'usergroups',
+                'label'   => 'Assigned User Groups',
+                'view'    => 'admin.components.com_users::users.profile-tabs.usergroups',
+                'data'    => ['groups' => $groups, 'userGroupIds' => $userGroupIds],
+            ],
+            [
+                'name'    => 'apitoken',
+                'label'   => 'Larajoom API Token',
+                'view'    => 'admin.components.com_users::users.profile-tabs.apitoken',
+                'data'    => ['apiToken' => $apiToken ?? null, 'apiEnabled' => $apiEnabled ?? true, 'apiReset' => $apiReset ?? false],
+            ],
+            [
+                'name'    => 'multifactor',
+                'label'   => 'Multi-factor Authentication',
+            ],
         ]" />
     </x-larajoom::form>
 @endsection
