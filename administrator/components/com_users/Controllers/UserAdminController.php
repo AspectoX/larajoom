@@ -309,14 +309,8 @@ class UserAdminController extends Controller
             'lastResetTime' => null,
         ];
 
-        $profile->name     = $data['name'];
-        $profile->username = $data['username'];
-        $profile->email    = $data['email'];
-
-        if ($canSeeSensitive) {
-            $profile->sendEmail = $request->boolean('sendEmail');
-            $profile->block     = $request->boolean('block');
-        }
+        $profile->sendEmail = $request->boolean('sendEmail', $profile->sendEmail ?? true);
+        $profile->block     = $request->boolean('block', $profile->block ?? false);
 
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -340,10 +334,6 @@ class UserAdminController extends Controller
 
         if (Schema::hasTable('larajoom_user_profile')) {
             $profileData = [
-                'name'          => $profile->name,
-                'username'      => $profile->username,
-                'email'         => $profile->email,
-                'password'      => $profile->password ?? null,
                 'block'         => (int) ($profile->block ?? 0),
                 'activated'     => 1,
                 'sendEmail'     => (int) ($profile->sendEmail ?? 1),

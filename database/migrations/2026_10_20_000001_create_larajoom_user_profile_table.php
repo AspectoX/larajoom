@@ -27,6 +27,9 @@ return new class extends Migration
             $table->boolean('sendEmail')->default(1);
             $table->text('params')->nullable();
 
+            // Datos de la cuenta (username)
+            $table->string('username', 255)->nullable()->after('user_id');
+
             // Fechas
             $table->timestamp('lastvisitDate')->nullable();
             $table->timestamp('lastResetTime')->nullable();
