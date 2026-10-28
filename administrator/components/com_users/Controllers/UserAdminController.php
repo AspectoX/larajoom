@@ -335,7 +335,6 @@ class UserAdminController extends Controller
         if (Schema::hasTable('larajoom_user_profile')) {
             $profileData = [
                 'block'         => (int) ($profile->block ?? 0),
-                'activated'     => 1,
                 'sendEmail'     => (int) ($profile->sendEmail ?? 1),
                 'params'        => $profile->params ?? null,
                 'registerDate'  => $profile->registerDate ?? now(),
