@@ -38,6 +38,9 @@ Route::prefix('users')->middleware(['larajoom.auth', 'larajoom.acl'])->group(fun
 
     Route::post('/mass-mail', [UserAdminController::class, 'massMail'])->name('larajoom.admin.users.massMail');
 
+    // Métodos MFA
+    Route::get('/{id}/method/add', [UserAdminController::class, 'addMfaMethod'])->name('larajoom.admin.users.method.add');
+
     // Mensajes
     Route::get('/messages', [UserAdminController::class, 'messages'])->name('larajoom.admin.users.messages');
     Route::post('/messages/send', [UserAdminController::class, 'sendMessage'])->name('larajoom.admin.users.sendMessage');

@@ -16,6 +16,7 @@ return [
     'save_new'           => 'Guardar y nuevo',
     'save_close'         => 'Guardar y Cerrar',
     'cancel'             => 'Cancelar',
+    'back'               => 'Atras',
     'delete'             => 'Eliminar',
     'edit'               => 'Editar',
     'title'              => 'Título',

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Aspectox\LaraJoom\Admin\Components\com_users\Models\User;
+use Aspectox\LaraJoom\Core\Access;
 
 class UserAdminController extends Controller
 {
@@ -41,8 +42,10 @@ class UserAdminController extends Controller
     {
         $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
         $fieldsets = $this->userCreateFieldsets();
+        $twoFactorStatus = [];
+        $user = null;
 
-        return view('admin.components.com_users::users.create', compact('groups', 'fieldsets'));
+        return view('admin.components.com_users::users.create', compact('groups', 'fieldsets', 'twoFactorStatus', 'user'));
     }
 
     /**
@@ -92,6 +95,10 @@ class UserAdminController extends Controller
                         'value' => [],
                     ],
                 ],
+            ],
+            'multifactor' => [
+                'label'   => __('com_users::com_users.multifactor_auth'),
+                'message' => __('com_users::com_users.multifactor_none'),
             ],
         ];
     }
@@ -149,89 +156,123 @@ class UserAdminController extends Controller
             ? DB::table('larajoom_user_profile')->where('user_id', $id)->first()
             : null;
 
-        $fieldsets = $this->userEditFieldsets($user, $profile);
+        $fieldsets = $this->userEditFieldsets($user, $profile, $userGroupIds);
 
         return view('admin.components.com_users::users.edit', compact('user', 'groups', 'userGroupIds', 'userNotes', 'fieldsets'));
     }
 
     /**
      * Definición de fieldsets para editar un usuario.
+     *
+     * Los campos sensibles (id, fechas de registro/visita/reset, resetCount,
+     * sendEmail, block) solo se incluyen si el usuario actual tiene permiso
+     * core.admin sobre com_users (superadmin o admin explícito).
      */
-    protected function userEditFieldsets($user, ?object $profile = null): array
+    protected function userEditFieldsets($user, ?object $profile = null, array $userGroupIds = []): array
     {
         $profile = $profile ?? (object) [];
+
+        $canSeeSensitive = Access::can('com_users', 'core.admin');
+
+        $fields = [
+            [
+                'name'    => 'avatar',
+                'type'    => 'file',
+                'label'   => __('com_users::com_users.avatar'),
+                'value'   => $profile->avatar ?? '',
+                'preview' => $this->avatarUrl($profile->avatar ?? null),
+            ],
+            [
+                'name'     => 'name',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.user_name'),
+                'value'    => $profile->name ?? $user->name,
+                'required' => true,
+            ],
+            [
+                'name'     => 'username',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.user_name_username'),
+                'value'    => $profile->username ?? $user->username,
+                'required' => true,
+            ],
+            [
+                'name'     => 'email',
+                'type'     => 'email',
+                'label'    => __('com_users::com_users.email'),
+                'value'    => $profile->email ?? $user->email,
+                'required' => true,
+            ],
+            [
+                'name'         => 'password',
+                'type'         => 'password',
+                'label'        => __('com_users::com_users.password'),
+                'autocomplete' => 'new-password',
+                'hint'         => __('com_users::com_users.password_requirements'),
+            ],
+            [
+                'name'         => 'password_confirmation',
+                'type'         => 'password',
+                'label'        => __('com_users::com_users.password_confirm'),
+                'autocomplete' => 'new-password',
+            ],
+        ];
+
+        if ($canSeeSensitive) {
+            $fields[] = [
+                'name'     => 'registerDate',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.registration_date'),
+                'value'    => $this->formatDate($profile->registerDate ?? $user->created_at),
+                'readonly' => true,
+            ];
+            $fields[] = [
+                'name'     => 'lastvisitDate',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.last_visit_date'),
+                'value'    => $this->formatDate($profile->lastvisitDate ?? null),
+                'readonly' => true,
+            ];
+            $fields[] = [
+                'name'     => 'lastResetTime',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.last_reset_date'),
+                'value'    => $this->formatDate($profile->lastResetTime ?? null),
+                'readonly' => true,
+            ];
+            $fields[] = [
+                'name'     => 'resetCount',
+                'type'     => 'text',
+                'label'    => __('com_users::com_users.password_reset_count'),
+                'value'    => $profile->resetCount ?? 0,
+                'readonly' => true,
+            ];
+            $fields[] = [
+                'name'  => 'sendEmail',
+                'type'  => 'toggle',
+                'label' => __('com_users::com_users.receive_system_emails'),
+                'value' => (bool) ($profile->sendEmail ?? true),
+            ];
+            $fields[] = [
+                'name'  => 'block',
+                'type'  => 'toggle',
+                'label' => __('com_users::com_users.user_status'),
+                'value' => (bool) ($profile->block ?? false),
+                'hint'  => __('com_users::com_users.user_status_hint'),
+            ];
+            $fields[] = [
+                'name'     => 'id',
+                'type'     => 'text',
+                'label'    => 'ID',
+                'value'    => $user->getKey(),
+                'readonly' => true,
+            ];
+        }
 
         return [
             'account_details' => [
                 'label'  => __('com_users::com_users.account_details'),
-                'fields' => [
-                    [
-                        'name'     => 'id',
-                        'type'     => 'text',
-                        'label'    => 'ID',
-                        'value'    => $user->getKey(),
-                        'readonly' => true,
-                    ],
-                    [
-                        'name'     => 'name',
-                        'type'     => 'text',
-                        'label'    => __('com_users::com_users.user_name'),
-                        'value'    => $profile->name ?? $user->name,
-                        'required' => true,
-                    ],
-                    [
-                        'name'     => 'username',
-                        'type'     => 'text',
-                        'label'    => __('com_users::com_users.user_name_username'),
-                        'value'    => $profile->username ?? $user->username,
-                        'required' => true,
-                    ],
-                    [
-                        'name'     => 'email',
-                        'type'     => 'email',
-                        'label'    => __('com_users::com_users.email'),
-                        'value'    => $profile->email ?? $user->email,
-                        'required' => true,
-                    ],
-                    [
-                        'name'         => 'password',
-                        'type'         => 'password',
-                        'label'        => __('com_users::com_users.password'),
-                        'autocomplete' => 'new-password',
-                        'hint'         => __('com_users::com_users.password_requirements'),
-                    ],
-                    [
-                        'name'         => 'password_confirmation',
-                        'type'         => 'password',
-                        'label'        => __('com_users::com_users.password_confirm'),
-                        'autocomplete' => 'new-password',
-                    ],
-                    [
-                        'name'     => 'registerDate',
-                        'type'     => 'text',
-                        'label'    => __('com_users::com_users.registration_date'),
-                        'value'    => $this->formatDate($profile->registerDate ?? $user->created_at),
-                        'readonly' => true,
-                    ],
-                    [
-                        'name'     => 'lastvisitDate',
-                        'type'     => 'text',
-                        'label'    => __('com_users::com_users.last_visit_date'),
-                        'value'    => $this->formatDate($profile->lastvisitDate ?? null),
-                        'readonly' => true,
-                    ],
-                ],
-            ],
-            'usergroups' => [
-                'label'   => __('com_users::com_users.usergroups'),
-                'fields' => [
-                    [
-                        'name'  => 'groups',
-                        'type'  => 'toggle',
-                        'label' => __('com_users::com_users.usergroups'),
-                        'value' => $userGroupIds,
-                    ],
-                ],
+                'fields' => $fields,
             ],
         ];
     }
@@ -240,27 +281,96 @@ class UserAdminController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $data = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:larajoom_users,email,' . $user->id,
-            'password' => 'nullable|string|min:8',
-            'groups'   => 'nullable|array',
-        ]);
+        $canSeeSensitive = Access::can('com_users', 'core.admin');
 
-        $user->name  = $data['name'];
-        $user->email = $data['email'];
+        $rules = [
+            'avatar'    => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'name'      => 'required|string|max:255',
+            'username'  => 'required|string|max:150|alpha_dash|unique:larajoom_users,username,' . $user->id,
+            'email'     => 'required|email|max:255|unique:larajoom_users,email,' . $user->id,
+            'password'  => 'nullable|string|min:8|confirmed',
+        ];
+
+        if ($canSeeSensitive) {
+            $rules['sendEmail'] = 'nullable|boolean';
+            $rules['block']     = 'nullable|boolean';
+        }
+
+        $data = $request->validate($rules);
+
+        $profile = $this->profileRow($user->getKey()) ?? (object) [
+            'registerDate'  => now(),
+            'resetCount'    => 0,
+            'lastvisitDate' => null,
+            'lastResetTime' => null,
+        ];
+
+        $profile->name     = $data['name'];
+        $profile->username = $data['username'];
+        $profile->email    = $data['email'];
+
+        if ($canSeeSensitive) {
+            $profile->sendEmail = $request->boolean('sendEmail');
+            $profile->block     = $request->boolean('block');
+        }
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            $previous = $profile->avatar ?? null;
+
+            if ($previous && !preg_match('#^(https?:)?//#i', $previous) && is_file(storage_path('app/public/' . $previous))) {
+                @unlink(storage_path('app/public/' . $previous));
+            }
+
+            $profile->avatar = $path;
+        }
 
         if (!empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
+            $profile->password      = Hash::make($data['password']);
+            $profile->lastResetTime = now();
+            $profile->resetCount    = (int) ($profile->resetCount ?? 0) + 1;
+
+            $user->password = $profile->password;
         }
 
+        if (Schema::hasTable('larajoom_user_profile')) {
+            $profileData = [
+                'name'          => $profile->name,
+                'username'      => $profile->username,
+                'email'         => $profile->email,
+                'password'      => $profile->password ?? null,
+                'block'         => (int) ($profile->block ?? 0),
+                'activated'     => 1,
+                'sendEmail'     => (int) ($profile->sendEmail ?? 1),
+                'params'        => $profile->params ?? null,
+                'registerDate'  => $profile->registerDate ?? now(),
+                'lastvisitDate' => $profile->lastvisitDate ?? null,
+                'lastResetTime' => $profile->lastResetTime ?? null,
+                'resetCount'    => (int) ($profile->resetCount ?? 0),
+                'avatar'        => $profile->avatar ?? null,
+                'created_at'    => $profile->created_at ?? now(),
+                'updated_at'    => now(),
+            ];
+
+            DB::table('larajoom_user_profile')->updateOrInsert(
+                ['user_id' => $user->getKey()],
+                $profileData
+            );
+        }
+
+        $user->name     = $data['name'];
+        $user->username = $data['username'];
+        $user->email    = $data['email'];
         $user->save();
 
-        if (!Access::isSuperAdmin()) {
-            abort(403, 'Solo un SuperAdmin puede cambiar los grupos de un usuario.');
-        }
+        if ($request->has('groups')) {
+            if (!Access::isSuperAdmin()) {
+                abort(403, 'Solo un SuperAdmin puede cambiar los grupos de un usuario.');
+            }
 
-        $this->syncUserGroups($user->id, $data['groups'] ?? []);
+            $this->syncUserGroups($user->id, $data['groups'] ?? []);
+        }
 
         $this->logUserAction($request, $user->id, 'user_updated', 'com_users', 'Se actualizó el usuario ' . $data['email']);
 
@@ -280,8 +390,9 @@ class UserAdminController extends Controller
         $profile = $this->profileRow($user->getKey());
 
         return view('admin.components.com_users::users.profile', [
-            'user'      => $user,
-            'fieldsets' => $this->profileFieldsets($user, $profile),
+            'user'            => $user,
+            'fieldsets'       => $this->profileFieldsets($user, $profile),
+            'twoFactorStatus' => $this->getTwoFactorStatus($user->getKey()),
         ]);
     }
 
@@ -966,5 +1077,17 @@ class UserAdminController extends Controller
             'enabled'   => count($methods) > 0,
             'methods'   => $methods,
         ];
+    }
+
+    /**
+     * Agrega un nuevo método de autenticación de dos factores (MFA) para un usuario.
+     */
+    public function addMfaMethod(int $id, Request $request)
+    {
+        $method = $request->query('method', 'totp');
+
+        return redirect()
+            ->route('larajoom.admin.users.edit', $id)
+            ->with('success', __('com_users::com_users.mfa_method_added', ['method' => $method]));
     }
 }

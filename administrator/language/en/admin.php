@@ -16,6 +16,7 @@ return [
     'save_new'           => 'Save & New',
     'save_close'         => 'Save & Close',
     'cancel'             => 'Cancel',
+    'back'               => 'Back',
     'delete'             => 'Delete',
     'edit'               => 'Edit',
     'title'              => 'Title',

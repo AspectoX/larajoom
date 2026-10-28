@@ -14,8 +14,8 @@
             'value' => 'save',
         ],
         [
-            'label' => __('larajoom_admin::admin.cancel'),
-            'icon'  => 'cancel',
+            'label' => __('larajoom_admin::admin.back'),
+            'icon'  => 'back',
             'url'   => route('larajoom.admin.users.index'),
             'color' => 'warning',
         ],
@@ -23,133 +23,15 @@
 @endsection
 
 @section('content')
-    <x-larajoom::form :action="$user->id ? route('larajoom.admin.users.update', $user->id) : route('larajoom.admin.users.store')" :method="$user->id ? 'PUT' : 'POST'" id="adminForm" enctype="multipart/form-data">
-        @csrf
-        <div class="details">
-            @foreach ($fieldsets as $fieldset)
-                <details class="details__item" @if ($loop->first) open @endif name="profile">
-                    <summary class="details__link">{{ $fieldset['label'] }}</summary>
-                    <div class="details__body">
-                        <fieldset class="options-form">
-                            <legend>{{ $fieldset['label'] }}</legend>
-
-                            @foreach ($fieldset['fields'] ?? [] as $field)
-                                @if ($field['type'] === 'password')
-                                    <x-larajoom::password
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :required="$field['required'] ?? false"
-                                        :autocomplete="$field['autocomplete'] ?? 'new-password'" />
-                                @elseif ($field['type'] === 'file')
-                                    <x-larajoom::file
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :preview="$field['preview'] ?? null"
-                                        accept="image/*" />
-                                @elseif ($field['type'] === 'toggle')
-                                    <x-larajoom::toggle
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :checked="$field['value'] ?? false" />
-                                @elseif ($field['readonly'] ?? false)
-                                    <div class="form-group">
-                                        <label class="form-label">{{ $field['label'] }}</label>
-                                        <div class="form-input">{{ $field['value'] }}</div>
-                                    </div>
-                                @else
-                                    <x-larajoom::input
-                                        :name="$field['name']"
-                                        :type="$field['type'] ?? 'text'"
-                                        :label="$field['label']"
-                                        :value="old($field['name'], $field['value'] ?? null)"
-                                        :required="$field['required'] ?? false" />
-                                @endif
-
-                                @if (!empty($field['hint']))
-                                    <p><small>{{ $field['hint'] }}</small></p>
-                                @endif
-                            @endforeach
-
-                            @if (!empty($fieldset['message']))
-                                <p>{{ $fieldset['message'] }}</p>
-                            @endif
-                        </fieldset>
-                    </div>
-                </details>
-            @endforeach
-        </div>
+    <x-larajoom::form :action="route('larajoom.admin.users.update', $user->getKey())" method="PUT" id="adminForm" enctype="multipart/form-data">
+        <x-larajoom::tabs id="user-edit-tabs" :tabs="[
+            [
+                'name'    => 'details',
+                'label'   => __('com_users::com_users.account_details'),
+                'active'  => true,
+                'view'    => 'admin.components.com_users::users.profile-tabs.details',
+                'data'    => ['fieldset' => $fieldsets['account_details'] ?? null],
+            ],
+        ]" />
     </x-larajoom::form>
-
-    @if ($user->id)
-        <x-larajoom::form :action="route('larajoom.admin.users.addNote', $user->id)" method="POST" id="noteForm">
-            <fieldset>
-                <legend>{{ __('com_users::com_users.notes') }}</legend>
-
-                <x-larajoom::input name="note_text" :label="__('com_users::com_users.note_text')" required />
-
-                <button type="submit" class="btn">
-                    @icon('add') {{ __('com_users::com_users.add_note') }}
-                </button>
-            </fieldset>
-        </x-larajoom::form>
-
-        @if ($userNotes->count() > 0)
-            <fieldset>
-                <legend>{{ __('com_users::com_users.notes_list') }}</legend>
-                @foreach ($userNotes as $note)
-                    <div class="note-item" style="border-bottom: 1px solid #ccc; padding: 10px 0;">
-                        <span class="note-text">{{ $note->note_text }}</span>
-                        <span class="note-date">{{ \Illuminate\Support\Carbon::parse($note->created_at)->format('Y-m-d H:i') }}</span>
-                        <a href="{{ route('larajoom.admin.users.editNote', $note->id) }}" class="btn-table">@icon('edit') {{ __('larajoom_admin::admin.edit') }}</a>
-                        <form method="POST" action="{{ route('larajoom.admin.users.destroyNote', $note->id) }}" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn transparent circle">@icon('delete')</button>
-                        </form>
-                    </div>
-                @endforeach
-            </fieldset>
-        @endif
-
-        <x-larajoom::form :action="route('larajoom.admin.users.twofactor')" method="POST" id="twofactorForm">
-            @csrf
-            <fieldset>
-                <legend>{{ __('com_users::com_users.two_factor_auth') }}</legend>
-
-                <h4>{{ __('com_users::com_users.two_factor_auth') }}</h4>
-
-                @if ($twoFactorStatus['enabled'])
-                    <p>{{ __('com_users::com_users.two_factor_enabled') }}</p>
-                    <ul>
-                        @foreach ($twoFactorStatus['methods'] as $method)
-                            <li>
-                                <strong>{{ $method['label'] }}</strong><br>
-                                <small>{{ __('com_users::com_users.two_factor_secret') }}: <code>{{ $method['secret'] }}</code></small>
-                            </li>
-                        @endforeach
-                    </ul>
-                    <form method="POST" action="{{ route('larajoom.admin.users.remove2fa', $user->id) }}" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn danger">
-                            @icon('delete') {{ __('com_users::com_users.disable_two_factor') }}
-                        </button>
-                    </form>
-                @else
-                    <p>{{ __('com_users::com_users.two_factor_not_enabled') }}</p>
-                    <button type="button" class="btn" onclick="document.getElementById('setup2faForm').submit()">
-                        @icon('key') {{ __('com_users::com_users.setup_two_factor') }}
-                    </button>
-                    <form method="POST" action="{{ route('larajoom.admin.users.setup2fa', $user->id) }}" id="setup2faForm" style="display: none;">
-                        @csrf
-                        @method('POST')
-                        <input type="hidden" name="method" value="totp">
-                        <button type="submit" class="btn">
-                            @icon('key') {{ __('com_users::com_users.setup_two_factor') }}
-                        </button>
-                    </form>
-                @endif
-            </fieldset>
-        </x-larajoom::form>
-    @endif
 @endsection

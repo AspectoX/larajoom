@@ -14,69 +14,35 @@
             'value' => 'save',
         ],
         [
-            'label' => __('larajoom_admin::admin.cancel'),
-            'icon'  => 'cancel',
+            'label' => __('larajoom_admin::admin.back'),
+            'icon'  => 'back',
             'url'   => route('larajoom.admin.users.index'),
             'color' => 'warning',
-        ],
+        ],        
     ]" />
 @endsection
 
 @section('content')
     <x-larajoom::form :action="route('larajoom.admin.users.store')" method="POST" id="adminForm" enctype="multipart/form-data">
-        @csrf
-        <div class="details">
-            @foreach ($fieldsets as $fieldset)
-                <details class="details__item" @if ($loop->first) open @endif name="profile">
-                    <summary class="details__link">{{ $fieldset['label'] }}</summary>
-                    <div class="details__body">
-                        <fieldset class="options-form">
-                            <legend>{{ $fieldset['label'] }}</legend>
-
-                            @foreach ($fieldset['fields'] ?? [] as $field)
-                                @if ($field['type'] === 'password')
-                                    <x-larajoom::password
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :required="$field['required'] ?? false"
-                                        :autocomplete="$field['autocomplete'] ?? 'new-password'" />
-                                @elseif ($field['type'] === 'file')
-                                    <x-larajoom::file
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :preview="$field['preview'] ?? null"
-                                        accept="image/*" />
-                                @elseif ($field['type'] === 'toggle')
-                                    <x-larajoom::toggle
-                                        :name="$field['name']"
-                                        :label="$field['label']"
-                                        :checked="$field['value'] ?? false" />
-                                @elseif ($field['readonly'] ?? false)
-                                    <div class="form-group">
-                                        <label class="form-label">{{ $field['label'] }}</label>
-                                        <div class="form-input">{{ $field['value'] }}</div>
-                                    </div>
-                                @else
-                                    <x-larajoom::input
-                                        :name="$field['name']"
-                                        :type="$field['type'] ?? 'text'"
-                                        :label="$field['label']"
-                                        :value="old($field['name'], $field['value'] ?? null)"
-                                        :required="$field['required'] ?? false" />
-                                @endif
-
-                                @if (!empty($field['hint']))
-                                    <p><small>{{ $field['hint'] }}</small></p>
-                                @endif
-                            @endforeach
-
-                            @if (!empty($fieldset['message']))
-                                <p>{{ $fieldset['message'] }}</p>
-                            @endif
-                        </fieldset>
-                    </div>
-                </details>
-            @endforeach
-        </div>
+        <x-larajoom::tabs id="user-create-tabs" :tabs="[
+            [
+                'name'    => 'details',
+                'label'   => __('com_users::com_users.new_user'),
+                'active'  => true,
+                'view'    => 'admin.components.com_users::users.profile-tabs.details',
+                'data'    => ['fieldset' => $fieldsets['account_details'] ?? null],
+            ],
+            [
+                'name'    => 'multifactor',
+                'label'   => __('com_users::com_users.multifactor_auth'),
+                'active'  => false,
+                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor',
+                'data'    => [
+                    'label'            => $fieldsets['multifactor']['label'] ?? __('com_users::com_users.multifactor_auth'),
+                    'twoFactorStatus'  => [],
+                    'user'             => null,
+                ],
+            ],
+        ]" />
     </x-larajoom::form>
 @endsection
