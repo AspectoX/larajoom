@@ -18,7 +18,7 @@
             'icon'  => 'back',
             'url'   => route('larajoom.admin.users.index'),
             'color' => 'warning',
-        ],        
+        ],
     ]" />
 @endsection
 
@@ -27,21 +27,28 @@
         <x-larajoom::tabs id="user-create-tabs" :tabs="[
             [
                 'name'    => 'details',
-                'label'   => __('com_users::com_users.new_user'),
+                'label'   => __('com_users::com_users.account_details'),
                 'active'  => true,
                 'view'    => 'admin.components.com_users::users.profile-tabs.details',
                 'data'    => ['fieldset' => $fieldsets['account_details'] ?? null],
             ],
             [
+                'name'    => 'usergroups',
+                'label'   => 'Assigned User Groups',
+                'view'    => 'admin.components.com_users::users.profile-tabs.usergroups',
+                'data'    => ['groups' => $groups, 'userGroupIds' => $userGroupIds ?? []],
+            ],
+            [
+                'name'    => 'apitoken',
+                'label'   => 'Larajoom API Token',
+                'view'    => 'admin.components.com_users::users.profile-tabs.apitoken',
+                'data'    => ['apiToken' => null, 'apiEnabled' => true, 'apiReset' => false],
+            ],
+            [
                 'name'    => 'multifactor',
-                'label'   => __('com_users::com_users.multifactor_auth'),
-                'active'  => false,
-                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor',
-                'data'    => [
-                    'label'            => $fieldsets['multifactor']['label'] ?? __('com_users::com_users.multifactor_auth'),
-                    'twoFactorStatus'  => [],
-                    'user'             => null,
-                ],
+                'label'   => 'Multi-factor Authentication',
+                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor-create',
+                'data'    => [],
             ],
         ]" />
     </x-larajoom::form>

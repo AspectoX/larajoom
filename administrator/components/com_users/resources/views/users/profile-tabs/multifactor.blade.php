@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="com-users-methods-list-method-addnew-container border-top pt-2">
-                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user->getKey(), 'method' => 'totp']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
+                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user?->getKey() ?? null, 'method' => 'totp']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
                         <span class="icon-plus-2" aria-hidden="true"></span>
                         {{ __('com_users::com_users.mfa_add_new', ['method' => __('com_users::com_users.mfa_method_totp')]) }}
                     </a>
@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="com-users-methods-list-method-addnew-container border-top pt-2">
-                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user->getKey(), 'method' => 'yubikey']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
+                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user?->getKey() ?? null, 'method' => 'yubikey']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
                         <span class="icon-plus-2" aria-hidden="true"></span>
                         {{ __('com_users::com_users.mfa_add_new', ['method' => __('com_users::com_users.mfa_method_yubikey')]) }}
                     </a>
@@ -82,7 +82,7 @@
                 </div>
 
                 <div class="com-users-methods-list-method-addnew-container border-top pt-2">
-                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user->getKey(), 'method' => 'webauthn']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
+                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user?->getKey() ?? null, 'method' => 'webauthn']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
                         <span class="icon-plus-2" aria-hidden="true"></span>
                         {{ __('com_users::com_users.mfa_add_new', ['method' => __('com_users::com_users.mfa_method_webauthn')]) }}
                     </a>
@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="com-users-methods-list-method-addnew-container border-top pt-2">
-                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user->getKey(), 'method' => 'email']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
+                    <a href="{{ route('larajoom.admin.users.method.add', ['id' => $user?->getKey() ?? null, 'method' => 'email']) }}" class="com-users-methods-list-method-addnew btn btn-primary btn-sm">
                         <span class="icon-plus-2" aria-hidden="true"></span>
                         {{ __('com_users::com_users.mfa_add_new', ['method' => __('com_users::com_users.mfa_method_email')]) }}
                     </a>

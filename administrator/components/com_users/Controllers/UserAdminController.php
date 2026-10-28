@@ -55,8 +55,15 @@ class UserAdminController extends Controller
     {
         return [
             'account_details' => [
-                'label'  => __('com_users::com_users.new_user'),
+                'label'  => __('com_users::com_users.account_details'),
                 'fields' => [
+                    [
+                        'name'    => 'avatar',
+                        'type'    => 'file',
+                        'label'   => __('com_users::com_users.avatar'),
+                        'value'   => '',
+                        'preview' => null,
+                    ],
                     [
                         'name'     => 'name',
                         'type'     => 'text',
@@ -82,6 +89,18 @@ class UserAdminController extends Controller
                         'required'   => true,
                         'autocomplete' => 'new-password',
                         'hint'         => __('com_users::com_users.password_requirements'),
+                    ],
+                    [
+                        'name'         => 'password_confirmation',
+                        'type'         => 'password',
+                        'label'        => __('com_users::com_users.password_confirm'),
+                        'autocomplete' => 'new-password',
+                    ],
+                    [
+                        'name'  => 'sendEmail',
+                        'type'  => 'toggle',
+                        'label' => __('com_users::com_users.receive_system_emails'),
+                        'value' => true,
                     ],
                 ],
             ],
@@ -391,10 +410,22 @@ class UserAdminController extends Controller
         $user = Auth::guard('ax-larajoom')->user();
         $profile = $this->profileRow($user->getKey());
 
+        $groups = DB::table('larajoom_usergroups')->orderBy('id')->get();
+        $userGroupIds = $this->userGroupIds($user->getKey());
+
+        $apiToken   = $user->api_token ?? null;
+        $apiEnabled = (bool) ($user->api_enabled ?? true);
+        $apiReset   = (bool) ($user->api_reset ?? false);
+
         return view('admin.components.com_users::users.profile', [
             'user'            => $user,
             'fieldsets'       => $this->profileFieldsets($user, $profile),
             'twoFactorStatus' => $this->getTwoFactorStatus($user->getKey()),
+            'groups'          => $groups,
+            'userGroupIds'    => $userGroupIds,
+            'apiToken'        => $apiToken,
+            'apiEnabled'      => $apiEnabled,
+            'apiReset'        => $apiReset,
         ]);
     }
 
@@ -883,6 +914,10 @@ class UserAdminController extends Controller
      */
     protected function logUserAction(Request $request, int $userId, string $action, string $module, string $description): void
     {
+        if (!Schema::hasTable('larajoom_user_action_log')) {
+            return;
+        }
+
         $ip = $request->ip();
         DB::table('larajoom_user_action_log')->insert([
             'user_id'      => $userId,

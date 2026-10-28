@@ -47,7 +47,7 @@
             [
                 'name'    => 'multifactor',
                 'label'   => 'Multi-factor Authentication',
-                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor',
+                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor-edit',
                 'data'    => ['user' => $user],
             ],
         ]" />
