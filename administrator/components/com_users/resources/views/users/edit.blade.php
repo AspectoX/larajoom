@@ -47,6 +47,8 @@
             [
                 'name'    => 'multifactor',
                 'label'   => 'Multi-factor Authentication',
+                'view'    => 'admin.components.com_users::users.profile-tabs.multifactor',
+                'data'    => ['user' => $user],
             ],
         ]" />
     </x-larajoom::form>
